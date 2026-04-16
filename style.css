@@ -104,7 +104,9 @@ body {
     cursor: pointer;
     font-weight: bold;
     transition: 0.2s;
+    user-select: none; /* Evita que se seleccione el texto al hacer click rápido */
 }
+
 
 .key:hover { border-color: var(--primary); }
 
