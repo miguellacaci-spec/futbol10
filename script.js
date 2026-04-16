@@ -37,6 +37,8 @@ const players = [
     "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", " MAUPAY",  
 ];
 
+const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
+
 let gameState = {
     word: "",
     guessed: [],
@@ -44,10 +46,7 @@ let gameState = {
     streak: 0
 };
 
-// --- Utilidades ---
-// Función vital: quita tildes para que el juego sea justo
-const normalize = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
+// Navegación
 function showGame(gameId) {
     document.getElementById('menu-screen').classList.add('hidden');
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
@@ -59,40 +58,57 @@ function showMenu() {
     document.getElementById('menu-screen').classList.remove('hidden');
 }
 
-// --- Lógica del Ahorcado ---
+// Inicializar Juego
 function initHangman() {
     gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
     gameState.guessed = [];
     gameState.mistakes = 0;
     
     document.getElementById('lives').innerText = 6;
-    document.getElementById('usedLettersText').innerText = "";
+    document.getElementById('streak').innerText = gameState.streak;
+    
+    renderKeyboard();
     updateDisplay();
     drawCanvas(0);
 }
 
-function updateDisplay() {
-    const display = gameState.word.split('').map(char => {
-        if (char === " ") return "&nbsp;&nbsp;";
-        // Comparamos normalizando para ignorar tildes
-        return gameState.guessed.includes(normalize(char)) ? char : "_";
-    }).join(" ");
-    
-    document.getElementById('wordDisplay').innerHTML = display;
+// Crear Teclado en pantalla
+function renderKeyboard() {
+    const container = document.getElementById('qwerty-keyboard');
+    container.innerHTML = ''; 
 
-    if (!display.includes("_")) victory();
+    QWERTY_LAYOUT.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'keyboard-row';
+        
+        row.split('').forEach(letter => {
+            const keyDiv = document.createElement('div');
+            keyDiv.className = 'key';
+            keyDiv.textContent = letter;
+            keyDiv.id = `key-${letter}`;
+            keyDiv.onclick = () => handleInput(letter);
+            rowDiv.appendChild(keyDiv);
+        });
+        container.appendChild(rowDiv);
+    });
 }
 
+// Lógica de entrada de letras
 function handleInput(char) {
-    char = normalize(char.toUpperCase());
-    if (!char || char.length > 1 || gameState.guessed.includes(char)) return;
+    char = char.toUpperCase();
+    if (gameState.guessed.includes(char)) return;
 
     gameState.guessed.push(char);
-    document.getElementById('usedLettersText').innerText = gameState.guessed.join(", ");
 
-    const normalizedWord = normalize(gameState.word);
-    
-    if (!normalizedWord.includes(char)) {
+    // Oscurecer tecla
+    const keyElement = document.getElementById(`key-${char}`);
+    if (keyElement) keyElement.classList.add('used');
+
+    // Normalizar para tildes (ej: Á -> A)
+    const normalizedWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const normalizedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    if (!normalizedWord.includes(normalizedChar)) {
         gameState.mistakes++;
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
         drawCanvas(gameState.mistakes);
@@ -102,69 +118,66 @@ function handleInput(char) {
     }
 }
 
-// --- Eventos de teclado ---
-document.getElementById('letterInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const val = e.target.value;
-        handleInput(val);
-        e.target.value = "";
-    }
-});
-
-document.getElementById('wordInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') solveFullWord();
-});
-
-document.getElementById('guessButton').onclick = () => {
-    const el = document.getElementById('letterInput');
-    handleInput(el.value);
-    el.value = "";
-};
+function updateDisplay() {
+    const display = gameState.word.split('').map(char => {
+        if (char === " ") return "&nbsp;";
+        const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return gameState.guessed.includes(normChar) ? char : "_";
+    }).join(" ");
+    
+    document.getElementById('wordDisplay').innerHTML = display;
+    if (!display.includes("_")) victory();
+}
 
 function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
-    if (normalize(val) === normalize(gameState.word)) {
-        victory();
-    } else {
-        gameOver();
-    }
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nWord) victory();
+    else gameOver();
     document.getElementById('wordInput').value = "";
 }
 
 function victory() {
     gameState.streak++;
-    document.getElementById('streak').innerText = gameState.streak;
     alert("¡GOLAZO! Era " + gameState.word);
     initHangman();
 }
 
 function gameOver() {
     gameState.streak = 0;
-    document.getElementById('streak').innerText = 0;
     alert("¡TARJETA ROJA! Era " + gameState.word);
     initHangman();
 }
 
-// --- Dibujo Profesional ---
 function drawCanvas(step) {
     const c = document.getElementById('hangmanCanvas');
     const ctx = c.getContext('2d');
-    ctx.strokeStyle = "#161b22"; ctx.lineWidth = 5; ctx.lineCap = "round";
+    ctx.strokeStyle = "#333"; ctx.lineWidth = 4;
     
     if(step === 0) {
-        ctx.clearRect(0,0,c.width,c.height);
+        ctx.clearRect(0,0,220,280);
         ctx.beginPath();
-        ctx.moveTo(20,260); ctx.lineTo(180,260); // Base
-        ctx.moveTo(50,260); ctx.lineTo(50,20);   // Poste
-        ctx.lineTo(150,20); ctx.lineTo(150,50);  // Cuerda
+        ctx.moveTo(20,260); ctx.lineTo(180,260);
+        ctx.moveTo(50,260); ctx.lineTo(50,20);
+        ctx.lineTo(150,20); ctx.lineTo(150,50);
         ctx.stroke();
         return;
     }
-    
-    if(step >= 1) { ctx.beginPath(); ctx.arc(150, 80, 25, 0, Math.PI*2); ctx.stroke(); } // Cabeza
-    if(step >= 2) { ctx.beginPath(); ctx.moveTo(150, 105); ctx.lineTo(150, 180); ctx.stroke(); } // Cuerpo
-    if(step >= 3) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(120, 150); ctx.stroke(); } // Brazo L
-    if(step >= 4) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(180, 150); ctx.stroke(); } // Brazo R
-    if(step >= 5) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(120, 220); ctx.stroke(); } // Pierna L
-    if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); } // Pierna R
+    if(step >= 1) { ctx.beginPath(); ctx.arc(150, 80, 25, 0, Math.PI*2); ctx.stroke(); }
+    if(step >= 2) { ctx.beginPath(); ctx.moveTo(150, 105); ctx.lineTo(150, 180); ctx.stroke(); }
+    if(step >= 3) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(120, 150); ctx.stroke(); }
+    if(step >= 4) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(180, 150); ctx.stroke(); }
+    if(step >= 5) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(120, 220); ctx.stroke(); }
+    if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); }
 }
+
+// Teclado físico
+document.addEventListener('keydown', (e) => {
+    const key = e.key.toUpperCase();
+    if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
+});
+
+document.getElementById('solveButton').onclick = solveFullWord;
+
