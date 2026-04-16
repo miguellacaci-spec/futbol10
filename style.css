@@ -4,7 +4,6 @@
     --bg: #0d1117;
     --card: #161b22;
     --text: #ffffff;
-    --danger: #ff4d4d;
 }
 
 body {
@@ -12,11 +11,8 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--bg);
     color: var(--text);
-    display: flex;
-    justify-content: center;
+    overflow-x: hidden;
 }
-
-#app { width: 100%; max-width: 1200px; }
 
 .screen {
     min-height: 100vh;
@@ -24,102 +20,119 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
-    box-sizing: border-box;
 }
 
-.hidden { display: none !important; }
+.hidden { display: none; }
 
-/* Logo con brillo */
+/* Menú */
 .logo {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2rem, 8vw, 4rem);
-    text-shadow: 0 0 20px rgba(0, 255, 135, 0.3);
+    font-size: 3rem;
     margin-bottom: 3rem;
 }
 .logo span { color: var(--primary); }
 
-/* Cartas del Menú */
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
     width: 100%;
+    max-width: 800px;
 }
 
 .menu-card {
     background: var(--card);
-    padding: 2.5rem;
-    border-radius: 20px;
+    padding: 2rem;
+    border-radius: 15px;
     cursor: pointer;
     border: 1px solid #30363d;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+    transition: 0.3s;
 }
 
-.menu-card:hover {
-    transform: scale(1.05);
-    border-color: var(--primary);
-    box-shadow: 0 10px 30px rgba(0, 255, 135, 0.1);
-}
+.menu-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+.coming-soon { opacity: 0.5; cursor: not-allowed; }
 
-/* Juego y Canvas */
+/* Juego */
 .game-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    display: flex;
     gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-top: 2rem;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .game-layout { grid-template-columns: 1fr; }
 }
 
 #hangmanCanvas {
-    background: #e0e0e0;
-    border-radius: 15px;
-    border: 4px solid var(--card);
-    width: 100%;
-    max-width: 220px;
-    height: auto;
+    background: #f0f0f0;
+    border-radius: 12px;
+    border: 3px solid var(--card);
 }
 
 .word-container {
     font-size: 2rem;
     font-family: 'Orbitron', sans-serif;
-    letter-spacing: 5px;
+    letter-spacing: 6px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    min-height: 50px;
+}
+
+/* TECLADO QWERTY */
+.keyboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
     margin-bottom: 2rem;
-    color: var(--primary);
+}
+
+.keyboard-row {
+    display: flex;
+    gap: 6px;
+}
+
+.key {
+    width: 42px;
+    height: 48px;
+    background: var(--card);
+    border: 1px solid #30363d;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.key:hover { border-color: var(--primary); }
+
+/* Estado oscurecido */
+.key.used {
+    opacity: 0.15;
+    background: #000;
+    pointer-events: none;
+    transform: scale(0.9);
 }
 
 /* Inputs y Botones */
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
 input {
-    background: #1c2128;
-    border: 2px solid #30363d;
+    background: #0d1117;
+    border: 1px solid #30363d;
     color: white;
     padding: 12px;
-    border-radius: 10px;
-    outline: none;
+    border-radius: 8px;
+    flex-grow: 1;
 }
 
-input:focus { border-color: var(--primary); }
+.secondary-btn { background: var(--secondary); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; }
 
-button {
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
-    text-transform: uppercase;
-}
-
-.primary-btn { background: var(--primary); color: #000; border: none; }
-.secondary-btn { background: transparent; color: var(--text); border: 2px solid var(--secondary); }
-button:hover { filter: brightness(1.1); transform: translateY(-2px); }
-
-.info-footer {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    background: var(--card);
-    padding: 1rem;
-    border-radius: 10px;
-}
+.game-nav { width: 100%; display: flex; justify-content: space-between; max-width: 900px; }
+.back-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 5px; cursor: pointer; }
