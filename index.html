@@ -17,10 +17,15 @@
                     <h3>Ahorcado Sports</h3>
                     <p>Adivina jugadores de LaLiga EA Sports</p>
                 </div>
+                <div class="menu-card" onclick="showGame('blur')">
+                    <div class="icon">🖼️</div>
+                    <h3>Blur Guess</h3>
+                    <p>Adivina el jugador tras el desenfoque</p>
+                </div>
                 <div class="menu-card coming-soon">
                     <div class="icon">📈</div>
-                    <h3>Higher or lower</h3>
-                    <p>Próximamente</p>
+                    <h3>Próximamente</h3>
+                    <p>Más niveles pronto</p>
                 </div>
             </div>
         </div>
@@ -38,19 +43,37 @@
                 
                 <div class="play-side">
                     <div class="word-container" id="wordDisplay"></div>
-                    
                     <div id="qwerty-keyboard" class="keyboard-container"></div>
-
                     <div class="controls">
                         <div class="input-group">
                             <input type="text" id="wordInput" placeholder="¿Sabes el nombre completo?" autocomplete="off">
                             <button id="solveButton" class="secondary-btn">RESOLVER</button>
                         </div>
                     </div>
-
                     <div class="info-footer">
                         <p>Vidas: <span id="lives">6</span></p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="blur-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← Volver</button>
+                <div class="score-board">Racha: <span id="blur-streak">0</span></div>
+            </nav>
+
+            <div class="blur-container">
+                <div class="image-box">
+                    <img id="playerImg" src="" alt="Jugador">
+                </div>
+                
+                <div class="blur-controls">
+                    <div class="input-group">
+                        <input type="text" id="blurInput" placeholder="¿Quién es este jugador?" autocomplete="off">
+                        <button id="btnBlurCheck" class="secondary-btn">ENVIAR</button>
+                    </div>
+                    <p>Intentos: <span id="blur-lives">5</span></p>
                 </div>
             </div>
         </div>
