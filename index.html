@@ -9,30 +9,30 @@
 </head>
 <body>
     <div id="app">
-        <div id="menu-screen" class="screen">
+        <main id="menu-screen" class="screen">
             <h1 class="logo">Futbol<span>10</span></h1>
             <div class="menu-grid">
-                <div class="menu-card" onclick="showGame('hangman')">
+                <div class="menu-card" onclick="showGame('hangman')" role="button">
                     <div class="icon">⚽</div>
                     <h3>Ahorcado Sports</h3>
-                    <p>Adivina jugadores de LaLiga EA Sports</p>
+                    <p>Adivina jugadores de LaLiga</p>
                 </div>
                 <div class="menu-card coming-soon">
-                    <div class="icon">❓</div>
-                    <h3>Higher or lower</h3>
-                    <p>Mayor o menor valor de mercado</p>
+                    <div class="icon">📈</div>
+                    <h3>Higher or Lower</h3>
+                    <p>¿Quién vale más en el mercado?</p>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <div id="hangman-screen" class="screen hidden">
+        <section id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← Volver</button>
                 <div class="score-board">Racha: <span id="streak">0</span></div>
             </nav>
 
             <div class="game-layout">
-                <div class="canvas-side">
+                <div class="canvas-container">
                     <canvas id="hangmanCanvas" width="220" height="280"></canvas>
                 </div>
                 
@@ -41,23 +41,23 @@
                     
                     <div class="controls">
                         <div class="input-group">
-                            <input type="text" id="letterInput" maxlength="1" placeholder="A">
+                            <input type="text" id="letterInput" maxlength="1" placeholder="A" autocomplete="off">
                             <button id="guessButton" class="primary-btn">PROBAR LETRA</button>
                         </div>
                         
                         <div class="input-group">
-                            <input type="text" id="wordInput" placeholder="Nombre completo del jugador...">
+                            <input type="text" id="wordInput" placeholder="Nombre completo..." autocomplete="off">
                             <button id="solveButton" class="secondary-btn">RESOLVER</button>
                         </div>
                     </div>
 
                     <div class="info-footer">
-                        <p>Vidas: <span id="lives">6</span></p>
+                        <div class="status-item">Vidas: <span id="lives">6</span></div>
                         <div class="used-box">Letras: <span id="usedLettersText"></span></div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
     <script src="script.js"></script>
 </body>
