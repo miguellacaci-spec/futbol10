@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FootyGames Pro - Elite Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div id="menu-screen" class="screen">
+            <h1 class="logo">FOOTY<span>GAMES</span></h1>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="showGame('hangman')">
+                    <div class="icon">⚽</div>
+                    <h3>Ahorcado Pro</h3>
+                    <p>Adivina a los cracks actuales</p>
+                </div>
+                <div class="menu-card coming-soon">
+                    <div class="icon">❓</div>
+                    <h3>Next Coming...</h3>
+                    <p>Próximamente nuevo minijuego</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="hangman-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← Volver</button>
+                <div class="score-board">Racha: <span id="streak">0</span></div>
+            </nav>
+
+            <div class="game-layout">
+                <div class="canvas-side">
+                    <canvas id="hangmanCanvas" width="220" height="280"></canvas>
+                </div>
+                
+                <div class="play-side">
+                    <div class="word-container" id="wordDisplay"></div>
+                    
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="text" id="letterInput" maxlength="1" placeholder="A">
+                            <button id="guessButton" class="primary-btn">PROBAR LETRA</button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="text" id="wordInput" placeholder="Nombre completo del jugador...">
+                            <button id="solveButton" class="secondary-btn">RESOLVER</button>
+                        </div>
+                    </div>
+
+                    <div class="info-footer">
+                        <p>Vidas: <span id="lives">6</span></p>
+                        <div class="used-box">Letras: <span id="usedLettersText"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
