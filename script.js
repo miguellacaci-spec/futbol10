@@ -61,21 +61,18 @@ const players = [
 
     
 ];
-
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 
-let gameState = {
-    word: "",
-    guessed: [],
-    mistakes: 0,
-    streak: 0
-};
+// Estados de los juegos
+let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
+let blurState = { player: "", blur: 25, lives: 5, streak: 0 };
 
-// Navegación
+// --- NAVEGACIÓN ---
 function showGame(gameId) {
-    document.getElementById('menu-screen').classList.add('hidden');
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
     if(gameId === 'hangman') initHangman();
+    if(gameId === 'blur') initBlurGame();
 }
 
 function showMenu() {
@@ -83,29 +80,24 @@ function showMenu() {
     document.getElementById('menu-screen').classList.remove('hidden');
 }
 
-// Inicializar Juego
+// --- LÓGICA AHORCADO (Tuya original) ---
 function initHangman() {
     gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
     gameState.guessed = [];
     gameState.mistakes = 0;
-    
     document.getElementById('lives').innerText = 6;
     document.getElementById('streak').innerText = gameState.streak;
-    
     renderKeyboard();
     updateDisplay();
     drawCanvas(0);
 }
 
-// Crear Teclado en pantalla
 function renderKeyboard() {
     const container = document.getElementById('qwerty-keyboard');
     container.innerHTML = ''; 
-
     QWERTY_LAYOUT.forEach(row => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'keyboard-row';
-        
         row.split('').forEach(letter => {
             const keyDiv = document.createElement('div');
             keyDiv.className = 'key';
@@ -118,21 +110,14 @@ function renderKeyboard() {
     });
 }
 
-// Lógica de entrada de letras
 function handleInput(char) {
     char = char.toUpperCase();
     if (gameState.guessed.includes(char)) return;
-
     gameState.guessed.push(char);
-
-    // Oscurecer tecla
     const keyElement = document.getElementById(`key-${char}`);
     if (keyElement) keyElement.classList.add('used');
-
-    // Normalizar para tildes (ej: Á -> A)
     const normalizedWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const normalizedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
     if (!normalizedWord.includes(normalizedChar)) {
         gameState.mistakes++;
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
@@ -149,7 +134,6 @@ function updateDisplay() {
         const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         return gameState.guessed.includes(normChar) ? char : "_";
     }).join(" ");
-    
     document.getElementById('wordDisplay').innerHTML = display;
     if (!display.includes("_")) victory();
 }
@@ -158,7 +142,6 @@ function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
     if (nVal === nWord) victory();
     else gameOver();
     document.getElementById('wordInput').value = "";
@@ -180,7 +163,6 @@ function drawCanvas(step) {
     const c = document.getElementById('hangmanCanvas');
     const ctx = c.getContext('2d');
     ctx.strokeStyle = "#333"; ctx.lineWidth = 4;
-    
     if(step === 0) {
         ctx.clearRect(0,0,220,280);
         ctx.beginPath();
@@ -198,11 +180,58 @@ function drawCanvas(step) {
     if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); }
 }
 
-// Teclado físico
+// --- LÓGICA BLUR GUESS (Nuevo) ---
+function initBlurGame() {
+    blurState.player = players[Math.floor(Math.random() * players.length)].toUpperCase();
+    blurState.blur = 30;
+    blurState.lives = 5;
+    
+    document.getElementById('blur-lives').innerText = blurState.lives;
+    document.getElementById('blur-streak').innerText = blurState.streak;
+    document.getElementById('blurInput').value = "";
+    
+    const img = document.getElementById('playerImg');
+    // IMPORTANTE: Las imágenes deben estar en una carpeta llamada 'players'
+    // Ejemplo: players/MBAPPE.jpg
+    img.src = `players/${blurState.player}.jpg`;
+    img.style.filter = `blur(${blurState.blur}px)`;
+}
+
+function checkBlurGuess() {
+    const input = document.getElementById('blurInput');
+    const val = input.value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    if (nVal === nPlayer) {
+        blurState.streak++;
+        document.getElementById('playerImg').style.filter = "blur(0px)";
+        setTimeout(() => { alert("¡BRUTAL! Es " + blurState.player); initBlurGame(); }, 300);
+    } else {
+        blurState.lives--;
+        blurState.blur -= 6;
+        if (blurState.lives <= 0) {
+            blurState.streak = 0;
+            document.getElementById('playerImg').style.filter = "blur(0px)";
+            setTimeout(() => { alert("¡FUERA DE JUEGO! Era " + blurState.player); initBlurGame(); }, 300);
+        } else {
+            document.getElementById('blur-lives').innerText = blurState.lives;
+            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
+            input.value = "";
+        }
+    }
+}
+
+// Eventos
 document.addEventListener('keydown', (e) => {
-    const key = e.key.toUpperCase();
-    if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
+    if (!document.getElementById('hangman-screen').classList.contains('hidden')) {
+        const key = e.key.toUpperCase();
+        if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
+    }
+    if (!document.getElementById('blur-screen').classList.contains('hidden') && e.key === 'Enter') {
+        checkBlurGuess();
+    }
 });
 
 document.getElementById('solveButton').onclick = solveFullWord;
-
+document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
