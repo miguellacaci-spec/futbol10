@@ -12,27 +12,35 @@
         <div id="menu-screen" class="screen">
             <h1 class="logo">Futbol<span>10</span></h1>
             <div class="menu-grid">
-                <div class="menu-card" onclick="showGame('hangman')">
-                    <div class="icon">⚽</div>
-                    <h3>Ahorcado Sports</h3>
-                    <p>Adivina jugadores de LaLiga EA Sports</p>
+                <div class="menu-card" onclick="showCategory('laliga')">
+                    <div class="icon">🇪🇸</div>
+                    <h3>LaLiga EA Sports</h3>
+                    <p>Equipos de España</p>
                 </div>
-                <div class="menu-card" onclick="showGame('blur')">
-                    <div class="icon">🖼️</div>
-                    <h3>Blur Guess</h3>
-                    <p>Adivina el jugador tras el desenfoque</p>
+                <div class="menu-card" onclick="showCategory('premier')">
+                    <div class="icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+                    <h3>Premier League</h3>
+                    <p>Equipos de Inglaterra</p>
                 </div>
-                <div class="menu-card coming-soon">
-                    <div class="icon">📈</div>
-                    <h3>Próximamente</h3>
-                    <p>Más niveles pronto</p>
+                <div class="menu-card" onclick="showCategory('leyendas')">
+                    <div class="icon">🏆</div>
+                    <h3>Leyendas</h3>
+                    <p>Jugadores históricos</p>
                 </div>
             </div>
         </div>
 
+        <div id="category-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← Volver al inicio</button>
+            </nav>
+            <h2 id="category-title" class="logo" style="font-size: 2rem; margin-top: 1rem;"></h2>
+            <div class="menu-grid" id="category-games-grid"></div>
+        </div>
+
         <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← Volver</button>
+                <button onclick="backToCategory()" class="back-btn">← Volver</button>
                 <div class="score-board">Racha: <span id="streak">0</span></div>
             </nav>
 
@@ -45,9 +53,12 @@
                     <div class="word-container" id="wordDisplay"></div>
                     <div id="qwerty-keyboard" class="keyboard-container"></div>
                     <div class="controls">
-                        <div class="input-group">
-                            <input type="text" id="wordInput" placeholder="¿Sabes el nombre completo?" autocomplete="off">
-                            <button id="solveButton" class="secondary-btn">RESOLVER</button>
+                        <div class="input-container">
+                            <div class="input-group">
+                                <input type="text" id="wordInput" placeholder="¿Sabes el nombre completo?" autocomplete="off">
+                                <button id="solveButton" class="secondary-btn">RESOLVER</button>
+                            </div>
+                            <div id="hangman-suggestions" class="suggestions-box"></div>
                         </div>
                     </div>
                     <div class="info-footer">
@@ -59,7 +70,7 @@
 
         <div id="blur-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← Volver</button>
+                <button onclick="backToCategory()" class="back-btn">← Volver</button>
                 <div class="score-board">Racha: <span id="blur-streak">0</span></div>
             </nav>
 
@@ -69,9 +80,12 @@
                 </div>
                 
                 <div class="blur-controls">
-                    <div class="input-group">
-                        <input type="text" id="blurInput" placeholder="¿Quién es este jugador?" autocomplete="off">
-                        <button id="btnBlurCheck" class="secondary-btn">ENVIAR</button>
+                    <div class="input-container">
+                        <div class="input-group">
+                            <input type="text" id="blurInput" placeholder="¿Quién es este jugador?" autocomplete="off">
+                            <button id="btnBlurCheck" class="secondary-btn">ENVIAR</button>
+                        </div>
+                        <div id="blur-suggestions" class="suggestions-box"></div>
                     </div>
                     <p>Intentos: <span id="blur-lives">5</span></p>
                 </div>
