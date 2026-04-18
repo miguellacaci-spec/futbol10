@@ -62,12 +62,49 @@ const players = [
     
 ];
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
-
-// Estados de los juegos
 let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
 let blurState = { player: "", blur: 25, lives: 5, streak: 0 };
+let currentCategory = "";
 
 // --- NAVEGACIÓN ---
+function showMenu() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById('menu-screen').classList.remove('hidden');
+}
+
+function showCategory(category) {
+    currentCategory = category;
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    const catScreen = document.getElementById('category-screen');
+    const grid = document.getElementById('category-games-grid');
+    const title = document.getElementById('category-title');
+    
+    catScreen.classList.remove('hidden');
+    grid.innerHTML = "";
+
+    if (category === 'laliga') {
+        title.innerHTML = "LaLiga <span>EA Sports</span>";
+        grid.innerHTML = `
+            <div class="menu-card" onclick="showGame('hangman')">
+                <div class="icon">⚽</div>
+                <h3>Ahorcado Sports</h3>
+                <p>Adivina jugadores de LaLiga</p>
+            </div>
+            <div class="menu-card" onclick="showGame('blur')">
+                <div class="icon">🖼️</div>
+                <h3>Blur Guess</h3>
+                <p>Adivina el jugador desenfocado</p>
+            </div>`;
+    } else {
+        title.innerHTML = category === 'premier' ? "Premier <span>League</span>" : "Leyendas <span>Fútbol</span>";
+        grid.innerHTML = `<div class="menu-card coming-soon">
+                            <div class="icon">📈</div>
+                            <h3>Próximamente</h3>
+                            <p>Contenido pronto</p>
+                          </div>`;
+    }
+}
+
 function showGame(gameId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
@@ -75,18 +112,42 @@ function showGame(gameId) {
     if(gameId === 'blur') initBlurGame();
 }
 
-function showMenu() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById('menu-screen').classList.remove('hidden');
+function backToCategory() {
+    showCategory(currentCategory);
 }
 
-// --- LÓGICA AHORCADO (Tuya original) ---
+// --- AUTOCOMPLETADO ---
+function setupAutocomplete(inputId, suggestionId) {
+    const input = document.getElementById(inputId);
+    const box = document.getElementById(suggestionId);
+
+    input.addEventListener('input', () => {
+        const val = input.value.toUpperCase().trim();
+        box.innerHTML = "";
+        if (val.length < 2) return;
+
+        const matches = players.filter(p => p.includes(val)).slice(0, 4);
+        matches.forEach(match => {
+            const div = document.createElement('div');
+            div.textContent = match;
+            div.onclick = () => {
+                input.value = match;
+                box.innerHTML = "";
+            };
+            box.appendChild(div);
+        });
+    });
+}
+
+// --- LÓGICA AHORCADO ---
 function initHangman() {
     gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
     gameState.guessed = [];
     gameState.mistakes = 0;
     document.getElementById('lives').innerText = 6;
     document.getElementById('streak').innerText = gameState.streak;
+    document.getElementById('wordInput').value = "";
+    document.getElementById('hangman-suggestions').innerHTML = "";
     renderKeyboard();
     updateDisplay();
     drawCanvas(0);
@@ -142,9 +203,10 @@ function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (nVal === nWord) victory();
+    if (nVal === nWord && nVal !== "") victory();
     else gameOver();
     document.getElementById('wordInput').value = "";
+    document.getElementById('hangman-suggestions').innerHTML = "";
 }
 
 function victory() {
@@ -180,19 +242,16 @@ function drawCanvas(step) {
     if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); }
 }
 
-// --- LÓGICA BLUR GUESS (Nuevo) ---
+// --- LÓGICA BLUR GUESS ---
 function initBlurGame() {
     blurState.player = players[Math.floor(Math.random() * players.length)].toUpperCase();
     blurState.blur = 30;
     blurState.lives = 5;
-    
     document.getElementById('blur-lives').innerText = blurState.lives;
     document.getElementById('blur-streak').innerText = blurState.streak;
     document.getElementById('blurInput').value = "";
-    
+    document.getElementById('blur-suggestions').innerHTML = "";
     const img = document.getElementById('playerImg');
-    // IMPORTANTE: Las imágenes deben estar en una carpeta llamada 'players'
-    // Ejemplo: players/MBAPPE.jpg
     img.src = `players/${blurState.player}.jpg`;
     img.style.filter = `blur(${blurState.blur}px)`;
 }
@@ -203,7 +262,7 @@ function checkBlurGuess() {
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    if (nVal === nPlayer) {
+    if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
         document.getElementById('playerImg').style.filter = "blur(0px)";
         setTimeout(() => { alert("¡BRUTAL! Es " + blurState.player); initBlurGame(); }, 300);
@@ -218,9 +277,14 @@ function checkBlurGuess() {
             document.getElementById('blur-lives').innerText = blurState.lives;
             document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
             input.value = "";
+            document.getElementById('blur-suggestions').innerHTML = "";
         }
     }
 }
+
+// Inicialización de Autocompletado
+setupAutocomplete('wordInput', 'hangman-suggestions');
+setupAutocomplete('blurInput', 'blur-suggestions');
 
 // Eventos
 document.addEventListener('keydown', (e) => {
