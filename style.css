@@ -28,7 +28,8 @@ body {
 .logo {
     font-family: 'Orbitron', sans-serif;
     font-size: 3rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 .logo span { color: var(--primary); }
 
@@ -52,6 +53,36 @@ body {
 
 .menu-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 .coming-soon { opacity: 0.5; cursor: not-allowed; }
+
+/* Autocompletado */
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--primary);
+    border-radius: 0 0 8px 8px;
+    z-index: 100;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.suggestions-box div {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #30363d;
+    text-align: left;
+}
+
+.suggestions-box div:hover {
+    background: var(--secondary);
+}
 
 /* Juego Ahorcado */
 .game-layout {
@@ -101,7 +132,7 @@ body {
 .key.used { opacity: 0.15; pointer-events: none; }
 
 /* Inputs y Botones */
-.input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+.input-group { display: flex; gap: 10px; margin-bottom: 5px; width: 100%; }
 
 input {
     background: #0d1117;
@@ -117,7 +148,7 @@ input {
 .game-nav { width: 100%; display: flex; justify-content: space-between; max-width: 900px; }
 .back-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 5px; cursor: pointer; }
 
-/* --- NUEVOS ESTILOS BLUR GUESS --- */
+/* BLUR GUESS */
 .blur-container {
     display: flex;
     flex-direction: column;
