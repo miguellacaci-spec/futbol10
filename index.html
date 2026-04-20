@@ -1,194 +1,90 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Futbol10 - Minijuegos</title>
-
     <link rel="stylesheet" href="style.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-
 </head>
-
 <body>
-
     <div id="app">
-
         <div id="menu-screen" class="screen">
-
             <h1 class="logo">Futbol<span>10</span></h1>
-
             <div class="menu-grid">
-
                 <div class="menu-card" onclick="showCategory('laliga')">
-
-                    <div class="icon">🇪🇸</div>
-
-                    <h3>LaLiga EA Sports</h3>
-
-                    <p>Equipos de España</p>
-
+                    <span class="icon">🇪🇸</span>
+                    <h3>LaLiga</h3>
+                    <p>EA Sports 2024/25</p>
                 </div>
-
                 <div class="menu-card" onclick="showCategory('premier')">
-
-                    <div class="icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
-
-                    <h3>Premier League</h3>
-
-                    <p>Equipos de Inglaterra</p>
-
+                    <span class="icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+                    <h3>Premier</h3>
+                    <p>Barclays League</p>
                 </div>
-
                 <div class="menu-card" onclick="showCategory('leyendas')">
-
-                    <div class="icon">🏆</div>
-
+                    <span class="icon">🏆</span>
                     <h3>Leyendas</h3>
-
-                    <p>Jugadores históricos</p>
-
+                    <p>Iconos del Fútbol</p>
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="category-screen" class="screen hidden">
-
             <nav class="game-nav">
-
-                <button onclick="showMenu()" class="back-btn">← Volver al inicio</button>
-
+                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <h2 id="category-title" class="logo" style="font-size: 1.5rem; margin: 0;"></h2>
             </nav>
-
-            <h2 id="category-title" class="logo" style="font-size: 2rem; margin-top: 1rem;"></h2>
-
             <div class="menu-grid" id="category-games-grid"></div>
-
         </div>
-
-
 
         <div id="hangman-screen" class="screen hidden">
-
             <nav class="game-nav">
-
-                <button onclick="backToCategory()" class="back-btn">← Volver</button>
-
-                <div class="score-board">Racha: <span id="streak">0</span></div>
-
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">RACHA: <span id="streak">0</span></div>
             </nav>
-
-
 
             <div class="game-layout">
-
                 <div class="canvas-side">
-
                     <canvas id="hangmanCanvas" width="220" height="280"></canvas>
-
                 </div>
-
                 
-
                 <div class="play-side">
-
                     <div class="word-container" id="wordDisplay"></div>
-
                     <div id="qwerty-keyboard" class="keyboard-container"></div>
-
-                    <div class="controls">
-
-                        <div class="input-container">
-
-                            <div class="input-group">
-
-                                <input type="text" id="wordInput" placeholder="¿Sabes el nombre completo?" autocomplete="off">
-
-                                <button id="solveButton" class="secondary-btn">RESOLVER</button>
-
-                            </div>
-
-                            <div id="hangman-suggestions" class="suggestions-box"></div>
-
+                    <div class="input-container">
+                        <div class="input-group">
+                            <input type="text" id="wordInput" placeholder="Nombre completo..." autocomplete="off">
+                            <button id="solveButton" class="secondary-btn">ENVIAR</button>
                         </div>
-
+                        <div id="hangman-suggestions" class="suggestions-box"></div>
                     </div>
-
-                    <div class="info-footer">
-
-                        <p>Vidas: <span id="lives">6</span></p>
-
-                    </div>
-
+                    <div class="info-footer">VIDAS: <span id="lives">6</span></div>
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="blur-screen" class="screen hidden">
-
             <nav class="game-nav">
-
-                <button onclick="backToCategory()" class="back-btn">← Volver</button>
-
-                <div class="score-board">Racha: <span id="blur-streak">0</span></div>
-
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">RACHA: <span id="blur-streak">0</span></div>
             </nav>
 
-
-
             <div class="blur-container">
-
                 <div class="image-box">
-
                     <img id="playerImg" src="" alt="Jugador">
-
                 </div>
-
-                
-
-                <div class="blur-controls">
-
-                    <div class="input-container">
-
-                        <div class="input-group">
-
-                            <input type="text" id="blurInput" placeholder="¿Quién es este jugador?" autocomplete="off">
-
-                            <button id="btnBlurCheck" class="secondary-btn">ENVIAR</button>
-
-                        </div>
-
-                        <div id="blur-suggestions" class="suggestions-box"></div>
-
+                <div class="input-container">
+                    <div class="input-group">
+                        <input type="text" id="blurInput" placeholder="¿Quién es?" autocomplete="off">
+                        <button id="btnBlurCheck" class="secondary-btn">ADIVINAR</button>
                     </div>
-
-                    <p>Intentos: <span id="blur-lives">5</span></p>
-
+                    <div id="blur-suggestions" class="suggestions-box"></div>
                 </div>
-
+                <div class="info-footer" style="color: var(--primary)">INTENTOS: <span id="blur-lives">5</span></div>
             </div>
-
         </div>
-
     </div>
-
     <script src="script.js"></script>
-
 </body>
-
 </html>
-
