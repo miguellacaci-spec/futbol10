@@ -154,7 +154,6 @@ function showCategory(category) {
             </div>
             <div class="menu-card blur-game-card" onclick="showGame('blur')">
                 <div class="card-bg-image"></div> <div class="card-info">
-                    <span class="icon">🖼️</span>
                     <h3>Blur Guess</h3>
                     <p>Adivina el jugador</p>
                 </div>
