@@ -152,12 +152,16 @@ function showCategory(category) {
                 <h3>Ahorcado</h3>
                 <p>Nivel Clásico</p>
             </div>
-            <div class="menu-card" onclick="showGame('blur')">
-                <span class="icon">🖼️</span>
-                <h3>Blur Guess</h3>
-                <p>Nivel Experto</p>
+            <div class="menu-card blur-game-card" onclick="showGame('blur')">
+                <div class="card-bg-image"></div> <div class="card-info">
+                    <span class="icon">🖼️</span>
+                    <h3>Blur Guess</h3>
+                    <p>Adivina el jugador</p>
+                </div>
             </div>`;
-    } else {
+    }
+    
+    else {
         title.innerHTML = category === 'premier' ? "PREMIER <span>LEAGUE</span>" : "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
     }
