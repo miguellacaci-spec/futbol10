@@ -99,7 +99,7 @@ body {
 
 /* Menú de Juegos de LaLiga */
 #category-games-grid .menu-card:nth-child(1) { background-image: url('players/hangman_preview.jpg'); }
-#category-games-grid .menu-card:nth-child(2) { background-image: url('players/blur_preview.jpg'); }
+#category-games-grid .menu-card:nth-child(2) { background-image: url('players/blur_laliga.jpg'); }
 
 /* --- AUTOCOMPLETADO --- */
 .input-container {
