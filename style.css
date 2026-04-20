@@ -242,3 +242,50 @@ input[type="text"]:focus {
     font-family: 'Orbitron', sans-serif;
     color: var(--error);
 }
+
+
+
+/* Tarjeta Blur Especial */
+.blur-game-card {
+    position: relative;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px; /* Un poco más alta para que luzca la foto */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* La foto JPG de fondo */
+.card-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* SUSTITUYE 'fondo-blur.jpg' POR EL NOMBRE DE TU ARCHIVO */
+    background-image: url('fondo-blur.jpg'); 
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px) brightness(0.4); /* Desenfoque y oscuridad */
+    transition: 0.5s ease;
+    z-index: 1;
+}
+
+/* El contenido (Texto e icono) */
+.card-info {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+/* Efecto al pasar el ratón por encima */
+.blur-game-card:hover .card-bg-image {
+    filter: blur(1px) brightness(0.6); /* Se enfoca y aclara un poco */
+    transform: scale(1.1); /* Zoom suave */
+}
+
+.blur-game-card:hover {
+    border-color: var(--primary);
+}
