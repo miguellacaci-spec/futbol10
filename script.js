@@ -148,7 +148,6 @@ function showCategory(category) {
         title.innerHTML = "LALIGA <span>EA SPORTS</span>";
         grid.innerHTML = `
             <div class="menu-card" onclick="showGame('hangman')">
-                <span class="icon">⚽</span>
                 <h3>Ahorcado</h3>
                 <p>Nivel Clásico</p>
             </div>
@@ -260,13 +259,13 @@ function solveFullWord() {
 
 function victory() {
     gameState.streak++;
-    alert("⚽ ¡GOLAZO! Era: " + gameState.word);
+    alert("¡LOKUURA! Era: " + gameState.word);
     initHangman();
 }
 
 function gameOver() {
     gameState.streak = 0;
-    alert("❌ ¡TARJETA ROJA! Era: " + gameState.word);
+    alert("¡TARJETA ROJA! Era: " + gameState.word);
     initHangman();
 }
 
