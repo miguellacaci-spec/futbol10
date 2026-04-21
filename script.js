@@ -369,16 +369,20 @@ function showMenu() {
 }
 
 function showCategory(category) {
-    currentCategory = category;
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    const catScreen = document.getElementById('category-screen');
-    const grid = document.getElementById('category-games-grid');
-    const title = document.getElementById('category-title');
-    
-    catScreen.classList.remove('hidden');
-    grid.innerHTML = "";
+    currentCategory = category;
+    // Ocultar todas las pantallas
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    
+    const catScreen = document.getElementById('category-screen');
+    const grid = document.getElementById('category-games-grid');
+    const title = document.getElementById('category-title');
+    
+    if (!catScreen || !grid) return; // Evita errores si no encuentra el div
 
-    if (category === 'laliga') {
+    catScreen.classList.remove('hidden');
+    grid.innerHTML = "";
+
+    if (category === 'laliga') {
         title.innerHTML = "LALIGA <span>EA SPORTS</span>";
         grid.innerHTML = `
             <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
@@ -394,16 +398,11 @@ function showCategory(category) {
                     <h3>Blur Guess</h3>
                     <p>Adivina el jugador</p>
                 </div>
-            </div>
-            <div class="menu-card coming-soon">
-                <span class="icon">📈</span>
-                <h3>Higher or Lower</h3>
-                <p>Próximamente</p>
             </div>`;
     } else {
-        title.innerHTML = category === 'premier' ? "PREMIER <span>LEAGUE</span>" : "LEYENDAS <span>FÚTBOL</span>";
-        grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
-    }
+        title.innerHTML = category === 'premier' ? "PREMIER <span>LEAGUE</span>" : "LEYENDAS <span>FÚTBOL</span>";
+        grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
+    }
 }
 
 function showGame(gameId) {
