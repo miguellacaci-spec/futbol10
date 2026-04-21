@@ -143,13 +143,17 @@ function showCategory(category) {
     
     catScreen.classList.remove('hidden');
     grid.innerHTML = "";
+
 function showCategory(category) {
     currentCategory = category;
+    // Ocultamos todas las pantallas
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    
     const catScreen = document.getElementById('category-screen');
     const grid = document.getElementById('category-games-grid');
     const title = document.getElementById('category-title');
     
+    // Mostramos la pantalla de categorías
     catScreen.classList.remove('hidden');
     grid.innerHTML = "";
 
@@ -170,13 +174,11 @@ function showCategory(category) {
                     <p>Adivina el jugador</p>
                 </div>
             </div>`;
-    }
-    else {
+    } else {
         title.innerHTML = category === 'premier' ? "PREMIER <span>LEAGUE</span>" : "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
     }
 }
-
 function showGame(gameId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
