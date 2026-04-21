@@ -445,27 +445,10 @@ input[type="text"]:focus {
 
 
 
-/* ESTILOS PARA FONDOS DE CATEGORÍAS */
+/* --- BLOQUE DE CATEGORÍAS CORREGIDO --- */
 
-/* Configuración común para todas las imágenes de fondo */
-.laliga-bg-image, .premier-bg-image, .leyendas-bg-image {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.3) blur(2px); /* Oscuro para que se lea el texto */
-    transition: 0.5s ease;
-    z-index: 1;
-}
-
-/* Rutas de las imágenes (Asegúrate de tenerlas en tu carpeta players/) */
-.laliga-bg-image { background-image: url('players/fondo-laliga.jpg'); }
-.premier-bg-image { background-image: url('players/fondo-premier.jpg'); }
-.leyendas-bg-image { background-image: url('players/fondo-leyendas.jpg'); }
-
-/* Estilo de la tarjeta para que contenga la imagen */
-.laliga-card, .premier-card, .leyendas-card {
+/* 1. Estilo de la tarjeta (el contenedor) */
+.laliga-card, .premier-card, .leyendas-card, .rosco-game-card {
     position: relative;
     padding: 0 !important;
     min-height: 220px;
@@ -474,19 +457,41 @@ input[type="text"]:focus {
     justify-content: center;
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer; /* Asegura que salga la mano al pasar el ratón */
 }
 
-/* Efecto Hover: Zoom y más luz */
+/* 2. Configuración de todas las imágenes de fondo */
+.laliga-bg-image, .premier-bg-image, .leyendas-bg-image, .rosco-bg-image {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3) blur(2px);
+    transition: 0.5s ease;
+    z-index: 1; /* Capa del fondo */
+    pointer-events: none; /* ESTO ARREGLA EL CLICK: El ratón atraviesa la imagen */
+}
+
+/* 3. Rutas de las imágenes */
+.laliga-bg-image { background-image: url('players/fondo-laliga.jpg'); }
+.premier-bg-image { background-image: url('players/fondo-premier.jpg'); }
+.leyendas-bg-image { background-image: url('players/fondo-leyendas.jpg'); }
+.rosco-bg-image { background-image: url('players/fondo-rosco.jpg'); }
+
+/* 4. Efecto Hover mejorado */
 .menu-card:hover .laliga-bg-image, 
 .menu-card:hover .premier-bg-image, 
-.menu-card:hover .leyendas-bg-image {
+.menu-card:hover .leyendas-bg-image,
+.menu-card:hover .rosco-bg-image {
     filter: brightness(0.5) blur(0px);
     transform: scale(1.1);
 }
 
-/* Forzar que el texto esté por encima de la foto */
+/* 5. El texto e iconos (capa superior) */
 .card-info {
     position: relative;
-    z-index: 2;
-    pointer-events: none;
+    z-index: 2; /* Por encima de la imagen */
+    pointer-events: none; /* El texto tampoco debe bloquear el click */
+    text-align: center;
 }
