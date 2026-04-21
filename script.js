@@ -339,6 +339,25 @@ const roscoQuestions = [
         ]
     }
 ];
+
+function obtenerRoscoAleatorio(preguntas) {
+    return preguntas.map(item => {
+        // Elegimos un índice al azar entre 0 y el total de preguntas de esa letra
+        const indiceAleatorio = Math.floor(Math.random() * item.preguntas.length);
+        const seleccionada = item.preguntas[indiceAleatorio];
+        
+        return {
+            letra: item.letra,
+            respuesta: seleccionada.respuesta,
+            hint: seleccionada.hint
+        };
+    });
+}
+
+// Para usarlo:
+const partidaActual = obtenerRoscoAleatorio(roscoQuestions);
+console.log(partidaActual); // Esto te devuelve un array con 27 preguntas elegidas al azar
+
 let roscoState = { currentIndex: 0, results: {}, timeLeft: 150, timer: null };
 
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
