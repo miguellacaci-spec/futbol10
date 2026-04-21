@@ -500,15 +500,16 @@ function solveFullWord() {
 }
 
 function victory() {
-    gameState.streak++;
-    alert("¡LOKUURA! Era: " + gameState.word);
-    initHangman();
+    gameState.streak++;
+    mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => {
+        initHangman();
+    });
 }
-
 function gameOver() {
-    gameState.streak = 0;
-    alert("¡TARJETA ROJA! Era: " + gameState.word);
-    initHangman();
+    gameState.streak = 0;
+    mostrarMensajePro("🧤 ¡Vaya!", "Era: " + gameState.word, () => {
+        initHangman();
+    });
 }
 
 function drawCanvas(step) {
@@ -546,29 +547,35 @@ function initBlurGame() {
 }
 
 function checkBlurGuess() {
-    const input = document.getElementById('blurInput');
-    const val = input.value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (nVal === nPlayer && nVal !== "") {
-        blurState.streak++;
-        document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => { alert("🔥 ¡BRUTAL! Es " + blurState.player); initBlurGame(); }, 300);
-    } else {
-        blurState.lives--;
-        blurState.blur -= 6;
-        if (blurState.lives <= 0) {
-            blurState.streak = 0;
-            document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => { alert("🧤 ¡PARADÓN! Era " + blurState.player); initBlurGame(); }, 300);
-        } else {
-            document.getElementById('blur-lives').innerText = blurState.lives;
-            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
-            input.value = "";
-        }
-    }
+    const input = document.getElementById('blurInput');
+    const val = input.value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nPlayer && nVal !== "") {
+        blurState.streak++;
+        document.getElementById('playerImg').style.filter = "blur(0px)";
+        // CAMBIO AQUÍ:
+        setTimeout(() => { 
+            mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => { initBlurGame(); }); 
+        }, 300);
+    } else {
+        blurState.lives--;
+        blurState.blur -= 6;
+        if (blurState.lives <= 0) {
+            blurState.streak = 0;
+            document.getElementById('playerImg').style.filter = "blur(0px)";
+            // CAMBIO AQUÍ:
+            setTimeout(() => { 
+                mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => { initBlurGame(); }); 
+            }, 300);
+        } else {
+            document.getElementById('blur-lives').innerText = blurState.lives;
+            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
+            input.value = "";
+        }
+    }
 }
-
 setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
 
@@ -675,10 +682,11 @@ function pasapalabra() {
 }
 
 function endRosco(msg) {
-    clearInterval(roscoState.timer);
-    let aciertos = Object.values(roscoState.results).filter(r => r === 'correct').length;
-    alert(msg + "\nAciertos: " + aciertos);
-    showMenu();
+    clearInterval(roscoState.timer);
+    let aciertos = Object.values(roscoState.results).filter(r => r === 'correct').length;
+    mostrarMensajePro("FIN DEL JUEGO", msg + "\nAciertos: " + aciertos, () => {
+        showMenu();
+    });
 }
 
 // CORRECCIÓN 7: Función global para salir y limpiar el timer
@@ -690,3 +698,18 @@ function salirDelRosco() {
 // Asignar botones nuevos
 document.getElementById('btnRoscoCheck').onclick = checkRosco;
 document.getElementById('btnPasapalabra').onclick = pasapalabra;
+
+
+// FUNCIÓN PARA MOSTRAR EL MODAL PROFESIONAL
+function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
+    const modal = document.getElementById('custom-modal');
+    document.getElementById('modal-title').innerText = titulo;
+    document.getElementById('modal-message').innerText = mensaje;
+    
+    modal.classList.remove('hidden');
+
+    document.getElementById('modal-btn').onclick = () => {
+        modal.classList.add('hidden');
+        if (accionAlCerrar) accionAlCerrar();
+    };
+}
