@@ -125,23 +125,23 @@ const roscoQuestions = [
     {
         letra: "A",
         preguntas: [
-            { respuesta: "ALABA", hint: "Defensa austriaco del Real Madrid" },
-            { respuesta: "ANSU FATI", hint: "Joven delantero del Barça que heredó el 10 de Messi" },
-            { respuesta: "ARDA GULER", hint: "Perla turca fichada por el Real Madrid en 2023" }
+            { respuesta: "ANCELOTTI", hint: "Nombre del único entrenador en ganar las 5 grandes ligas." },
+            { respuesta: "ANSU FATI", hint: "Nombre y apellido del jugador del Brighton que en el Barça heredó el 10 de Messi" },
+            { respuesta: "ARDA GULER", hint: "Nombre y apellido del jugador más caro de la selección de Turquía" }
         ]
     },
     {
         letra: "B",
         preguntas: [
-            { respuesta: "BETIS", hint: "Equipo sevillano del Benito Villamarín" },
-            { respuesta: "BELLINGHAM", hint: "Estrella inglesa que llegó al Madrid desde el Dortmund" },
-            { respuesta: "BENZEMA", hint: "Ganador del Balón de Oro 2022 y leyenda blanca" }
+            { respuesta: "BETIS", hint: "Equipo sevillano que ganó LaLiga en 1934/1935" },
+            { respuesta: "BELLINGHAM", hint: "Nombre del jugador ingles del Madrid proveniente del Dortmund" },
+            { respuesta: "BENZEMA", hint: "Ganador del Balón de Oro 2022" }
         ]
     },
     {
         letra: "C",
         preguntas: [
-            { respuesta: "COURTOIS", hint: "Portero belga del Real Madrid" },
+            { respuesta: "COURTOIS", hint: "Apellido del MVP en la final de la Champions en 2021/2022." },
             { respuesta: "CADIZ", hint: "Equipo andaluz conocido como el 'Submarino Amarillo'" },
             { respuesta: "CARVAJAL", hint: "Lateral derecho eterno de la selección y el Real Madrid" }
         ]
@@ -150,7 +150,7 @@ const roscoQuestions = [
         letra: "D",
         preguntas: [
             { respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" },
-            { respuesta: "DE PAUL", hint: "Motor argentino del centro del campo del Atlético" },
+            { respuesta: "DE PAUL", hint: "Apellido del jugador argentino que juega con Messi en el Inter de Miami." },
             { respuesta: "DE BRUYNE", hint: "Genio belga del Manchester City" }
         ]
     },
@@ -174,8 +174,8 @@ const roscoQuestions = [
         letra: "G",
         preguntas: [
             { respuesta: "GAVI", hint: "Intenso centrocampista canterano del FC Barcelona" },
-            { respuesta: "GRIEZMANN", hint: "Máximo goleador histórico del Atlético de Madrid" },
-            { respuesta: "GIRONA", hint: "Equipo revelación de la Liga 2023/2024" }
+            { respuesta: "GRIEZMANN", hint: "Apellido del máximo goleador histórico del Atlético de Madrid." },
+            { respuesta: "GIRONA", hint: "Equipo revelación de LaLiga en la 2023/2024." }
         ]
     },
     {
@@ -199,7 +199,7 @@ const roscoQuestions = [
         preguntas: [
             { respuesta: "JOAQUIN", hint: "Leyenda del Betis conocida por su arte y fintas" },
             { respuesta: "JOAO FELIX", hint: "Talentoso mediapunta portugués" },
-            { respuesta: "JUVENTUS", hint: "La 'Vecchia Signora' del fútbol italiano" }
+            { respuesta: "JUVENTUS", hint: "La 'Vecchia Signora' del fútbol italiano." }
         ]
     },
     {
@@ -237,7 +237,7 @@ const roscoQuestions = [
     {
         letra: "Ñ",
         preguntas: [
-            { respuesta: "ESPAÑA", hint: "Contiene la Ñ: Campeona de la Eurocopa 2024" },
+            { respuesta: "ESPAÑA", hint: "Contiene la Ñ: Campeona de la Eurocopa del 2024." },
             { respuesta: "CAICEDO", hint: "Contiene la Ñ: Delantero ecuatoriano ex del Espanyol" },
             { respuesta: "REGINO", hint: "Contiene la Ñ: Apellido de un canterano o jugador clásico" }
         ]
@@ -262,7 +262,7 @@ const roscoQuestions = [
         letra: "Q",
         preguntas: [
             { respuesta: "QUINI", hint: "Mítico delantero asturiano de Sporting y Barça" },
-            { respuesta: "QUERETARO", hint: "Club mexicano donde jugó Ronaldinho" },
+            { respuesta: "QUERETARO", hint: "Club mexicano donde jugó Ronaldinho." },
             { respuesta: "QUATTRINI", hint: "Apellido de algún jugador clásico del calcio" }
         ]
     },
@@ -310,7 +310,7 @@ const roscoQuestions = [
         letra: "W",
         preguntas: [
             { respuesta: "WIRTZ", hint: "Joven estrella alemana del Leverkusen" },
-            { respuesta: "WOLVERHAMPTON", hint: "Equipo inglés con un lobo en el escudo" },
+            { respuesta: "WOLVERHAMPTON", hint: "Primer equipo de las 5 grandes ligas que descendió en la temporada 2025/2026." },
             { respuesta: "WALKER", hint: "Lateral derecho velocísimo del Manchester City" }
         ]
     },
@@ -325,17 +325,17 @@ const roscoQuestions = [
     {
         letra: "Y",
         preguntas: [
-            { respuesta: "YASHIN", hint: "La 'Araña Negra', único portero con Balón de Oro" },
-            { respuesta: "YAMAL", hint: "Apellido de la joven estrella Lamine" },
+            { respuesta: "YASHIN", hint: "Apellido del único portero con un Balón de Oro." },
+            { respuesta: "YAMAL", hint: "Apellido del ganador del trofeo Kopa en la temporada 2023/2024 y 2024/2025." },
             { respuesta: "YESTE", hint: "Mítico zurdo del Athletic Club" }
         ]
     },
     {
         letra: "Z",
         preguntas: [
-            { respuesta: "ZIDANE", hint: "Genio francés, marcó de volea en la Novena" },
+            { respuesta: "ZIDANE", hint: "Apellido del jugador que marcó de volea en la final de la Champions del 2002." },
             { respuesta: "ZUBIMENDI", hint: "Elegante mediocentro de la Real Sociedad" },
-            { respuesta: "ZAMORA", hint: "Trofeo al portero menos goleado de la Liga" }
+            { respuesta: "ZAMORA", hint: "Trofeo al portero menos goleado de LaLiga." }
         ]
     }
 ];
