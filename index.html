@@ -12,35 +12,40 @@
     <div id="app">
         <div id="menu-screen" class="screen">
             <h1 class="logo">Futbol<span>10</span></h1>
+            
             <div class="menu-grid">
-
-                
-                <div class="menu-card rosco-game-card" onclick="showGame('rosco')">
-                    <div class="rosco-bg-image"></div>
-                    <div class="card-info">
-                        <h3>El Rosco</h3>
-                        <p>Desafío Futbol10</p>
-                    </div>
-                </div>
-                <div class="menu-card" onclick="showCategory('laliga')">
-                    <span class="icon">🇪🇸</span>
-                    <h3>LaLiga</h3>
-                    <p>Minijuegos de Laliga EA Sports</p>
-                </div>
-                
-                <div class="menu-card" onclick="showCategory('premier')">
-                    <span class="icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
-                    <h3>Premier</h3>
-                    <p>Minijuegos de Premier League</p>
-                </div>
-                
-                <div class="menu-card" onclick="showCategory('leyendas')">
-                    <span class="icon">🏆</span>
-                    <h3>Leyendas</h3>
-                    <p>Minijuegos de Iconos</p>
-                </div>
-            </div>
+    <div class="menu-card rosco-game-card" onclick="showGame('rosco')">
+        <div class="rosco-bg-image"></div>
+        <div class="card-info">
+            <h3>El Rosco</h3>
+            <p>Desafío Futbol10</p>
         </div>
+    </div>
+
+    <div class="menu-card laliga-card" onclick="showCategory('laliga')">
+        <div class="laliga-bg-image"></div>
+        <div class="card-info">
+            <h3>LaLiga</h3>
+            <p>Minijuegos EA Sports</p>
+        </div>
+    </div>
+    
+    <div class="menu-card premier-card" onclick="showCategory('premier')">
+        <div class="premier-bg-image"></div>
+        <div class="card-info">
+            <h3>Premier</h3>
+            <p>Minijuegos League</p>
+        </div>
+    </div>
+    
+    <div class="menu-card leyendas-card" onclick="showCategory('leyendas')">
+        <div class="leyendas-bg-image"></div>
+        <div class="card-info">
+            <h3>Leyendas</h3>
+            <p>Minijuegos de Iconos</p>
+        </div>
+    </div>
+</div>
 
         <div id="category-screen" class="screen hidden">
             <nav class="game-nav">
