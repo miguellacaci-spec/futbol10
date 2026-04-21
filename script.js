@@ -395,7 +395,7 @@ function showCategory(category) {
                     <p>Adivina el jugador</p>
                 </div>
             </div>
-            <div class="menu-card coming-soon" style="grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 300px;">
+            <div class="menu-card coming-soon">
                 <span class="icon">📈</span>
                 <h3>Higher or Lower</h3>
                 <p>Próximamente</p>
