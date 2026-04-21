@@ -117,12 +117,18 @@ const players = [
     // 20. Real Oviedo
 
     "ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER"
-
-
-
-    
-
 ];
+
+const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+const roscoQuestions = [
+    { letra: "A", respuesta: "ALABA", hint: "Defensa austriaco del Real Madrid" },
+    { letra: "B", respuesta: "BETIS", hint: "Equipo sevillano del Benito Villamarín" },
+    { letra: "C", respuesta: "COURTOIS", hint: "Portero belga del Real Madrid" },
+    { letra: "D", respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" }
+    // ... Sigue el patrón para el resto de letras
+];
+
+let roscoState = { currentIndex: 0, results: {}, timeLeft: 150, timer: null };
 
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
@@ -172,6 +178,7 @@ function showGame(gameId) {
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
     if(gameId === 'hangman') initHangman();
     if(gameId === 'blur') initBlurGame();
+    if(gameId === 'rosco') initRosco(); 
 }
 
 function backToCategory() { showCategory(currentCategory); }
@@ -347,3 +354,92 @@ document.addEventListener('keydown', (e) => {
 
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
+
+function initRosco() {
+    const circle = document.getElementById('rosco-circle');
+    circle.innerHTML = "";
+    roscoState = { currentIndex: 0, results: {}, timeLeft: 150, timer: null };
+    
+    roscoAlphabet.forEach((letra, i) => {
+        const div = document.createElement('div');
+        div.className = 'rosco-letter';
+        div.id = `letra-${letra}`;
+        div.textContent = letra;
+        const angle = (i * 360 / roscoAlphabet.length) - 90;
+        const radius = window.innerWidth < 600 ? 140 : 220;
+        const x = Math.cos(angle * Math.PI / 180) * radius;
+        const y = Math.sin(angle * Math.PI / 180) * radius;
+        div.style.left = `calc(50% + ${x}px)`;
+        div.style.top = `calc(50% + ${y}px)`;
+        circle.appendChild(div);
+    });
+
+    startRoscoTimer();
+    updateRoscoTurn();
+}
+
+function startRoscoTimer() {
+    roscoState.timer = setInterval(() => {
+        roscoState.timeLeft--;
+        document.getElementById('rosco-timer').textContent = roscoState.timeLeft;
+        if(roscoState.timeLeft <= 0) endRosco("¡TIEMPO AGOTADO!");
+    }, 1000);
+}
+
+function updateRoscoTurn() {
+    let pending = false;
+    for(let i=0; i < roscoAlphabet.length; i++) {
+        let idx = (roscoState.currentIndex + i) % roscoAlphabet.length;
+        if(!roscoState.results[roscoAlphabet[idx]]) {
+            roscoState.currentIndex = idx;
+            pending = true;
+            break;
+        }
+    }
+    if(!pending) return endRosco("¡ROSCO COMPLETADO!");
+
+    const q = roscoQuestions[roscoState.currentIndex] || {letra: "?", hint: "Falta pregunta"};
+    document.querySelectorAll('.rosco-letter').forEach(l => l.classList.remove('current'));
+    document.getElementById(`letra-${q.letra}`).classList.add('current');
+    document.getElementById('rosco-letter-hint').textContent = q.letra;
+    document.getElementById('rosco-definition').textContent = q.hint;
+    document.getElementById('roscoInput').value = "";
+    document.getElementById('roscoInput').focus();
+}
+
+function checkRosco() {
+    const val = document.getElementById('roscoInput').value.toUpperCase().trim();
+    if(!val) return;
+    const q = roscoQuestions[roscoState.currentIndex];
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nAns = q.respuesta.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    if(nVal === nAns) {
+        roscoState.results[q.letra] = 'correct';
+        document.getElementById(`letra-${q.letra}`).classList.add('correct');
+    } else {
+        roscoState.results[q.letra] = 'wrong';
+        document.getElementById(`letra-${q.letra}`).classList.add('wrong');
+    }
+    updateRoscoTurn();
+}
+
+function pasapalabra() {
+    roscoState.currentIndex = (roscoState.currentIndex + 1) % roscoAlphabet.length;
+    updateRoscoTurn();
+}
+
+function endRosco(msg) {
+    clearInterval(roscoState.timer);
+    let aciertos = Object.values(roscoState.results).filter(r => r === 'correct').length;
+    alert(msg + "\nAciertos: " + aciertos);
+    showMenu();
+}
+
+// Asignar botones nuevos
+document.getElementById('btnRoscoCheck').onclick = checkRosco;
+document.getElementById('btnPasapalabra').onclick = pasapalabra;
+
+// Añadir Enter para el input del rosco en tu EventListener de teclado
+// Dentro de tu document.addEventListener('keydown'... busca los Enter y añade:
+// if (document.activeElement.id === 'roscoInput') checkRosco();
