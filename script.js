@@ -407,11 +407,16 @@ function showCategory(category) {
 }
 
 function showGame(gameId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(`${gameId}-screen`).classList.remove('hidden');
-    if(gameId === 'hangman') initHangman();
-    if(gameId === 'blur') initBlurGame();
-    if(gameId === 'rosco') initRosco(); 
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    const target = document.getElementById(`${gameId}-screen`);
+    if(target) {
+        target.classList.remove('hidden');
+        
+        // Ejecutamos la lógica según el juego
+        if(gameId === 'hangman') initHangman();
+        if(gameId === 'blur') initBlurGame();
+        if(gameId === 'rosco') setTimeout(initRosco, 50); // El retraso evita fallos visuales
+    }
 }
 
 function backToCategory() { showCategory(currentCategory); }
