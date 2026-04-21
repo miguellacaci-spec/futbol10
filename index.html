@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div id="blur-screen" class="screen hidden">
+<div id="blur-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="blur-streak">0</span></div>
@@ -96,7 +96,25 @@
                 <div class="info-footer" style="color: var(--primary)">INTENTOS: <span id="blur-lives">5</span></div>
             </div>
         </div>
-    </div>
-    <script src="script.js"></script>
+
+        <div id="rosco-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← SALIR</button>
+                <div class="score-board">TIEMPO: <span id="rosco-timer">150</span></div>
+            </nav>
+            <div class="rosco-wrapper">
+                <div id="rosco-circle" class="rosco-circle"></div>
+                <div class="rosco-content">
+                    <h2 id="rosco-letter-hint">A</h2>
+                    <p id="rosco-definition">Cargando definición...</p>
+                    <input type="text" id="roscoInput" placeholder="Respuesta..." autocomplete="off">
+                    <div class="rosco-actions">
+                        <button id="btnRoscoCheck" class="secondary-btn">ENVIAR</button>
+                        <button id="btnPasapalabra" class="back-btn">PASAPALABRA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <script src="script.js"></script>
 </body>
 </html>
