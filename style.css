@@ -289,3 +289,35 @@ input[type="text"]:focus {
 .blur-game-card:hover {
     border-color: var(--primary);
 }
+
+/* Tarjeta Ahorcado Especial */
+.hangman-game-card {
+    position: relative;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Foto de fondo para Ahorcado */
+.hangman-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('players/fondo-ahorcado.jpg'); /* Asegúrate de que el nombre coincida */
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4); 
+    transition: 0.5s ease;
+    z-index: 1;
+}
+
+.hangman-game-card:hover .hangman-bg-image {
+    filter: brightness(0.6);
+    transform: scale(1.1);
+}
