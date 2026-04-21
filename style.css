@@ -243,8 +243,6 @@ input[type="text"]:focus {
     color: var(--error);
 }
 
-
-
 /* Tarjeta Blur Especial */
 .blur-game-card {
     position: relative;
@@ -253,7 +251,7 @@ input[type="text"]:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 200px; /* Un poco más alta para que luzca la foto */
+    min-height: 200px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -264,11 +262,10 @@ input[type="text"]:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    /* SUSTITUYE 'fondo-blur.jpg' POR EL NOMBRE DE TU ARCHIVO */
     background-image: url('players/fondo-blur.jpg'); 
     background-size: cover;
     background-position: center;
-    filter: blur(4px) brightness(0.4); /* Desenfoque y oscuridad */
+    filter: blur(4px) brightness(0.4);
     transition: 0.5s ease;
     z-index: 1;
 }
@@ -282,8 +279,8 @@ input[type="text"]:focus {
 
 /* Efecto al pasar el ratón por encima */
 .blur-game-card:hover .card-bg-image {
-    filter: blur(1px) brightness(0.6); /* Se enfoca y aclara un poco */
-    transform: scale(1.1); /* Zoom suave */
+    filter: blur(1px) brightness(0.6);
+    transform: scale(1.1);
 }
 
 .blur-game-card:hover {
@@ -309,7 +306,7 @@ input[type="text"]:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('players/fondo-ahorcado.jpg'); /* Asegúrate de que el nombre coincida */
+    background-image: url('players/fondo-ahorcado.jpg');
     background-size: cover;
     background-position: center;
     filter: brightness(0.4); 
@@ -320,4 +317,11 @@ input[type="text"]:focus {
 .hangman-game-card:hover .hangman-bg-image {
     filter: brightness(0.6);
     transform: scale(1.1);
+}
+
+/* --- ARREGLO PARA QUE TE DEJE CLICAR --- */
+.card-bg-image, 
+.hangman-bg-image, 
+.card-info {
+    pointer-events: none;
 }
