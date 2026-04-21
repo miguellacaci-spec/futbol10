@@ -144,19 +144,6 @@ function showCategory(category) {
     catScreen.classList.remove('hidden');
     grid.innerHTML = "";
 
-function showCategory(category) {
-    currentCategory = category;
-    // Ocultamos todas las pantallas
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    
-    const catScreen = document.getElementById('category-screen');
-    const grid = document.getElementById('category-games-grid');
-    const title = document.getElementById('category-title');
-    
-    // Mostramos la pantalla de categorías
-    catScreen.classList.remove('hidden');
-    grid.innerHTML = "";
-
     if (category === 'laliga') {
         title.innerHTML = "LALIGA <span>EA SPORTS</span>";
         grid.innerHTML = `
@@ -179,6 +166,7 @@ function showCategory(category) {
         grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
     }
 }
+
 function showGame(gameId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(`${gameId}-screen`).classList.remove('hidden');
@@ -343,5 +331,19 @@ function checkBlurGuess() {
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
+
+// CONTROL DE TECLADO FÍSICO
+document.addEventListener('keydown', (e) => {
+    const isTyping = document.activeElement.tagName === 'INPUT';
+    if (!isTyping && !document.getElementById('hangman-screen').classList.contains('hidden')) {
+        const key = e.key.toUpperCase();
+        if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
+    }
+    if (e.key === 'Enter') {
+        if (document.activeElement.id === 'wordInput') solveFullWord();
+        if (document.activeElement.id === 'blurInput') checkBlurGuess();
+    }
+});
+
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
