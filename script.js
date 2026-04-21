@@ -120,14 +120,225 @@ const players = [
 ];
 
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
-const roscoQuestions = [
-    { letra: "A", respuesta: "ALABA", hint: "Defensa austriaco del Real Madrid" },
-    { letra: "B", respuesta: "BETIS", hint: "Equipo sevillano del Benito Villamarín" },
-    { letra: "C", respuesta: "COURTOIS", hint: "Portero belga del Real Madrid" },
-    { letra: "D", respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" }
-    // ... Sigue el patrón para el resto de letras
-];
 
+const roscoQuestions = [
+    {
+        letra: "A",
+        preguntas: [
+            { respuesta: "ALABA", hint: "Defensa austriaco del Real Madrid" },
+            { respuesta: "ANSU FATI", hint: "Joven delantero del Barça que heredó el 10 de Messi" },
+            { respuesta: "ARDA GULER", hint: "Perla turca fichada por el Real Madrid en 2023" }
+        ]
+    },
+    {
+        letra: "B",
+        preguntas: [
+            { respuesta: "BETIS", hint: "Equipo sevillano del Benito Villamarín" },
+            { respuesta: "BELLINGHAM", hint: "Estrella inglesa que llegó al Madrid desde el Dortmund" },
+            { respuesta: "BENZEMA", hint: "Ganador del Balón de Oro 2022 y leyenda blanca" }
+        ]
+    },
+    {
+        letra: "C",
+        preguntas: [
+            { respuesta: "COURTOIS", hint: "Portero belga del Real Madrid" },
+            { respuesta: "CADIZ", hint: "Equipo andaluz conocido como el 'Submarino Amarillo'" },
+            { respuesta: "CARVAJAL", hint: "Lateral derecho eterno de la selección y el Real Madrid" }
+        ]
+    },
+    {
+        letra: "D",
+        preguntas: [
+            { respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" },
+            { respuesta: "DE PAUL", hint: "Motor argentino del centro del campo del Atlético" },
+            { respuesta: "DE BRUYNE", hint: "Genio belga del Manchester City" }
+        ]
+    },
+    {
+        letra: "E",
+        preguntas: [
+            { respuesta: "ENDRICK", hint: "Joven promesa brasileña fichada por el Real Madrid" },
+            { respuesta: "EMPOLI", hint: "Equipo modesto de la Serie A italiana" },
+            { respuesta: "ETO'O", hint: "Legendario delantero camerunés del Barça e Inter" }
+        ]
+    },
+    {
+        letra: "F",
+        preguntas: [
+            { respuesta: "FORLAN", hint: "Delantero uruguayo que brilló en el Atlético y Villarreal" },
+            { respuesta: "FALCAO", hint: "El 'Tigre' que goleó en el Atleti y Rayo Vallecano" },
+            { respuesta: "FEYENOORD", hint: "Histórico equipo de los Países Bajos (Rotterdam)" }
+        ]
+    },
+    {
+        letra: "G",
+        preguntas: [
+            { respuesta: "GAVI", hint: "Intenso centrocampista canterano del FC Barcelona" },
+            { respuesta: "GRIEZMANN", hint: "Máximo goleador histórico del Atlético de Madrid" },
+            { respuesta: "GIRONA", hint: "Equipo revelación de la Liga 2023/2024" }
+        ]
+    },
+    {
+        letra: "H",
+        preguntas: [
+            { respuesta: "HAALAND", hint: "El 'Androide' noruego del Manchester City" },
+            { respuesta: "HULK", hint: "Delantero brasileño famoso por su potencia física" },
+            { respuesta: "HERNANDEZ", hint: "Apellido de los hermanos Lucas y Theo" }
+        ]
+    },
+    {
+        letra: "I",
+        preguntas: [
+            { respuesta: "ISCO", hint: "Magia malagueña que ahora brilla en el Betis" },
+            { respuesta: "INIESTA", hint: "Autor del gol que nos dio el Mundial 2010" },
+            { respuesta: "INTER", hint: "Club italiano que viste de 'nerazzurro'" }
+        ]
+    },
+    {
+        letra: "J",
+        preguntas: [
+            { respuesta: "JOAQUIN", hint: "Leyenda del Betis conocida por su arte y fintas" },
+            { respuesta: "JOAO FELIX", hint: "Talentoso mediapunta portugués" },
+            { respuesta: "JUVENTUS", hint: "La 'Vecchia Signora' del fútbol italiano" }
+        ]
+    },
+    {
+        letra: "K",
+        preguntas: [
+            { respuesta: "KROOS", hint: "El 'Metrónomo' alemán retirado en 2024" },
+            { respuesta: "KANE", hint: "Goleador inglés que se marchó al Bayern" },
+            { respuesta: "KUN AGUERO", hint: "Histórico 10 del City que tuvo que retirarse en el Barça" }
+        ]
+    },
+    {
+        letra: "L",
+        preguntas: [
+            { respuesta: "LEWANDOWSKI", hint: "Bota de Oro polaca y 9 del Barça" },
+            { respuesta: "LIVERPOOL", hint: "Club inglés que nunca camina solo" },
+            { respuesta: "LAMINE YAMAL", hint: "El adolescente récord del Barça y la Selección" }
+        ]
+    },
+    {
+        letra: "M",
+        preguntas: [
+            { respuesta: "MESSI", hint: "Para muchos, el mejor jugador de la historia" },
+            { respuesta: "MODRIC", hint: "El eterno 10 croata del Real Madrid" },
+            { respuesta: "MBAPPE", hint: "La gran estrella francesa que llegó al Bernabéu" }
+        ]
+    },
+    {
+        letra: "N",
+        preguntas: [
+            { respuesta: "NEYMAR", hint: "Magia brasileña, ex del Santos, Barça y PSG" },
+            { respuesta: "NAPOLES", hint: "Club donde Maradona es un Dios" },
+            { respuesta: "NICO WILLIAMS", hint: "Extremo veloz del Athletic y héroe de la Eurocopa" }
+        ]
+    },
+    {
+        letra: "Ñ",
+        preguntas: [
+            { respuesta: "ESPAÑA", hint: "Contiene la Ñ: Campeona de la Eurocopa 2024" },
+            { respuesta: "CAICEDO", hint: "Contiene la Ñ: Delantero ecuatoriano ex del Espanyol" },
+            { respuesta: "REGINO", hint: "Contiene la Ñ: Apellido de un canterano o jugador clásico" }
+        ]
+    },
+    {
+        letra: "O",
+        preguntas: [
+            { respuesta: "OBLAK", hint: "Muro esloveno bajo los palos del Atlético" },
+            { respuesta: "OSASUNA", hint: "Equipo que juega en el Sadar" },
+            { respuesta: "ODEGAARD", hint: "Capitán del Arsenal con pasado madridista" }
+        ]
+    },
+    {
+        letra: "P",
+        preguntas: [
+            { respuesta: "PEDRI", hint: "El canario que pone la pausa en el Camp Nou" },
+            { respuesta: "PELE", hint: "O Rei del fútbol brasileño" },
+            { respuesta: "PULISIC", hint: "El 'Capitán América' del AC Milan" }
+        ]
+    },
+    {
+        letra: "Q",
+        preguntas: [
+            { respuesta: "QUINI", hint: "Mítico delantero asturiano de Sporting y Barça" },
+            { respuesta: "QUERETARO", hint: "Club mexicano donde jugó Ronaldinho" },
+            { respuesta: "QUATTRINI", hint: "Apellido de algún jugador clásico del calcio" }
+        ]
+    },
+    {
+        letra: "R",
+        preguntas: [
+            { respuesta: "RONALDO", hint: "El 'Fenómeno' brasileño" },
+            { respuesta: "RAUL", hint: "El eterno capitán del Real Madrid" },
+            { respuesta: "RODRYGO", hint: "Rayo brasileño del ataque blanco" }
+        ]
+    },
+    {
+        letra: "S",
+        preguntas: [
+            { respuesta: "SIMEONE", hint: "El 'Cholo', alma del banquillo atlético" },
+            { respuesta: "SUAREZ", hint: "El 'Pistolero' uruguayo ex del Barça y Atleti" },
+            { respuesta: "SALAH", hint: "El 'Faraón' del Liverpool" }
+        ]
+    },
+    {
+        letra: "T",
+        preguntas: [
+            { respuesta: "TER STEGEN", hint: "Portero alemán del FC Barcelona" },
+            { respuesta: "TOTTENHAM", hint: "Club de Londres que juega en un estadio futurista" },
+            { respuesta: "TCHOUAMENI", hint: "Pivote francés de gran despliegue físico del Madrid" }
+        ]
+    },
+    {
+        letra: "U",
+        preguntas: [
+            { respuesta: "UDINESE", hint: "Club italiano de la ciudad de Udine" },
+            { respuesta: "UMTITI", hint: "Central francés que fue campeón del mundo en 2018" },
+            { respuesta: "UNAI SIMON", hint: "Portero titular de la Selección Española" }
+        ]
+    },
+    {
+        letra: "V",
+        preguntas: [
+            { respuesta: "VINICIUS", hint: "Extremo brasileño, candidato al Balón de Oro" },
+            { respuesta: "VALENCIA", hint: "Equipo que juega en Mestalla" },
+            { respuesta: "VILLARREAL", hint: "El equipo del 'Submarino Amarillo' de Castellón" }
+        ]
+    },
+    {
+        letra: "W",
+        preguntas: [
+            { respuesta: "WIRTZ", hint: "Joven estrella alemana del Leverkusen" },
+            { respuesta: "WOLVERHAMPTON", hint: "Equipo inglés con un lobo en el escudo" },
+            { respuesta: "WALKER", hint: "Lateral derecho velocísimo del Manchester City" }
+        ]
+    },
+    {
+        letra: "X",
+        preguntas: [
+            { respuesta: "XAVI", hint: "Maestro del mediocampo y ex-entrenador del Barça" },
+            { respuesta: "XHAKA", hint: "Líder suizo del centro del campo" },
+            { respuesta: "XABI ALONSO", hint: "Entrenador de moda que hizo historia con el Leverkusen" }
+        ]
+    },
+    {
+        letra: "Y",
+        preguntas: [
+            { respuesta: "YASHIN", hint: "La 'Araña Negra', único portero con Balón de Oro" },
+            { respuesta: "YAMAL", hint: "Apellido de la joven estrella Lamine" },
+            { respuesta: "YESTE", hint: "Mítico zurdo del Athletic Club" }
+        ]
+    },
+    {
+        letra: "Z",
+        preguntas: [
+            { respuesta: "ZIDANE", hint: "Genio francés, marcó de volea en la Novena" },
+            { respuesta: "ZUBIMENDI", hint: "Elegante mediocentro de la Real Sociedad" },
+            { respuesta: "ZAMORA", hint: "Trofeo al portero menos goleado de la Liga" }
+        ]
+    }
+];
 let roscoState = { currentIndex: 0, results: {}, timeLeft: 150, timer: null };
 
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
