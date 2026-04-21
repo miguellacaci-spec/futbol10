@@ -325,3 +325,40 @@ input[type="text"]:focus {
 .card-info {
     pointer-events: none;
 }
+/* --- ESTILOS DEL ROSCO --- */
+.rosco-game-card {
+    position: relative; padding: 0 !important; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; min-height: 200px;
+    border: 1px solid var(--secondary);
+}
+.rosco-bg-image {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(45deg, #121821, var(--secondary));
+    opacity: 0.6; z-index: 1;
+}
+
+.rosco-wrapper {
+    position: relative; width: 500px; height: 500px;
+    display: flex; align-items: center; justify-content: center; margin-top: 40px;
+}
+.rosco-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; }
+
+.rosco-letter {
+    position: absolute; width: 40px; height: 40px; background: #0044cc;
+    border: 2px solid white; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-weight: bold;
+    color: white; transform: translate(-50%, -50%); transition: 0.3s;
+}
+.rosco-letter.current { background: white; color: #0044cc; box-shadow: 0 0 20px white; scale: 1.2; z-index: 10; }
+.rosco-letter.correct { background: var(--primary); }
+.rosco-letter.wrong { background: var(--error); }
+
+.rosco-content { text-align: center; z-index: 5; max-width: 300px; }
+#rosco-letter-hint { font-size: 4rem; color: var(--primary); margin: 0; font-family: 'Orbitron'; }
+#rosco-definition { font-size: 1.2rem; margin-bottom: 20px; min-height: 60px; }
+.rosco-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+
+@media (max-width: 600px) {
+    .rosco-wrapper { width: 320px; height: 320px; }
+    .rosco-letter { width: 30px; height: 30px; font-size: 0.8rem; }
+}
