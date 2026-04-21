@@ -379,23 +379,28 @@ function showCategory(category) {
     grid.innerHTML = "";
 
     if (category === 'laliga') {
-        title.innerHTML = "LALIGA <span>EA SPORTS</span>";
-        grid.innerHTML = `
-            <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
-                <div class="hangman-bg-image"></div>
-                <div class="card-info">
-                    <h3>Ahorcado</h3>
-                    <p>Nivel Clásico</p>
-                </div>
-            </div>
-            <div class="menu-card blur-game-card" onclick="showGame('blur')">
-                <div class="card-bg-image"></div> 
-                <div class="card-info">
-                    <h3>Blur Guess</h3>
-                    <p>Adivina el jugador</p>
-                </div>
-            </div>`;
-    } else {
+        title.innerHTML = "LALIGA <span>EA SPORTS</span>";
+        grid.innerHTML = `
+            <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
+                <div class="hangman-bg-image"></div>
+                <div class="card-info">
+                    <h3>Ahorcado</h3>
+                    <p>Nivel Clásico</p>
+                </div>
+            </div>
+            <div class="menu-card blur-game-card" onclick="showGame('blur')">
+                <div class="card-bg-image"></div> 
+                <div class="card-info">
+                    <h3>Blur Guess</h3>
+                    <p>Adivina el jugador</p>
+                </div>
+            </div>
+            <div class="menu-card coming-soon" style="grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 300px;">
+                <span class="icon">📈</span>
+                <h3>Higher or Lower</h3>
+                <p>Próximamente</p>
+            </div>`;
+    } else {
         title.innerHTML = category === 'premier' ? "PREMIER <span>LEAGUE</span>" : "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
     }
