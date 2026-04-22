@@ -329,44 +329,6 @@ input[type="number"] {
     transform: scale(1.1);
 }
 
-/* --- Tarjeta Máquina del Tiempo --- */
-.timemachine-game-card {
-    position: relative;
-    padding: 0 !important;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    /* Mantenemos tu toque retro dorado en el borde al hacer hover */
-}
-
-.timemachine-game-card:hover {
-    border-color: #ffd700;
-}
-
-/* Foto de fondo */
-.timemachine-bg-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Pon aquí la ruta de una foto chula, por ejemplo un estadio antiguo, un reloj vintage, o un momento icónico */
-    background-image: url('players/fondo-timemachine.jpg'); 
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.4); 
-    transition: 0.5s ease;
-    z-index: 1;
-    pointer-events: none; /* Para que deje hacer click */
-}
-
-/* Efecto al pasar el ratón por encima */
-.timemachine-game-card:hover .timemachine-bg-image {
-    filter: brightness(0.6);
-    transform: scale(1.1);
-}
 /* --- ARREGLO PARA QUE TE DEJE CLICAR --- */
 .card-bg-image, 
 .hangman-bg-image, 
@@ -405,18 +367,11 @@ input[type="number"] {
 }
 .rosco-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; }
 
-
-
 .rosco-letter {
-
     position: absolute; width: 40px; height: 40px; background: #0044cc;
-
     border: 2px solid white; border-radius: 50%; display: flex;
-
     align-items: center; justify-content: center; font-weight: bold;
-
     color: white; transform: translate(-50%, -50%); transition: 0.3s;
-
 }
 .rosco-letter.current { background: white; color: #0044cc; box-shadow: 0 0 20px white; scale: 1.2; z-index: 10; }
 .rosco-letter.correct { background: var(--primary); }
@@ -431,8 +386,6 @@ input[type="number"] {
     .rosco-wrapper { width: 320px; height: 320px; }
     .rosco-letter { width: 30px; height: 30px; font-size: 0.8rem; }
 }
-
-
 
 /* Estilos para el Modal Profesional */
 .modal-overlay {
@@ -491,8 +444,6 @@ input[type="number"] {
     transform: scale(1.05);
 }
 
-
-
 /* --- BLOQUE DE CATEGORÍAS CORREGIDO --- */
 
 /* 1. Estilo de la tarjeta (el contenedor) */
@@ -543,7 +494,6 @@ input[type="number"] {
     pointer-events: none; /* El texto tampoco debe bloquear el click */
     text-align: center;
 }
-
 
 /* ==========================================
    AJUSTES "FIT SCREEN" (Para que no haya scroll)
@@ -599,7 +549,6 @@ body, html {
 .word-container {
     margin-bottom: 2vh;
 }
-
 
 /* ==========================================
    MÁQUINA DEL TIEMPO - ESTILO RETRO FIT
@@ -697,3 +646,99 @@ body, html {
     border: 1px solid var(--error);
     font-weight: bold;
 }
+
+/* --- Tarjeta Máquina del Tiempo --- */
+.timemachine-game-card {
+    position: relative;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.timemachine-game-card:hover {
+    border-color: #ffd700;
+}
+
+/* Foto de fondo */
+.timemachine-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Pon aquí la ruta de la foto para el menú */
+    background-image: url('events/fondo-timemachine.jpg'); 
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4); 
+    transition: 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Efecto al pasar el ratón por encima */
+.timemachine-game-card:hover .timemachine-bg-image {
+    filter: brightness(0.6);
+    transform: scale(1.1);
+}
+
+/* ==========================================
+   MINIJUEGO XI HISTÓRICO (PREMIER)
+   ========================================== */
+
+/* Tarjeta Menú Premier */
+.eleven-game-card {
+    position: relative; padding: 0 !important; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; min-height: 220px;
+    border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+}
+.eleven-game-card:hover { border-color: #e90052; } /* Rosa clásico Premier */
+.eleven-bg-image {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('events/fondo-premier.jpg'); 
+    background-size: cover; background-position: center;
+    filter: brightness(0.3) blur(2px); transition: 0.5s ease; z-index: 1; pointer-events: none;
+}
+.eleven-game-card:hover .eleven-bg-image { filter: brightness(0.5) blur(0px); transform: scale(1.1); }
+
+/* Layout del Campo */
+.eleven-layout { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; margin-top: 1vh; }
+.eleven-header { text-align: center; margin-bottom: 2vh; }
+
+.pitch-container {
+    width: 100%; max-width: 600px; height: 50vh; min-height: 350px;
+    background: linear-gradient(0deg, #2e7d32 0%, #1b5e20 100%);
+    border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 10px;
+    display: flex; flex-direction: column; justify-content: space-evenly;
+    padding: 15px 5px; position: relative;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Líneas decorativas del césped */
+.pitch-container::before {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px;
+    background: rgba(255, 255, 255, 0.4); transform: translateY(-50%);
+}
+.pitch-container::after {
+    content: ''; position: absolute; top: 50%; left: 50%; width: 80px; height: 80px;
+    border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 50%; transform: translate(-50%, -50%);
+}
+
+.pitch-row { display: flex; justify-content: space-around; width: 100%; z-index: 2; }
+.player-slot { display: flex; flex-direction: column; align-items: center; width: 80px; text-align: center; transition: 0.3s; }
+.player-slot.clickable { cursor: pointer; }
+.player-slot.clickable:hover { transform: scale(1.1); }
+
+.player-slot .shirt { font-size: clamp(1.5rem, 5vw, 2rem); filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); transition: 0.3s; }
+.player-slot .shirt.empty { opacity: 0.6; filter: grayscale(1); }
+
+.player-slot .name {
+    background: rgba(0, 0, 0, 0.7); color: white; font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+    padding: 3px 6px; border-radius: 4px; margin-top: 5px; font-family: 'Orbitron', sans-serif;
+    border: 1px solid rgba(255,255,255,0.2); word-break: break-word; line-height: 1.1;
+}
+.player-slot .hidden-name { color: #555; border-color: rgba(255,255,255,0.05); }
+.player-slot.revealed { animation: modalPop 0.4s ease-out; }
