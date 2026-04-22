@@ -148,6 +148,29 @@ const timeMachineEvents = [
     { foto: "lamine2023", event: "El debut oficial del jovencísimo Lamine Yamal con la Selección Española", year: 2023 }
 ];
 
+const elevenMatches = [
+    {
+        team: "ARSENAL",
+        desc: "Los Invencibles (Temporada 2003/04)",
+        xi: [
+            [{ name: "LEHMANN", hint: "🇩🇪 Portero" }],
+            [{ name: "LAUREN", hint: "🇨🇲 Lateral" }, { name: "CAMPBELL", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Central" }, { name: "TOURE", hint: "🇨🇮 Central" }, { name: "COLE", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Lateral" }],
+            [{ name: "LJUNGBERG", hint: "🇸🇪 Interior" }, { name: "VIEIRA", hint: "🇫🇷 Medio" }, { name: "GILBERTO SILVA", hint: "🇧🇷 Medio" }, { name: "PIRES", hint: "🇫🇷 Interior" }],
+            [{ name: "BERGKAMP", hint: "🇳🇱 Mediapunta" }, { name: "HENRY", hint: "🇫🇷 Delantero" }]
+        ]
+    },
+    {
+        team: "MANCHESTER UNITED",
+        desc: "Final Champions League 2008",
+        xi: [
+            [{ name: "VAN DER SAR", hint: "🇳🇱 Portero" }],
+            [{ name: "BROWN", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Lateral" }, { name: "FERDINAND", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Central" }, { name: "VIDIC", hint: "🇷🇸 Central" }, { name: "EVRA", hint: "🇫🇷 Lateral" }],
+            [{ name: "HARGREAVES", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Interior" }, { name: "SCHOLES", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Medio" }, { name: "CARRICK", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Medio" }, { name: "CRISTIANO RONALDO", hint: "🇵🇹 Interior" }],
+            [{ name: "ROONEY", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Delantero" }, { name: "TEVEZ", hint: "🇦🇷 Delantero" }]
+        ]
+    }
+];
+
 function obtenerRoscoAleatorio(preguntas) {
     return preguntas.map(item => {
         const indiceAleatorio = Math.floor(Math.random() * item.preguntas.length);
@@ -170,6 +193,7 @@ const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
 let blurState = { player: "", blur: 30, lives: 5, streak: 0 };
 let timeMachineState = { event: "", year: 0, lives: 5, streak: 0 };
+let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalPlayers: 11 };
 let currentCategory = "";
 
 // ==========================================
@@ -177,11 +201,13 @@ let currentCategory = "";
 // ==========================================
 
 function showMenu() {
+    if (elevenState.timer) clearInterval(elevenState.timer);
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('menu-screen').classList.remove('hidden');
 }
 
 function showCategory(category) {
+    if (elevenState.timer) clearInterval(elevenState.timer);
     currentCategory = category;
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     
@@ -228,7 +254,14 @@ function showCategory(category) {
             </div>`;
     } else {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
-        grid.innerHTML = `<div class="menu-card coming-soon"><span class="icon">📈</span><h3>Próximamente</h3><p>Nuevos niveles en camino</p></div>`;
+        grid.innerHTML = `
+            <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
+                <div class="eleven-bg-image"></div>
+                <div class="card-info">
+                    <h3>XI Histórico</h3>
+                    <p>Adivina la alineación</p>
+                </div>
+            </div>`;
     }
 }
 
@@ -241,6 +274,7 @@ function showGame(gameId) {
         if(gameId === 'hangman') initHangman();
         if(gameId === 'blur') initBlurGame();
         if(gameId === 'timemachine') initTimeMachine();
+        if(gameId === 'eleven') initElevenGame();
         if(gameId === 'rosco') setTimeout(initRosco, 50);
     }
 }
@@ -556,7 +590,123 @@ function salirDelRosco() {
 }
 
 // ==========================================
-// 8. EVENT LISTENERS Y MODAL
+// 9. LÓGICA: XI HISTÓRICO PREMIER
+// ==========================================
+
+function initElevenGame() {
+    if (elevenState.timer) clearInterval(elevenState.timer);
+    
+    elevenState.match = elevenMatches[Math.floor(Math.random() * elevenMatches.length)];
+    elevenState.guessed = [];
+    elevenState.timeLeft = 180; // 3 minutos
+    elevenState.totalPlayers = 11;
+
+    updateElevenTimerDisplay();
+    document.getElementById('eleven-team').innerText = elevenState.match.team;
+    document.getElementById('eleven-desc').innerText = elevenState.match.desc;
+    document.getElementById('elevenInput').value = "";
+    document.getElementById('eleven-hint-display').innerText = "Toca un jugador '❓' para ver su pista";
+    document.getElementById('eleven-hint-display').style.color = "#ffd700";
+    
+    renderPitch();
+    startElevenTimer();
+    setTimeout(() => document.getElementById('elevenInput').focus(), 100);
+}
+
+function startElevenTimer() {
+    elevenState.timer = setInterval(() => {
+        elevenState.timeLeft--;
+        updateElevenTimerDisplay();
+        if(elevenState.timeLeft <= 0) {
+            clearInterval(elevenState.timer);
+            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => { initElevenGame(); });
+        }
+    }, 1000);
+}
+
+function updateElevenTimerDisplay() {
+    let m = Math.floor(elevenState.timeLeft / 60);
+    let s = elevenState.timeLeft % 60;
+    document.getElementById('eleven-timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function renderPitch() {
+    const pitch = document.getElementById('pitch');
+    pitch.innerHTML = "";
+
+    elevenState.match.xi.forEach((linea) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'pitch-row';
+        
+        linea.forEach((playerObj) => {
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'player-slot';
+            
+            if (elevenState.guessed.includes(playerObj.name)) {
+                playerDiv.classList.add('revealed');
+                playerDiv.innerHTML = `<div class="shirt">👕</div><div class="name">${playerObj.name}</div>`;
+            } else {
+                playerDiv.classList.add('clickable');
+                playerDiv.innerHTML = `<div class="shirt empty">❓</div><div class="name hidden-name">---</div>`;
+                playerDiv.onclick = () => {
+                    const hintDisplay = document.getElementById('eleven-hint-display');
+                    hintDisplay.innerText = `Pista: ${playerObj.hint}`;
+                    hintDisplay.style.color = "#00ff87";
+                    document.getElementById('elevenInput').focus();
+                };
+            }
+            rowDiv.appendChild(playerDiv);
+        });
+        pitch.appendChild(rowDiv);
+    });
+}
+
+function checkElevenGuess() {
+    const input = document.getElementById('elevenInput');
+    const val = input.value.toUpperCase().trim();
+    if (!val) return;
+
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let found = false;
+
+    elevenState.match.xi.forEach(linea => {
+        linea.forEach(playerObj => {
+            const nPlayer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (nVal === nPlayer && !elevenState.guessed.includes(playerObj.name)) {
+                elevenState.guessed.push(playerObj.name);
+                found = true;
+            }
+        });
+    });
+
+    if (found) {
+        input.value = "";
+        document.getElementById('eleven-hint-display').innerText = "✅ ¡Correcto! Sigue así.";
+        document.getElementById('eleven-hint-display').style.color = "#00ff87";
+        renderPitch();
+        
+        if (elevenState.guessed.length === elevenState.totalPlayers) {
+            clearInterval(elevenState.timer);
+            setTimeout(() => {
+                mostrarMensajePro("🏆 ¡LEYENDA!", "Has adivinado el XI Histórico completo.", () => { initElevenGame(); });
+            }, 300);
+        }
+    } else {
+        input.value = "";
+        document.getElementById('eleven-hint-display').innerText = "❌ Fallo o ya adivinado";
+        document.getElementById('eleven-hint-display').style.color = "#ff4d4d";
+        setTimeout(() => {
+            if(document.getElementById('eleven-hint-display').innerText.includes("❌")) {
+                document.getElementById('eleven-hint-display').innerText = "Toca un jugador '❓' para ver su pista";
+                document.getElementById('eleven-hint-display').style.color = "#ffd700";
+            }
+        }, 1500);
+    }
+}
+
+
+// ==========================================
+// 10. EVENT LISTENERS Y MODAL
 // ==========================================
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
@@ -567,6 +717,7 @@ document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
 document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
 document.getElementById('btnRoscoCheck').onclick = checkRosco;
 document.getElementById('btnPasapalabra').onclick = pasapalabra;
+document.getElementById('btnElevenCheck').onclick = checkElevenGuess;
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
@@ -579,6 +730,7 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'blurInput') checkBlurGuess();
         if (document.activeElement.id === 'roscoInput') checkRosco();
         if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
+        if (document.activeElement.id === 'elevenInput') checkElevenGuess();
     }
 });
 
