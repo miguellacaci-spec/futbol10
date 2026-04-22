@@ -110,31 +110,33 @@
                 <div class="score-board">RACHA: <span id="tm-streak">0</span></div>
             </nav>
 
-            <div class="game-layout" style="flex-direction: column; align-items: center; max-width: 600px;">
-                <div class="word-container" style="font-size: 1.5rem; letter-spacing: 2px; text-align: center; margin-bottom: 1rem; color: var(--primary);">
-                    ¿EN QUÉ AÑO OCURRIÓ?
-                </div>
+            <div class="tm-layout">
+                <h2 class="tm-title">¿EN QUÉ AÑO OCURRIÓ?</h2>
                 
-                <div class="image-box" style="width: 100%; max-width: 350px; height: 200px; margin-bottom: 1rem; border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">
-                    <img id="tm-image" src="" alt="Evento Histórico" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                <div class="tm-monitor">
+                    <img id="tm-image" src="" alt="Evento Histórico">
                 </div>
 
-                <div id="tm-event-text" style="font-size: 1.2rem; text-align: center; margin-bottom: 2rem; color: #fff;">
+                <div id="tm-event-text" class="tm-event-card">
                     Cargando evento...
                 </div>
 
-                <div class="input-container" style="width: 100%; max-width: 300px;">
+                <div class="tm-controls">
                     <div class="input-group">
-                        <input type="number" id="tmInput" placeholder="Ej: 2010" autocomplete="off" style="text-align: center; font-size: 1.5rem; letter-spacing: 4px;">
+                        <input type="number" id="tmInput" placeholder="AÑO" autocomplete="off">
                         <button id="btnTmCheck" class="secondary-btn">ENVIAR</button>
                     </div>
-                    <div id="tm-feedback" style="text-align: center; margin-top: 15px; font-weight: bold; font-size: 1.1rem; color: #ffd700; min-height: 25px;"></div>
+                    
+                    <div class="tm-status">
+                        <span id="tm-feedback"></span>
+                        <span class="tm-lives-badge">INTENTOS: <span id="tm-lives">5</span></span>
+                    </div>
                 </div>
-                
-                <div class="info-footer" style="margin-top: 2rem;">INTENTOS: <span id="tm-lives">5</span></div>
             </div>
         </div>
 
+
+        
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
