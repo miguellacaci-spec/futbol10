@@ -135,7 +135,32 @@
             </div>
         </div>
 
+        <div id="eleven-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">TIEMPO: <span id="eleven-timer">03:00</span></div>
+            </nav>
 
+            <div class="eleven-layout">
+                <div class="eleven-header">
+                    <h2 id="eleven-team" class="logo" style="font-size: 1.8rem; margin-bottom: 5px;">Equipo</h2>
+                    <p id="eleven-desc" style="color: var(--primary); font-family: 'Orbitron';">Descripción</p>
+                </div>
+
+                <div class="pitch-container" id="pitch">
+                    </div>
+
+                <div class="input-container" style="max-width: 500px; margin: 20px auto; text-align: center;">
+                    <div id="eleven-hint-display" style="min-height: 24px; color: #ffd700; font-family: 'Orbitron'; margin-bottom: 10px; font-size: 0.9rem;">
+                        Toca un jugador '❓' para ver su pista
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="elevenInput" placeholder="Nombre del jugador..." autocomplete="off">
+                        <button id="btnElevenCheck" class="secondary-btn">ENVIAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
