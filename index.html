@@ -103,7 +103,32 @@
                 <div class="info-footer" style="color: var(--primary)">INTENTOS: <span id="blur-lives">5</span></div>
             </div>
         </div>
+<div id="timemachine-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">RACHA: <span id="tm-streak">0</span></div>
+            </nav>
 
+            <div class="game-layout" style="flex-direction: column; align-items: center; max-width: 600px;">
+                <div class="word-container" style="font-size: 1.5rem; letter-spacing: 2px; text-align: center; margin-bottom: 1rem; color: var(--primary);">
+                    ¿EN QUÉ AÑO OCURRIÓ?
+                </div>
+                
+                <div id="tm-event-text" style="font-size: 1.2rem; text-align: center; background: var(--card); padding: 2rem; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; width: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                    Cargando evento...
+                </div>
+
+                <div class="input-container" style="width: 100%; max-width: 300px;">
+                    <div class="input-group">
+                        <input type="number" id="tmInput" placeholder="Ej: 2010" autocomplete="off" style="text-align: center; font-size: 1.5rem; letter-spacing: 4px;">
+                        <button id="btnTmCheck" class="secondary-btn">ENVIAR</button>
+                    </div>
+                    <div id="tm-feedback" style="text-align: center; margin-top: 15px; font-weight: bold; font-size: 1.1rem; color: #ffd700; min-height: 25px;"></div>
+                </div>
+                
+                <div class="info-footer" style="margin-top: 2rem;">INTENTOS: <span id="tm-lives">5</span></div>
+            </div>
+        </div>
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
