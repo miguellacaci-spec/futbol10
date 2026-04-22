@@ -329,6 +329,44 @@ input[type="number"] {
     transform: scale(1.1);
 }
 
+/* --- Tarjeta Máquina del Tiempo --- */
+.timemachine-game-card {
+    position: relative;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    /* Mantenemos tu toque retro dorado en el borde al hacer hover */
+}
+
+.timemachine-game-card:hover {
+    border-color: #ffd700;
+}
+
+/* Foto de fondo */
+.timemachine-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Pon aquí la ruta de una foto chula, por ejemplo un estadio antiguo, un reloj vintage, o un momento icónico */
+    background-image: url('players/fondo-timemachine.jpg'); 
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4); 
+    transition: 0.5s ease;
+    z-index: 1;
+    pointer-events: none; /* Para que deje hacer click */
+}
+
+/* Efecto al pasar el ratón por encima */
+.timemachine-game-card:hover .timemachine-bg-image {
+    filter: brightness(0.6);
+    transform: scale(1.1);
+}
 /* --- ARREGLO PARA QUE TE DEJE CLICAR --- */
 .card-bg-image, 
 .hangman-bg-image, 
