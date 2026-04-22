@@ -214,8 +214,8 @@ function showCategory(category) {
     } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
-            <div class="menu-card" style="border-color: #ffd700;" onclick="showGame('timemachine')">
-                <span class="icon">⏳</span>
+            <div class="menu-card timemachine-game-card" style="border-color: #ffd700;" onclick="showGame('timemachine')">
+                <div class="timemachine-bg-image"></div>
                 <div class="card-info">
                     <h3 style="color: #ffd700;">Máquina del Tiempo</h3>
                     <p>¿En qué año fue?</p>
