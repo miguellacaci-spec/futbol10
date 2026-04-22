@@ -505,3 +505,59 @@ input[type="number"] {
     pointer-events: none; /* El texto tampoco debe bloquear el click */
     text-align: center;
 }
+
+
+/* ==========================================
+   AJUSTES "FIT SCREEN" (Para que no haya scroll)
+   ========================================== */
+
+/* 1. Bloqueamos el scroll del cuerpo de la página */
+body, html {
+    height: 100vh;
+    overflow: hidden; 
+}
+
+/* 2. La pantalla ocupa justo el 100% y centra las cosas */
+.screen {
+    height: 100vh;
+    min-height: unset;
+    padding: 2vh 1rem; /* Usamos porcentajes de pantalla (vh) en vez de píxeles fijos */
+    justify-content: center; 
+    overflow-y: auto; /* Solo saldrá scroll si la pantalla es enanísima (ej. un móvil viejo) */
+}
+
+/* 3. Reducimos los márgenes gigantes del Logo y la Navegación */
+.logo {
+    margin: 1vh 0; 
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+}
+
+.game-nav {
+    margin-bottom: 2vh;
+}
+
+/* 4. Hacemos que el Rosco y las Imágenes se adapten a la altura, no al ancho */
+.rosco-wrapper {
+    margin-top: 10px;
+    height: 60vh; /* Ocupa como máximo el 60% de la pantalla */
+    width: 60vh;
+    max-width: 100%;
+}
+
+.image-box {
+    max-height: 35vh; /* La imagen nunca empujará el texto fuera de la pantalla */
+    height: auto;
+    width: auto;
+    aspect-ratio: 1/1; /* Mantiene la foto cuadrada */
+}
+
+/* 5. Comprimimos un poco los textos de la Máquina del Tiempo */
+#tm-event-text {
+    padding: 1.5vh !important;
+    margin-bottom: 2vh !important;
+    font-size: 1.1rem !important;
+}
+
+.word-container {
+    margin-bottom: 2vh;
+}
