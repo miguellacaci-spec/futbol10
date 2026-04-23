@@ -447,7 +447,7 @@ input[type="number"] {
 /* --- BLOQUE DE CATEGORÍAS CORREGIDO --- */
 
 /* 1. Estilo de la tarjeta (el contenedor) */
-.laliga-card, .premier-card, .leyendas-card, .rosco-game-card {
+.laliga-card, .premier-card, .leyendas-card, .rosco-game-card, .europeos-card {
     position: relative;
     padding: 0 !important;
     min-height: 220px;
@@ -460,7 +460,7 @@ input[type="number"] {
 }
 
 /* 2. Configuración de todas las imágenes de fondo */
-.laliga-bg-image, .premier-bg-image, .leyendas-bg-image, .rosco-bg-image {
+.laliga-bg-image, .premier-bg-image, .leyendas-bg-image, .rosco-bg-image, .europeos-bg-image {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
@@ -477,12 +477,15 @@ input[type="number"] {
 .premier-bg-image { background-image: url('players/fondo-premier.jpg'); }
 .leyendas-bg-image { background-image: url('players/fondo-leyendas.jpg'); }
 .rosco-bg-image { background-image: url('players/fondo-rosco.jpg'); }
+/* Añade o reusa la imagen que te guste para la nueva categoría */
+.europeos-bg-image { background-image: url('players/fondo-leyendas.jpg'); } 
 
 /* 4. Efecto Hover mejorado */
 .menu-card:hover .laliga-bg-image, 
 .menu-card:hover .premier-bg-image, 
 .menu-card:hover .leyendas-bg-image,
-.menu-card:hover .rosco-bg-image {
+.menu-card:hover .rosco-bg-image,
+.menu-card:hover .europeos-bg-image {
     filter: brightness(0.5) blur(0px);
     transform: scale(1.1);
 }
@@ -686,16 +689,16 @@ body, html {
 }
 
 /* ==========================================
-   MINIJUEGO XI HISTÓRICO (PREMIER)
+   MINIJUEGO XI HISTÓRICO (AHORA EN EUROPEOS)
    ========================================== */
 
-/* Tarjeta Menú Premier */
+/* Tarjeta Menú XI */
 .eleven-game-card {
     position: relative; padding: 0 !important; overflow: hidden;
     display: flex; align-items: center; justify-content: center; min-height: 220px;
     border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
 }
-.eleven-game-card:hover { border-color: #e90052; } /* Rosa clásico Premier */
+.eleven-game-card:hover { border-color: #00ff87; } 
 .eleven-bg-image {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: url('events/fondo-premier.jpg'); 
@@ -744,35 +747,27 @@ body, html {
 .player-slot.revealed { animation: modalPop 0.4s ease-out; }
 
 /* ==========================================
-   MINIJUEGO: FUTDLE (WORDLE)
+   MODAL FUTDLE (WORDLE INTEGRADO)
    ========================================== */
 
-.wordle-game-card { border-color: #6e2cf2; }
-.wordle-game-card:hover { border-color: #00ff87; }
-.wordle-bg-image { 
-    background-image: url('events/fondo-wordle.jpg'); /* Añade una foto chula aquí */
-}
-.wordle-game-card:hover .wordle-bg-image { filter: brightness(0.5) blur(0px); transform: scale(1.1); }
-
-.wordle-layout {
-    display: flex; flex-direction: column; align-items: center; width: 100%;
-}
 .wordle-grid {
-    display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;
+    align-items: center;
 }
 .wordle-row {
-    display: flex; gap: 8px; justify-content: center;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
 }
 
-/* Cajas de las letras con diseño LED / Neón */
+/* Cajas de las letras ajustadas dinámicamente */
 .wordle-cell {
-    width: clamp(45px, 12vw, 60px);
-    height: clamp(45px, 12vw, 60px);
+    width: clamp(25px, 8vw, 45px);
+    height: clamp(25px, 8vw, 45px);
     background: rgba(28, 33, 40, 0.6);
     border: 2px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex; justify-content: center; align-items: center;
-    font-size: 2rem; font-family: 'Orbitron', sans-serif; font-weight: bold;
+    font-size: clamp(1.2rem, 4vw, 1.8rem); 
+    font-family: 'Orbitron', sans-serif; font-weight: bold;
     text-transform: uppercase;
     box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
