@@ -38,6 +38,14 @@
                         <p>Minijuegos League</p>
                     </div>
                 </div>
+
+                <div class="menu-card europeos-card" onclick="showCategory('europeos')">
+                    <div class="europeos-bg-image"></div>
+                    <div class="card-info">
+                        <h3>Juegos Europeos</h3>
+                        <p>Noches Mágicas</p>
+                    </div>
+                </div>
                 
                 <div class="menu-card leyendas-card" onclick="showCategory('leyendas')">
                     <div class="leyendas-bg-image"></div>
@@ -148,33 +156,11 @@
                 </div>
 
                 <div class="pitch-container" id="pitch">
-                    </div>
-
-                <div class="input-container" style="max-width: 500px; margin: 20px auto; text-align: center;">
-                    <div id="eleven-hint-display" style="min-height: 24px; color: #ffd700; font-family: 'Orbitron'; margin-bottom: 10px; font-size: 0.9rem;">
-                        Toca un jugador '❓' para ver su pista
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="elevenInput" placeholder="Nombre del jugador..." autocomplete="off">
-                        <button id="btnElevenCheck" class="secondary-btn">ENVIAR</button>
-                    </div>
                 </div>
-            </div>
-        </div>
-
-        <div id="wordle-screen" class="screen hidden">
-            <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-                <div class="score-board">RACHA: <span id="wordle-streak">0</span></div>
-            </nav>
-
-            <div class="wordle-layout">
-                <h2 class="logo" style="font-size: 2rem; margin-bottom: 5px;">FUT<span>DLE</span></h2>
-                <p style="color: var(--text-dim); margin-bottom: 20px; font-family: 'Orbitron';">Adivina el jugador en 6 intentos</p>
                 
-                <div id="wordle-grid" class="wordle-grid"></div>
-                
-                <div id="wordle-keyboard" class="keyboard-container" style="margin-top: 30px;"></div>
+                <p style="color: var(--text-dim); margin-top: 15px; font-family: 'Orbitron'; text-align: center;">
+                    Toca un jugador '❓' para adivinarlo
+                </p>
             </div>
         </div>
         
@@ -204,6 +190,18 @@
             <h2 id="modal-title">TÍTULO</h2>
             <p id="modal-message">Mensaje del juego...</p>
             <button id="modal-btn">CONTINUAR</button>
+        </div>
+    </div>
+
+    <div id="futdle-modal" class="modal-overlay hidden" style="z-index: 10000;">
+        <div class="modal-content" style="max-width: 95vw; width: 600px; padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 class="logo" style="font-size: 1.5rem; margin: 0;">FUT<span>DLE</span></h2>
+                <button onclick="closeFutdleModal()" class="back-btn" style="padding: 5px 15px;">✕</button>
+            </div>
+            <p id="futdle-hint" style="color: var(--primary); margin-bottom: 15px; font-family: 'Orbitron'; font-size: 1rem;"></p>
+            <div id="wordle-grid" class="wordle-grid"></div>
+            <div id="wordle-keyboard" class="keyboard-container" style="margin-top: 20px;"></div>
         </div>
     </div>
     
