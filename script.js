@@ -153,10 +153,13 @@ const elevenMatches = [
         team: "REAL MADRID",
         desc: "Bayern VS Real Madrid (4-3) Vuelta de Cuartos de la Champions League 2025/2026.",
         xi: [
+            [{ name: "VINICIUS", hint: "Brasileño" }, { name: "MBAPPE", hint: "Francia" }]
+            [{ name: "GULER", hint: "Turco" }, { name: "VALVERDE", hint: "Uruguayo" }, { name: "BELLINGHAM", hint: "Inglés" }, { name: "BRAHIM DIAZ", hint: "Marroquí" }],
+            [{ name: "MENDY", hint: "Francés" }, { name: "RUDIGER", hint: "Alemán" }, { name: "MILITAO", hint: "Brasileño" }, { name: "ALEXANDER"-"ARNOLD", hint: "Inglés" }],
             [{ name: "LUNIN", hint: "Ucraniano" }],
-            [{ name: "LAUREN", hint: "🇨🇲 Lateral" }, { name: "CAMPBELL", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Central" }, { name: "TOURE", hint: "🇨🇮 Central" }, { name: "COLE", hint: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Lateral" }],
-            [{ name: "LJUNGBERG", hint: "🇸🇪 Interior" }, { name: "VIEIRA", hint: "🇫🇷 Medio" }, { name: "GILBERTO SILVA", hint: "🇧🇷 Medio" }, { name: "PIRES", hint: "🇫🇷 Interior" }],
-            [{ name: "BERGKAMP", hint: "🇳🇱 Mediapunta" }, { name: "HENRY", hint: "🇫🇷 Delantero" }]
+            
+            
+            
         ]
     },
     {
