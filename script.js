@@ -194,6 +194,7 @@ let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
 let blurState = { player: "", blur: 30, lives: 5, streak: 0 };
 let timeMachineState = { event: "", year: 0, lives: 5, streak: 0 };
 let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalPlayers: 11 };
+let wordleState = { answer: "", guesses: [], currentGuess: "", streak: 0, maxGuesses: 6, wordLength: 5, validWords: [] };
 let currentCategory = "";
 
 // ==========================================
@@ -236,6 +237,13 @@ function showCategory(category) {
                     <h3>Blur Guess</h3>
                     <p>Adivina el jugador</p>
                 </div>
+            </div>
+            <div class="menu-card wordle-game-card" onclick="showGame('wordle')">
+                <div class="wordle-bg-image"></div>
+                <div class="card-info">
+                    <h3>Futdle</h3>
+                    <p>Wordle de 5 Letras</p>
+                </div>
             </div>`;
     } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
@@ -275,6 +283,7 @@ function showGame(gameId) {
         if(gameId === 'blur') initBlurGame();
         if(gameId === 'timemachine') initTimeMachine();
         if(gameId === 'eleven') initElevenGame();
+        if(gameId === 'wordle') initWordle();
         if(gameId === 'rosco') setTimeout(initRosco, 50);
     }
 }
@@ -704,9 +713,136 @@ function checkElevenGuess() {
     }
 }
 
+// ==========================================
+// 10. LÓGICA: FUTDLE (WORDLE)
+// ==========================================
+
+function initWordle() {
+    wordleState.validWords = players.filter(p => p.length === 5 && !p.includes(" "));
+    const randomPlayer = wordleState.validWords[Math.floor(Math.random() * wordleState.validWords.length)];
+    
+    wordleState.answer = randomPlayer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    wordleState.guesses = [];
+    wordleState.currentGuess = "";
+    document.getElementById('wordle-streak').innerText = wordleState.streak;
+    
+    renderWordleGrid();
+    renderWordleKeyboard();
+}
+
+function renderWordleGrid() {
+    const grid = document.getElementById('wordle-grid');
+    grid.innerHTML = "";
+    for (let i = 0; i < wordleState.maxGuesses; i++) {
+        const row = document.createElement('div');
+        row.className = 'wordle-row';
+        
+        const guess = wordleState.guesses[i] || (i === wordleState.guesses.length ? wordleState.currentGuess : "");
+        
+        for (let j = 0; j < wordleState.wordLength; j++) {
+            const cell = document.createElement('div');
+            cell.className = 'wordle-cell';
+            const letter = guess[j] || "";
+            cell.innerText = letter;
+            
+            if (letter && i === wordleState.guesses.length) {
+                cell.classList.add('active'); 
+            }
+            
+            if (i < wordleState.guesses.length) {
+                cell.classList.add('revealed'); 
+                const status = getWordleLetterStatus(guess, j);
+                cell.classList.add(status);
+            }
+            row.appendChild(cell);
+        }
+        grid.appendChild(row);
+    }
+}
+
+function getWordleLetterStatus(guess, index) {
+    const letter = guess[index];
+    if (wordleState.answer[index] === letter) return "correct";
+    if (wordleState.answer.includes(letter)) return "present";
+    return "absent";
+}
+
+function renderWordleKeyboard() {
+    const container = document.getElementById('wordle-keyboard');
+    container.innerHTML = ''; 
+    const layout = ["QWERTYUIOP", "ASDFGHJKLÑ", "⌫ZXCVBNM↵"];
+    
+    layout.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'keyboard-row';
+        Array.from(row).forEach(char => {
+            let letter = char; let display = char;
+            if (char === '⌫') { letter = 'BACKSPACE'; display = '⌫'; }
+            if (char === '↵') { letter = 'ENTER'; display = 'ENVIAR'; }
+
+            const keyDiv = document.createElement('div');
+            keyDiv.className = `key w-key ${letter === 'ENTER' || letter === 'BACKSPACE' ? 'wide-key' : ''}`;
+            keyDiv.textContent = display;
+            keyDiv.id = `wkey-${letter}`;
+            keyDiv.onclick = () => handleWordleKey(letter);
+            rowDiv.appendChild(keyDiv);
+        });
+        container.appendChild(rowDiv);
+    });
+    updateWordleKeyboard();
+}
+
+function updateWordleKeyboard() {
+    wordleState.guesses.forEach(guess => {
+        for (let i = 0; i < guess.length; i++) {
+            const letter = guess[i];
+            const keyEl = document.getElementById(`wkey-${letter}`);
+            if (!keyEl) continue;
+            
+            const status = getWordleLetterStatus(guess, i);
+            if (keyEl.classList.contains('correct')) continue; 
+            if (keyEl.classList.contains('present') && status === 'absent') continue;
+            
+            keyEl.className = `key w-key ${status}`;
+        }
+    });
+}
+
+function handleWordleKey(key) {
+    if (wordleState.guesses.length >= wordleState.maxGuesses) return;
+
+    if (key === 'ENTER') {
+        if (wordleState.currentGuess.length === wordleState.wordLength) submitWordleGuess();
+    } else if (key === 'BACKSPACE') {
+        wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+        renderWordleGrid();
+    } else if (wordleState.currentGuess.length < wordleState.wordLength && /^[A-ZÑ]$/.test(key)) {
+        wordleState.currentGuess += key;
+        renderWordleGrid();
+    }
+}
+
+function submitWordleGuess() {
+    wordleState.guesses.push(wordleState.currentGuess);
+    const isWin = wordleState.currentGuess === wordleState.answer;
+    wordleState.currentGuess = "";
+    
+    renderWordleGrid();
+    updateWordleKeyboard();
+
+    setTimeout(() => {
+        if (isWin) {
+            wordleState.streak++;
+            mostrarMensajePro("🔥 ¡GOLAZO!", "Has adivinado: " + wordleState.answer, () => initWordle());
+        } else if (wordleState.guesses.length >= wordleState.maxGuesses) {
+            wordleState.streak = 0;
+            mostrarMensajePro("❌ ¡PITIDO FINAL!", "Era: " + wordleState.answer, () => initWordle());
+        }
+    }, 600);
+}
 
 // ==========================================
-// 10. EVENT LISTENERS Y MODAL
+// 11. EVENT LISTENERS Y MODAL
 // ==========================================
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
@@ -721,11 +857,22 @@ document.getElementById('btnElevenCheck').onclick = checkElevenGuess;
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
+    
     if (!isTyping && !document.getElementById('hangman-screen').classList.contains('hidden')) {
         const key = e.key.toUpperCase();
         if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
     }
-    if (e.key === 'Enter') {
+    
+    if (!isTyping && !document.getElementById('wordle-screen').classList.contains('hidden')) {
+        if (e.key === 'Enter') handleWordleKey('ENTER');
+        else if (e.key === 'Backspace') handleWordleKey('BACKSPACE');
+        else {
+            const k = e.key.toUpperCase();
+            if (/^[A-ZÑ]$/.test(k)) handleWordleKey(k);
+        }
+    }
+
+    if (e.key === 'Enter' && isTyping) {
         if (document.activeElement.id === 'wordInput') solveFullWord();
         if (document.activeElement.id === 'blurInput') checkBlurGuess();
         if (document.activeElement.id === 'roscoInput') checkRosco();
