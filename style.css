@@ -742,3 +742,74 @@ body, html {
 }
 .player-slot .hidden-name { color: #555; border-color: rgba(255,255,255,0.05); }
 .player-slot.revealed { animation: modalPop 0.4s ease-out; }
+
+/* ==========================================
+   MINIJUEGO: FUTDLE (WORDLE)
+   ========================================== */
+
+.wordle-game-card { border-color: #6e2cf2; }
+.wordle-game-card:hover { border-color: #00ff87; }
+.wordle-bg-image { 
+    background-image: url('events/fondo-wordle.jpg'); /* Añade una foto chula aquí */
+}
+.wordle-game-card:hover .wordle-bg-image { filter: brightness(0.5) blur(0px); transform: scale(1.1); }
+
+.wordle-layout {
+    display: flex; flex-direction: column; align-items: center; width: 100%;
+}
+.wordle-grid {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;
+}
+.wordle-row {
+    display: flex; gap: 8px; justify-content: center;
+}
+
+/* Cajas de las letras con diseño LED / Neón */
+.wordle-cell {
+    width: clamp(45px, 12vw, 60px);
+    height: clamp(45px, 12vw, 60px);
+    background: rgba(28, 33, 40, 0.6);
+    border: 2px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; font-family: 'Orbitron', sans-serif; font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto visual cuando estás escribiendo una letra */
+.wordle-cell.active {
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px rgba(110, 44, 242, 0.4), inset 0 0 10px rgba(110, 44, 242, 0.2);
+    transform: scale(1.08);
+}
+
+/* Animación de giro (Flip) al revelar resultado */
+.wordle-cell.revealed {
+    transition: transform 0.6s ease, background 0.3s 0.3s, border-color 0.3s 0.3s;
+}
+
+/* Verde: Letra correcta en sitio correcto */
+.wordle-cell.revealed.correct {
+    background: var(--primary); color: var(--bg); border-color: var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow); transform: rotateX(360deg);
+}
+
+/* Amarillo: Letra correcta en mal sitio */
+.wordle-cell.revealed.present {
+    background: #ffd700; color: var(--bg); border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); transform: rotateX(360deg);
+}
+
+/* Gris: Letra no está */
+.wordle-cell.revealed.absent {
+    background: #0f1218; color: #444; border-color: #1a1e24; 
+    box-shadow: inset 0 0 20px rgba(0,0,0,1); transform: rotateX(360deg);
+}
+
+/* Teclado para Futdle */
+.w-key.correct { background: var(--primary); color: var(--bg); border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow);}
+.w-key.present { background: #ffd700; color: var(--bg); border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
+.w-key.absent { opacity: 0.2; pointer-events: none; }
+.wide-key { width: auto; padding: 0 15px; font-size: 0.9rem; }
