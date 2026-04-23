@@ -194,7 +194,7 @@ let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
 let blurState = { player: "", blur: 30, lives: 5, streak: 0 };
 let timeMachineState = { event: "", year: 0, lives: 5, streak: 0 };
 let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalPlayers: 11 };
-let wordleState = { answer: "", guesses: [], currentGuess: "", streak: 0, maxGuesses: 6, wordLength: 5, validWords: [] };
+let wordleState = { targetPlayer: "", answer: "", guesses: [], currentGuess: "", maxGuesses: 6, wordLength: 5 };
 let currentCategory = "";
 
 // ==========================================
@@ -237,13 +237,6 @@ function showCategory(category) {
                     <h3>Blur Guess</h3>
                     <p>Adivina el jugador</p>
                 </div>
-            </div>
-            <div class="menu-card wordle-game-card" onclick="showGame('wordle')">
-                <div class="wordle-bg-image"></div>
-                <div class="card-info">
-                    <h3>Futdle</h3>
-                    <p>Wordle de 5 Letras</p>
-                </div>
             </div>`;
     } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
@@ -260,15 +253,23 @@ function showCategory(category) {
                 <h3>Higher or Lower</h3>
                 <p>Próximamente</p>
             </div>`;
-    } else {
-        title.innerHTML = "PREMIER <span>LEAGUE</span>";
+    } else if (category === 'europeos') {
+        title.innerHTML = "JUEGOS <span>EUROPEOS</span>";
         grid.innerHTML = `
             <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
                 <div class="eleven-bg-image"></div>
                 <div class="card-info">
                     <h3>XI Histórico</h3>
-                    <p>Adivina la alineación</p>
+                    <p>Adivina con Futdle</p>
                 </div>
+            </div>`;
+    } else {
+        title.innerHTML = "PREMIER <span>LEAGUE</span>";
+        grid.innerHTML = `
+            <div class="menu-card coming-soon">
+                <span class="icon">📈</span>
+                <h3>Próximamente</h3>
+                <p>Nuevos niveles</p>
             </div>`;
     }
 }
@@ -283,7 +284,6 @@ function showGame(gameId) {
         if(gameId === 'blur') initBlurGame();
         if(gameId === 'timemachine') initTimeMachine();
         if(gameId === 'eleven') initElevenGame();
-        if(gameId === 'wordle') initWordle();
         if(gameId === 'rosco') setTimeout(initRosco, 50);
     }
 }
@@ -468,9 +468,7 @@ function initTimeMachine() {
     document.getElementById('tm-streak').innerText = timeMachineState.streak;
     document.getElementById('tm-event-text').innerText = timeMachineState.event;
     
-    // CARGAR LA IMAGEN DEL EVENTO
     document.getElementById('tm-image').src = `events/${randomEvent.foto}.jpg`;
-    
     document.getElementById('tmInput').value = "";
     document.getElementById('tm-feedback').innerText = "";
     
@@ -599,7 +597,7 @@ function salirDelRosco() {
 }
 
 // ==========================================
-// 9. LÓGICA: XI HISTÓRICO PREMIER
+// 8. LÓGICA: XI HISTÓRICO EUROPEO
 // ==========================================
 
 function initElevenGame() {
@@ -613,13 +611,9 @@ function initElevenGame() {
     updateElevenTimerDisplay();
     document.getElementById('eleven-team').innerText = elevenState.match.team;
     document.getElementById('eleven-desc').innerText = elevenState.match.desc;
-    document.getElementById('elevenInput').value = "";
-    document.getElementById('eleven-hint-display').innerText = "Toca un jugador '❓' para ver su pista";
-    document.getElementById('eleven-hint-display').style.color = "#ffd700";
     
     renderPitch();
     startElevenTimer();
-    setTimeout(() => document.getElementById('elevenInput').focus(), 100);
 }
 
 function startElevenTimer() {
@@ -628,6 +622,7 @@ function startElevenTimer() {
         updateElevenTimerDisplay();
         if(elevenState.timeLeft <= 0) {
             clearInterval(elevenState.timer);
+            closeFutdleModal();
             mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => { initElevenGame(); });
         }
     }, 1000);
@@ -658,10 +653,7 @@ function renderPitch() {
                 playerDiv.classList.add('clickable');
                 playerDiv.innerHTML = `<div class="shirt empty">❓</div><div class="name hidden-name">---</div>`;
                 playerDiv.onclick = () => {
-                    const hintDisplay = document.getElementById('eleven-hint-display');
-                    hintDisplay.innerText = `Pista: ${playerObj.hint}`;
-                    hintDisplay.style.color = "#00ff87";
-                    document.getElementById('elevenInput').focus();
+                    openFutdleForPlayer(playerObj);
                 };
             }
             rowDiv.appendChild(playerDiv);
@@ -670,64 +662,37 @@ function renderPitch() {
     });
 }
 
-function checkElevenGuess() {
-    const input = document.getElementById('elevenInput');
-    const val = input.value.toUpperCase().trim();
-    if (!val) return;
-
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    let found = false;
-
-    elevenState.match.xi.forEach(linea => {
-        linea.forEach(playerObj => {
-            const nPlayer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            if (nVal === nPlayer && !elevenState.guessed.includes(playerObj.name)) {
-                elevenState.guessed.push(playerObj.name);
-                found = true;
-            }
-        });
-    });
-
-    if (found) {
-        input.value = "";
-        document.getElementById('eleven-hint-display').innerText = "✅ ¡Correcto! Sigue así.";
-        document.getElementById('eleven-hint-display').style.color = "#00ff87";
-        renderPitch();
-        
-        if (elevenState.guessed.length === elevenState.totalPlayers) {
-            clearInterval(elevenState.timer);
-            setTimeout(() => {
-                mostrarMensajePro("🏆 ¡LEYENDA!", "Has adivinado el XI Histórico completo.", () => { initElevenGame(); });
-            }, 300);
-        }
-    } else {
-        input.value = "";
-        document.getElementById('eleven-hint-display').innerText = "❌ Fallo o ya adivinado";
-        document.getElementById('eleven-hint-display').style.color = "#ff4d4d";
+function checkElevenWin() {
+    if (elevenState.guessed.length === elevenState.totalPlayers) {
+        clearInterval(elevenState.timer);
         setTimeout(() => {
-            if(document.getElementById('eleven-hint-display').innerText.includes("❌")) {
-                document.getElementById('eleven-hint-display').innerText = "Toca un jugador '❓' para ver su pista";
-                document.getElementById('eleven-hint-display').style.color = "#ffd700";
-            }
-        }, 1500);
+            mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => { initElevenGame(); });
+        }, 500);
     }
 }
 
 // ==========================================
-// 10. LÓGICA: FUTDLE (WORDLE)
+// 9. LÓGICA: FUTDLE (INTEGRADO EN XI)
 // ==========================================
 
-function initWordle() {
-    wordleState.validWords = players.filter(p => p.length === 5 && !p.includes(" "));
-    const randomPlayer = wordleState.validWords[Math.floor(Math.random() * wordleState.validWords.length)];
-    
-    wordleState.answer = randomPlayer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+function openFutdleForPlayer(playerObj) {
+    wordleState.targetPlayer = playerObj.name;
+    // Normalizamos y eliminamos espacios para el juego Wordle
+    wordleState.answer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').toUpperCase();
+    wordleState.wordLength = wordleState.answer.length;
     wordleState.guesses = [];
     wordleState.currentGuess = "";
-    document.getElementById('wordle-streak').innerText = wordleState.streak;
+    wordleState.maxGuesses = 6;
+    
+    document.getElementById('futdle-hint').innerText = `Pista: ${playerObj.hint}`;
+    document.getElementById('futdle-modal').classList.remove('hidden');
     
     renderWordleGrid();
     renderWordleKeyboard();
+}
+
+function closeFutdleModal() {
+    document.getElementById('futdle-modal').classList.add('hidden');
 }
 
 function renderWordleGrid() {
@@ -830,19 +795,23 @@ function submitWordleGuess() {
     renderWordleGrid();
     updateWordleKeyboard();
 
-    setTimeout(() => {
-        if (isWin) {
-            wordleState.streak++;
-            mostrarMensajePro("🔥 ¡GOLAZO!", "Has adivinado: " + wordleState.answer, () => initWordle());
-        } else if (wordleState.guesses.length >= wordleState.maxGuesses) {
-            wordleState.streak = 0;
-            mostrarMensajePro("❌ ¡PITIDO FINAL!", "Era: " + wordleState.answer, () => initWordle());
-        }
-    }, 600);
+    if (isWin) {
+        setTimeout(() => {
+            closeFutdleModal();
+            elevenState.guessed.push(wordleState.targetPlayer);
+            renderPitch();
+            checkElevenWin();
+        }, 1000);
+    } else if (wordleState.guesses.length >= wordleState.maxGuesses) {
+        setTimeout(() => {
+            closeFutdleModal();
+            mostrarMensajePro("❌ ¡FALLASTE!", "El jugador era: " + wordleState.targetPlayer + ". \n¡Prueba con otro mientras te quede tiempo!", () => {});
+        }, 1000);
+    }
 }
 
 // ==========================================
-// 11. EVENT LISTENERS Y MODAL
+// 10. EVENT LISTENERS Y MODAL GENÉRICO
 // ==========================================
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
@@ -853,17 +822,18 @@ document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
 document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
 document.getElementById('btnRoscoCheck').onclick = checkRosco;
 document.getElementById('btnPasapalabra').onclick = pasapalabra;
-document.getElementById('btnElevenCheck').onclick = checkElevenGuess;
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
     
+    // Controles para Ahorcado
     if (!isTyping && !document.getElementById('hangman-screen').classList.contains('hidden')) {
         const key = e.key.toUpperCase();
         if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
     }
     
-    if (!isTyping && !document.getElementById('wordle-screen').classList.contains('hidden')) {
+    // Controles para Futdle Modal
+    if (!isTyping && !document.getElementById('futdle-modal').classList.contains('hidden')) {
         if (e.key === 'Enter') handleWordleKey('ENTER');
         else if (e.key === 'Backspace') handleWordleKey('BACKSPACE');
         else {
@@ -877,7 +847,6 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'blurInput') checkBlurGuess();
         if (document.activeElement.id === 'roscoInput') checkRosco();
         if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
-        if (document.activeElement.id === 'elevenInput') checkElevenGuess();
     }
 });
 
