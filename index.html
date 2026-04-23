@@ -161,6 +161,22 @@
                 </div>
             </div>
         </div>
+
+        <div id="wordle-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">RACHA: <span id="wordle-streak">0</span></div>
+            </nav>
+
+            <div class="wordle-layout">
+                <h2 class="logo" style="font-size: 2rem; margin-bottom: 5px;">FUT<span>DLE</span></h2>
+                <p style="color: var(--text-dim); margin-bottom: 20px; font-family: 'Orbitron';">Adivina el jugador en 6 intentos</p>
+                
+                <div id="wordle-grid" class="wordle-grid"></div>
+                
+                <div id="wordle-keyboard" class="keyboard-container" style="margin-top: 30px;"></div>
+            </div>
+        </div>
         
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
