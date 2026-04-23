@@ -141,7 +141,7 @@ const timeMachineEvents = [
     { foto: "guti2010", event: "El taconazo de Guti a Benzema 'inventando el fútbol' en Riazor", year: 2010 },
     { foto: "zlatan2012", event: "La monumental chilena de Ibrahimovic a Inglaterra desde 30 metros", year: 2012 },
     { foto: "vanbasten1988", event: "El inolvidable gol de volea de Van Basten en la final de la Eurocopa", year: 1988 },
-    { foto: "banks1970", event: "La parada impossible de Gordon Banks al cabezazo de Pelé", year: 1970 },
+    { foto: "banks1970", event: "La parada imposible de Gordon Banks al cabezazo de Pelé", year: 1970 },
     { foto: "centenariazo2002", event: "El sorprendente 'Centenariazo' del Deportivo ante el Real Madrid", year: 2002 },
     { foto: "grecia2004", event: "La victoria histórica y sorpresiva de Grecia en la Eurocopa", year: 2004 },
     { foto: "cruyff1982", event: "El penalti indirecto original de Johan Cruyff con el Ajax", year: 1982 },
@@ -677,12 +677,18 @@ function checkElevenWin() {
 
 function openFutdleForPlayer(playerObj) {
     wordleState.targetPlayer = playerObj.name;
-    // Normalizamos y eliminamos espacios para el juego Wordle
-    wordleState.answer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').toUpperCase();
+    
+    // Dejamos los espacios y guiones en la respuesta para que la cuadrícula se dibuje bien
+    wordleState.answer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     wordleState.wordLength = wordleState.answer.length;
     wordleState.guesses = [];
     wordleState.currentGuess = "";
     wordleState.maxGuesses = 6;
+
+    // MAGIA: Rellenar automáticamente espacios y guiones iniciales (por seguridad)
+    while(wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-') {
+        wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
+    }
     
     document.getElementById('futdle-hint').innerText = `Pista: ${playerObj.hint}`;
     document.getElementById('futdle-modal').classList.remove('hidden');
@@ -705,21 +711,31 @@ function renderWordleGrid() {
         const guess = wordleState.guesses[i] || (i === wordleState.guesses.length ? wordleState.currentGuess : "");
         
         for (let j = 0; j < wordleState.wordLength; j++) {
-            const cell = document.createElement('div');
-            cell.className = 'wordle-cell';
-            const letter = guess[j] || "";
-            cell.innerText = letter;
+            const targetChar = wordleState.answer[j];
             
-            if (letter && i === wordleState.guesses.length) {
-                cell.classList.add('active'); 
+            // Si el carácter original es un espacio o un guion, lo ponemos como "separador" transparente
+            if (targetChar === ' ' || targetChar === '-') {
+                const spacer = document.createElement('div');
+                spacer.className = 'wordle-spacer';
+                spacer.innerText = targetChar === '-' ? '-' : '';
+                row.appendChild(spacer);
+            } else {
+                const cell = document.createElement('div');
+                cell.className = 'wordle-cell';
+                const letter = guess[j] || "";
+                cell.innerText = letter;
+                
+                if (letter && i === wordleState.guesses.length) {
+                    cell.classList.add('active'); 
+                }
+                
+                if (i < wordleState.guesses.length) {
+                    cell.classList.add('revealed'); 
+                    const status = getWordleLetterStatus(guess, j);
+                    cell.classList.add(status);
+                }
+                row.appendChild(cell);
             }
-            
-            if (i < wordleState.guesses.length) {
-                cell.classList.add('revealed'); 
-                const status = getWordleLetterStatus(guess, j);
-                cell.classList.add(status);
-            }
-            row.appendChild(cell);
         }
         grid.appendChild(row);
     }
@@ -727,6 +743,7 @@ function renderWordleGrid() {
 
 function getWordleLetterStatus(guess, index) {
     const letter = guess[index];
+    if (!letter || letter === ' ' || letter === '-') return "ignore"; // Salto de seguridad
     if (wordleState.answer[index] === letter) return "correct";
     if (wordleState.answer.includes(letter)) return "present";
     return "absent";
@@ -765,6 +782,7 @@ function updateWordleKeyboard() {
             if (!keyEl) continue;
             
             const status = getWordleLetterStatus(guess, i);
+            if (status === 'ignore') continue;
             if (keyEl.classList.contains('correct')) continue; 
             if (keyEl.classList.contains('present') && status === 'absent') continue;
             
@@ -779,10 +797,24 @@ function handleWordleKey(key) {
     if (key === 'ENTER') {
         if (wordleState.currentGuess.length === wordleState.wordLength) submitWordleGuess();
     } else if (key === 'BACKSPACE') {
-        wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
-        renderWordleGrid();
+        if (wordleState.currentGuess.length > 0) {
+            // Borra la letra
+            wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+            // MAGIA: Si después de borrar se queda justo en un espacio o guion, lo borra también automáticamente
+            while (wordleState.currentGuess.length > 0 && 
+                  (wordleState.currentGuess.slice(-1) === ' ' || wordleState.currentGuess.slice(-1) === '-')) {
+                wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+            }
+            renderWordleGrid();
+        }
     } else if (wordleState.currentGuess.length < wordleState.wordLength && /^[A-ZÑ]$/.test(key)) {
+        // Añade la letra
         wordleState.currentGuess += key;
+        // MAGIA: Si el siguiente carácter que tocaría es un espacio o guion, lo salta automáticamente
+        while (wordleState.currentGuess.length < wordleState.wordLength && 
+              (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
+            wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
+        }
         renderWordleGrid();
     }
 }
@@ -832,7 +864,7 @@ document.addEventListener('keydown', (e) => {
         if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
     }
     
-    // Controles para Futdle Modal
+    // Controles para Futdle Modal (Teclado del PC)
     if (!isTyping && !document.getElementById('futdle-modal').classList.contains('hidden')) {
         if (e.key === 'Enter') handleWordleKey('ENTER');
         else if (e.key === 'Backspace') handleWordleKey('BACKSPACE');
@@ -842,6 +874,7 @@ document.addEventListener('keydown', (e) => {
         }
     }
 
+    // Controles normales
     if (e.key === 'Enter' && isTyping) {
         if (document.activeElement.id === 'wordInput') solveFullWord();
         if (document.activeElement.id === 'blurInput') checkBlurGuess();
