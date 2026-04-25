@@ -164,11 +164,29 @@ const elevenMatches = [
         desc: "Real Madrid VS Ajax (1-4) Vuelta de Octavos de la Champions League 2018/2019.",
         xi: [
             [{ name: "NERES", hint: "Brasileño" }, { name: "TADIC", hint: "Serbio" }, { name: "ZIYECH", hint: "Marroquí" }],
-            [{ name: "DE JONG", hint: "Holandés" }, { name: "SCHONE", hint: "Danés" }, { name: "VAN DE BEEK", hint: "Holandés" }],
-            [{ name: "TAGLIAFICO", hint: "Argentino" }, { name: "BLIND", hint: "Holandés" }, { name: "DE LIGT", hint: "Holandés" }, { name: "MAZRAOUI", hint: "Marroquí" }],
-            [{ name: "ONANA", hint: "Camerunés" }],
+            [{ name: "DE JONG", hint: "Neerlandés" }, { name: "SCHONE", hint: "Danés" }, { name: "VAN DE BEEK", hint: "Neerlandés" }],
+            [{ name: "TAGLIAFICO", hint: "Argentino" }, { name: "BLIND", hint: "Neerlandés" }, { name: "DE LIGT", hint: "Neerlandés" }, { name: "MAZRAOUI", hint: "Marroquí" }],
+            [{ name: "ONANA", hint: "Camerunés" }]
         ]
-    }
+    },
+    {
+        team:"BARCELONA",
+        desc: "Barcelona VS Sporting Portugal (2-0) Jornada 6 de la fase de grupos de la Champions 2017/2018.",
+        xi: [
+            [{ name: "ALCACER", hint: "Español" }, { name: "SUAREZ", hint: "Uruguayo" }, { name: "ALEIX VIDAL", hint: "Español" }],
+            [{ name: "DENIS SUAREZ", hint: "Español" }, { name: "ANDRE GOMES", hint: "Portugués" }, { name: "RAKITIC", hint: "Croata" }],
+            [{ name: "DIGNE", hint: "Francés" }, { name: "VERMAELEN", hint: "Belga" }, { name: "PIQUE", hint: "Español" }, { name: "SEMEDO", hint: "Portugués" }],
+            [{ name: "CILLESSEN", hint: "Neerlandés" }]
+        ]
+    },
+            
+
+
+
+
+
+
+        
 ];
 
 function obtenerRoscoAleatorio(preguntas) {
