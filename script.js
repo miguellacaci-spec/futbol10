@@ -72,7 +72,7 @@ const roscoQuestions = [
     { letra: "D", preguntas: [{ respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" }, { respuesta: "DE PAUL", hint: "Apellido del jugador argentino que juega con Messi en el Inter de Miami." }, { respuesta: "DE BRUYNE", hint: "Genio belga del Manchester City" }] },
     { letra: "E", preguntas: [{ respuesta: "ENDRICK", hint: "Joven promesa brasileña fichada por el Real Madrid" }, { respuesta: "EMPOLI", hint: "Equipo modesto de la Serie A italiana" }, { respuesta: "ETO'O", hint: "Legendario delantero camerunés del Barça e Inter" }] },
     { letra: "F", preguntas: [{ respuesta: "FORLAN", hint: "Delantero uruguayo que brilló en el Atlético y Villarreal" }, { respuesta: "FALCAO", hint: "El 'Tigre' que goleó en el Atleti y Rayo Vallecano" }, { respuesta: "FEYENOORD", hint: "Histórico equipo de los Países Bajos (Rotterdam)" }] },
-    { letra: "G", preguntas: [{ respuesta: "GAVI", hint: "Intenso centrocampista canterano del FC Barcelona" }, { respuesta: "GRIEZMANN", hint: "Apellido del máximo goleador histórico del Atlético de Madrid." }, { respuesta: "GIRONA", hint: "Equipo revelación de LaLiga en la 2023/2024." }] },
+    { letra: "G", preguntas: [{ respuesta: "GAVI", hint: "Intenso centrocampista canterano del FC Barcelona" }, { respuesta: "GRIEZMANN", hint: "Apellido del maximum goleador histórico del Atlético de Madrid." }, { respuesta: "GIRONA", hint: "Equipo revelación de LaLiga en la 2023/2024." }] },
     { letra: "H", preguntas: [{ respuesta: "HAALAND", hint: "El 'Androide' noruego del Manchester City" }, { respuesta: "HULK", hint: "Delantero brasileño famoso por su potencia física" }, { respuesta: "HERNANDEZ", hint: "Apellido de los hermanos Lucas y Theo" }] },
     { letra: "I", preguntas: [{ respuesta: "ISCO", hint: "Magia malagueña que ahora brilla en el Betis" }, { respuesta: "INIESTA", hint: "Autor del gol que nos dio el Mundial 2010" }, { respuesta: "INTER", hint: "Club italiano que viste de 'nerazzurro'" }] },
     { letra: "J", preguntas: [{ respuesta: "JOAQUIN", hint: "Leyenda del Betis conocida por su arte y fintas" }, { respuesta: "JOAO FELIX", hint: "Talentoso mediapunta portugués" }, { respuesta: "JUVENTUS", hint: "La 'Vecchia Signora' del fútbol italiano." }] },
@@ -286,12 +286,15 @@ function showCategory(category) {
                 </div>
             </div>`;
     } else {
+        // PREMIER LEAGUE - HIGHER OR LOWER AÑADIDO AQUÍ
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
-            <div class="menu-card coming-soon">
-                <span class="icon">📈</span>
-                <h3>Próximamente</h3>
-                <p>Nuevos niveles</p>
+            <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
+                <div class="card-bg bg-premier"></div>
+                <div class="card-info">
+                    <h3 style="color: #00ff85; text-shadow: 0 0 10px rgba(0, 255, 133, 0.4);">Higher / Lower</h3>
+                    <p>Valor de Mercado</p>
+                </div>
             </div>`;
     }
 }
@@ -305,6 +308,7 @@ function showGame(gameId) {
         if(gameId === 'blur') initBlurGame();
         if(gameId === 'timemachine') initTimeMachine();
         if(gameId === 'eleven') initElevenGame();
+        if(gameId === 'higherlower') initHigherLower(); // Añadido aquí
     }
 }
 
@@ -328,7 +332,7 @@ function setupAutocomplete(inputId, suggestionId) {
 }
 
 // ==========================================
-// 4. LÓGICA: AHORCADO (CORREGIDO ESPACIADO)
+// 4. LÓGICA: AHORCADO
 // ==========================================
 
 function initHangman() {
@@ -379,7 +383,6 @@ function handleInput(char) {
     }
 }
 
-/* AQUÍ ESTÁ EL ARREGLO DE LAS LETRAS DEL AHORCADO */
 function updateDisplay() {
     const words = gameState.word.split(" ");
     const displayHTML = words.map(word => {
@@ -387,13 +390,11 @@ function updateDisplay() {
             const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             return gameState.guessed.includes(normChar) ? char : "_";
         }).join(" ");
-        // Usar span nowrap garantiza que la palabra entera viaja junta si salta de línea
         return `<span style="white-space: nowrap;">${letters}</span>`;
     }).join(" &nbsp;&nbsp; "); 
     
     document.getElementById('wordDisplay').innerHTML = displayHTML;
     
-    // Al comprobar si ganamos, usamos textContent en lugar del HTML con los spans
     if (!document.getElementById('wordDisplay').textContent.includes("_")) victory();
 }
 
@@ -528,7 +529,7 @@ function checkTimeMachineGuess() {
 }
 
 // ==========================================
-// 7. LÓGICA: EL ROSCO (INDIVIDUAL Y MULTI)
+// 7. LÓGICA: EL ROSCO
 // ==========================================
 
 function initRosco(mode) {
@@ -983,7 +984,7 @@ function submitWordleGuess() {
 }
 
 // ==========================================
-// 10. EVENT LISTENERS
+// 10. EVENT LISTENERS GENERALES
 // ==========================================
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
@@ -1031,4 +1032,75 @@ function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
         modal.classList.add('hidden');
         if (accionAlCerrar) accionAlCerrar();
     };
+}
+
+
+// ==========================================
+// 12. LÓGICA: HIGHER OR LOWER (PREMIER)
+// ==========================================
+
+const premierPlayers = [
+    { name: "HAALAND", value: 180 }, { name: "FODEN", value: 130 }, { name: "SAKA", value: 130 },
+    { name: "RODRI", value: 110 }, { name: "RICE", value: 110 }, { name: "ODEGAARD", value: 95 },
+    { name: "BRUNO GUIMARAES", value: 85 }, { name: "RUBEN DIAS", value: 80 }, { name: "SALIBA", value: 80 },
+    { name: "ALVAREZ", value: 90 }, { name: "SZOBOSZLAI", value: 75 }, { name: "SALAH", value: 65 },
+    { name: "TRENT", value: 70 }, { name: "DE BRUYNE", value: 60 }, { name: "SON", value: 50 },
+    { name: "RASHFORD", value: 60 }, { name: "ALISSON", value: 35 }, { name: "VAN DIJK", value: 30 }
+];
+
+let hlState = { p1: null, p2: null, score: 0 };
+
+function initHigherLower() {
+    hlState.score = 0;
+    document.getElementById('hl-score').innerText = hlState.score;
+    
+    hlState.p1 = premierPlayers[Math.floor(Math.random() * premierPlayers.length)];
+    pickNewPlayer2();
+    renderHL();
+}
+
+function pickNewPlayer2() {
+    let available = premierPlayers.filter(p => p.name !== hlState.p1.name);
+    hlState.p2 = available[Math.floor(Math.random() * available.length)];
+}
+
+function renderHL() {
+    document.getElementById('hl-controls').classList.remove('hidden');
+    document.getElementById('hl-val-2').classList.add('hidden-val');
+    document.getElementById('hl-val-2').innerText = "???";
+
+    document.getElementById('hl-name-1').innerText = hlState.p1.name;
+    document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
+    document.getElementById('hl-img-1').src = `players/${hlState.p1.name}.jpg`;
+
+    document.getElementById('hl-name-2').innerText = hlState.p2.name;
+    document.getElementById('hl-img-2').src = `players/${hlState.p2.name}.jpg`;
+}
+
+function checkHigherLower(guess) {
+    let v1 = hlState.p1.value;
+    let v2 = hlState.p2.value;
+    let isCorrect = false;
+
+    if (guess === 'higher' && v2 >= v1) isCorrect = true;
+    if (guess === 'lower' && v2 <= v1) isCorrect = true;
+
+    document.getElementById('hl-controls').classList.add('hidden');
+    const val2El = document.getElementById('hl-val-2');
+    val2El.innerText = v2 + " M€";
+    val2El.classList.remove('hidden-val');
+
+    setTimeout(() => {
+        if (isCorrect) {
+            hlState.score++;
+            document.getElementById('hl-score').innerText = hlState.score;
+            hlState.p1 = hlState.p2;
+            pickNewPlayer2();
+            renderHL();
+        } else {
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => {
+                initHigherLower();
+            });
+        }
+    }, 1500);
 }
