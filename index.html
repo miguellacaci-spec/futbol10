@@ -18,6 +18,7 @@
                 </div>
                 <h1 class="logo-texto-inferior">FUTBOL<span>10</span></h1>
             </div>
+            
             <div class="menu-grid">
                 <div class="menu-card rosco-game-card" onclick="showRoscoMenu()">
                     <div class="card-bg bg-rosco"></div>
@@ -215,6 +216,43 @@
                 </div>
             </div>
         </div> 
+
+        <div id="higherlower-screen" class="screen hidden" style="background: linear-gradient(135deg, #38003c 0%, #0b0e14 100%);">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn" style="border-color: #00ff85; color: #00ff85;">← ATRÁS</button>
+                <div class="score-board" style="border-color: #00ff85;">PUNTOS: <span id="hl-score" style="color: #00ff85;">0</span></div>
+            </nav>
+
+            <h2 class="logo" style="font-size: 1.5rem; margin-bottom: 2vh; text-shadow: 0 0 15px rgba(0,255,133,0.5);">VALOR DE <span>MERCADO</span></h2>
+
+            <div class="hl-layout">
+                <div class="hl-card">
+                    <img id="hl-img-1" src="" alt="Jugador 1">
+                    <div class="hl-info">
+                        <h3 id="hl-name-1">Jugador 1</h3>
+                        <p style="color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem;">Tiene un valor de</p>
+                        <div class="hl-value" id="hl-val-1">0 M€</div>
+                    </div>
+                </div>
+                
+                <div class="hl-vs">VS</div>
+                
+                <div class="hl-card">
+                    <img id="hl-img-2" src="" alt="Jugador 2">
+                    <div class="hl-info">
+                        <h3 id="hl-name-2">Jugador 2</h3>
+                        <p style="color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem;">Tiene un valor...</p>
+                        
+                        <div class="hl-value hidden-val" id="hl-val-2">???</div>
+                        
+                        <div class="hl-buttons" id="hl-controls">
+                            <button class="hl-btn btn-higher" onclick="checkHigherLower('higher')">▲ MAYOR</button>
+                            <button class="hl-btn btn-lower" onclick="checkHigherLower('lower')">▼ MENOR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div> 
     
