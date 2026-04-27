@@ -423,24 +423,50 @@ input[type="number"]::-webkit-outer-spin-button {
 .wordle-cell.revealed.absent { background: #0f1218; color: #444; border-color: #1a1e24; box-shadow: inset 0 0 15px rgba(0,0,0,1); transform: rotateX(360deg); }
 
 
+/* Contenedor del nuevo logo */
 .logo-container {
-    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    margin: 0 0 2vh 0;
+    justify-content: center;
+    margin-bottom: 3vh;
+    animation: pulseLogo 3s infinite alternate ease-in-out;
 }
 
-.logo-img {
-    width: clamp(200px, 50vw, 400px); /* Ajusta su tamaño en móviles y PC */
+/* El tamaño del gráfico F10 adaptable a móviles y PC */
+.logo-svg {
+    width: clamp(140px, 40vw, 200px);
     height: auto;
-    /* Le añadimos la misma sombra brillante que tenía tu texto */
-    filter: drop-shadow(0 0 20px var(--primary-glow));
-    transition: transform 0.3s ease;
+    margin-bottom: -5px; /* Acerca el texto al gráfico */
 }
 
-/* Un pequeño efecto para que el logo palpite o reaccione al pasar el ratón */
-.logo-img:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 30px var(--primary));
+/* El texto de FUTBOL 10 */
+.logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.logo-text span {
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Subtítulo MINIJUEGOS */
+.logo-sub {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    color: var(--text-dim);
+    letter-spacing: 8px;
+    margin: 5px 0 0 0;
+}
+
+/* Efecto de "respiración" para darle vida al logo */
+@keyframes pulseLogo {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0, 255, 135, 0.1)); }
+    100% { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(0, 255, 135, 0.3)); }
 }
