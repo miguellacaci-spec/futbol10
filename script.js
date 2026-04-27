@@ -181,14 +181,12 @@ const elevenMatches = [
     }
 ];
 
-// Generador de dos roscos diferentes para multijugador
 function obtenerDosRoscos() {
     let r1 = [], r2 = [];
     roscoQuestions.forEach(item => {
         let options = [...item.preguntas];
-        options.sort(() => Math.random() - 0.5); // Barajar preguntas
+        options.sort(() => Math.random() - 0.5); 
         r1.push({ letra: item.letra, respuesta: options[0].respuesta, hint: options[0].hint });
-        // Si hay más de una opción, el J2 se lleva la segunda. Si no, se repite (para no romper).
         let idx2 = options.length > 1 ? 1 : 0;
         r2.push({ letra: item.letra, respuesta: options[idx2].respuesta, hint: options[idx2].hint });
     });
@@ -207,10 +205,9 @@ let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalP
 let wordleState = { targetPlayer: "", answer: "", guesses: [], currentGuess: "", maxGuesses: 6, wordLength: 5 };
 let currentCategory = "";
 
-// Estado Completo del Rosco (Maneja 1 o 2 Jugadores)
 let roscoState = {
     mode: 'individual',
-    currentPlayer: 1, // 1 o 2
+    currentPlayer: 1, 
     timerInterval: null,
     p1: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false },
     p2: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false }
@@ -331,7 +328,7 @@ function setupAutocomplete(inputId, suggestionId) {
 }
 
 // ==========================================
-// 4. LÓGICA: AHORCADO
+// 4. LÓGICA: AHORCADO (CORREGIDO ESPACIADO)
 // ==========================================
 
 function initHangman() {
@@ -382,14 +379,22 @@ function handleInput(char) {
     }
 }
 
+/* AQUÍ ESTÁ EL ARREGLO DE LAS LETRAS DEL AHORCADO */
 function updateDisplay() {
-    const display = gameState.word.split('').map(char => {
-        if (char === " ") return "&nbsp;";
-        const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        return gameState.guessed.includes(normChar) ? char : "_";
-    }).join(" ");
-    document.getElementById('wordDisplay').innerHTML = display;
-    if (!display.includes("_")) victory();
+    const words = gameState.word.split(" ");
+    const displayHTML = words.map(word => {
+        const letters = word.split('').map(char => {
+            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return gameState.guessed.includes(normChar) ? char : "_";
+        }).join(" ");
+        // Usar span nowrap garantiza que la palabra entera viaja junta si salta de línea
+        return `<span style="white-space: nowrap;">${letters}</span>`;
+    }).join(" &nbsp;&nbsp; "); 
+    
+    document.getElementById('wordDisplay').innerHTML = displayHTML;
+    
+    // Al comprobar si ganamos, usamos textContent en lugar del HTML con los spans
+    if (!document.getElementById('wordDisplay').textContent.includes("_")) victory();
 }
 
 function solveFullWord() {
@@ -545,7 +550,6 @@ function initRosco(mode) {
         timerInterval: null
     };
 
-    // Configuración visual según el modo
     if (mode === 'individual') {
         document.getElementById('rosco-single-timer').classList.remove('hidden');
         document.getElementById('rosco-multi-timers').classList.add('hidden');
@@ -559,7 +563,6 @@ function initRosco(mode) {
         document.getElementById('rosco-timer-p2').textContent = roscoState.p2.timeLeft;
     }
 
-    // Dibujar el círculo
     roscoAlphabet.forEach((letra, i) => {
         const div = document.createElement('div');
         div.className = 'rosco-letter';
@@ -582,23 +585,19 @@ function renderRoscoTurn() {
     const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
     const state = roscoState[pKey];
 
-    // Actualizar colores del anillo según los resultados del jugador actual
     document.querySelectorAll('.rosco-letter').forEach((el, i) => {
         const letra = roscoAlphabet[i];
-        el.className = 'rosco-letter'; // Reset de clases
+        el.className = 'rosco-letter'; 
         if (state.results[letra] === 'correct') el.classList.add('correct');
         else if (state.results[letra] === 'wrong') el.classList.add('wrong');
     });
 
-    // Resaltar la letra actual
     const currentEl = document.getElementById(`letra-${roscoAlphabet[state.currentIndex]}`);
     currentEl.classList.add('current');
     
-    // Si es multijugador, le damos el brillo azul o rojo
     if (roscoState.mode === 'multiplayer') {
         currentEl.classList.add(roscoState.currentPlayer === 1 ? 'current-p1' : 'current-p2');
         
-        // Efecto del título y contadores
         const titleEl = document.getElementById('rosco-player-title');
         titleEl.textContent = `Turno: Jugador ${roscoState.currentPlayer}`;
         titleEl.className = roscoState.currentPlayer === 1 ? 'title-p1' : 'title-p2';
@@ -607,7 +606,6 @@ function renderRoscoTurn() {
         document.getElementById('rosco-timer-p2').classList.toggle('timer-active', roscoState.currentPlayer === 2);
     }
 
-    // Actualizar Textos
     const q = state.questions[state.currentIndex];
     document.getElementById('rosco-letter-hint').textContent = q.letra;
     document.getElementById('rosco-definition').textContent = q.hint;
@@ -668,15 +666,15 @@ function checkRosco() {
 
     if(nVal === nAns) {
         state.results[q.letra] = 'correct';
-        advanceRoscoTurn(true); // Acertar mantiene el turno
+        advanceRoscoTurn(true); 
     } else {
         state.results[q.letra] = 'wrong';
-        advanceRoscoTurn(false); // Fallar pierde el turno
+        advanceRoscoTurn(false); 
     }
 }
 
 function pasapalabra() {
-    advanceRoscoTurn(false); // Pasapalabra pierde el turno
+    advanceRoscoTurn(false); 
 }
 
 function advanceRoscoTurn(keepTurn) {
@@ -684,7 +682,6 @@ function advanceRoscoTurn(keepTurn) {
     const state = roscoState[pKey];
     let pending = false;
     
-    // Buscar la siguiente letra libre
     for(let i=1; i <= roscoAlphabet.length; i++) {
         let idx = (state.currentIndex + i) % roscoAlphabet.length;
         if(!state.results[roscoAlphabet[idx]]) {
@@ -711,7 +708,6 @@ function advanceRoscoTurn(keepTurn) {
         return;
     }
     
-    // Cambio de turno multijugador
     if (!keepTurn && roscoState.mode === 'multiplayer') {
         const other = roscoState.currentPlayer === 1 ? 2 : 1;
         if (!roscoState[`p${other}`].done) {
@@ -751,7 +747,7 @@ function initElevenGame() {
     
     elevenState.match = elevenMatches[Math.floor(Math.random() * elevenMatches.length)];
     elevenState.guessed = [];
-    elevenState.timeLeft = 180; // 3 minutos
+    elevenState.timeLeft = 180; 
     elevenState.totalPlayers = 11;
 
     updateElevenTimerDisplay();
@@ -940,10 +936,16 @@ function handleWordleKey(key) {
         if (wordleState.currentGuess.length === wordleState.wordLength) submitWordleGuess();
     } else if (key === 'BACKSPACE') {
         if (wordleState.currentGuess.length > 0) {
-            wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
             while (wordleState.currentGuess.length > 0 && 
                   (wordleState.currentGuess.slice(-1) === ' ' || wordleState.currentGuess.slice(-1) === '-')) {
                 wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+            }
+            if (wordleState.currentGuess.length > 0) {
+                wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+            }
+            while (wordleState.currentGuess.length < wordleState.wordLength && 
+                  (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
+                wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
             }
             renderWordleGrid();
         }
