@@ -172,7 +172,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .laliga-card, .premier-card, .leyendas-card, .europeos-card,
 .rosco-game-card, .hangman-game-card, .blur-game-card, 
-.timemachine-game-card, .eleven-game-card {
+.timemachine-game-card, .eleven-game-card, .hl-game-card {
     position: relative;
     padding: 0 !important;
     display: flex;
@@ -184,6 +184,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .timemachine-game-card:hover { border-color: #ffd700; transform: translateY(-8px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1); }
 .rosco-game-card { border-color: var(--secondary); }
+.hl-game-card { border-color: #00ff85; }
 
 .card-info { position: relative; z-index: 2; text-align: center; pointer-events: none; padding: 10px; }
 
@@ -202,7 +203,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .leyendas-card:hover .bg-leyendas, .europeos-card:hover .bg-europeos,
 .rosco-game-card:hover .bg-rosco, .hangman-game-card:hover .bg-ahorcado,
 .blur-game-card:hover .bg-blur, .timemachine-game-card:hover .bg-timemachine,
-.eleven-game-card:hover .eleven-bg-image, .menu-card:hover .card-bg {
+.eleven-game-card:hover .eleven-bg-image, .hl-game-card:hover .bg-premier, .menu-card:hover .card-bg {
     filter: brightness(0.6) blur(0px);
     transform: scale(1.1);
 }
@@ -482,4 +483,159 @@ input[type="number"]::-webkit-outer-spin-button {
 @keyframes pulseLogo {
     0% { transform: perspective(500px) rotateX(10deg) scale(1); filter: brightness(1); }
     100% { transform: perspective(500px) rotateX(10deg) scale(1.05); filter: brightness(1.2); }
+}
+
+/* ==========================================
+   12. HIGHER OR LOWER (PREMIER LEAGUE)
+   ========================================== */
+.hl-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 1vh;
+}
+
+@media(min-width: 768px) {
+    .hl-layout { flex-direction: row; gap: 30px; }
+}
+
+.hl-card {
+    width: 100%;
+    max-width: 320px;
+    background: #2a002d; /* Morado Premier oscuro */
+    border: 2px solid rgba(0, 255, 133, 0.3); /* Verde Flúor suave */
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 4/5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    transition: 0.3s;
+}
+
+.hl-card:hover {
+    border-color: #00ff85;
+    box-shadow: 0 0 30px rgba(0, 255, 133, 0.2);
+}
+
+.hl-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.5;
+    transition: opacity 0.5s;
+}
+
+.hl-card:hover img { opacity: 0.7; }
+
+.hl-info {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(to top, rgba(11, 14, 20, 1) 0%, rgba(11, 14, 20, 0.8) 50%, transparent 100%);
+}
+
+.hl-info h3 {
+    margin: 0 0 5px 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    color: white;
+    text-shadow: 0 2px 5px rgba(0,0,0,1);
+}
+
+.hl-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: bold;
+    color: #00ff85;
+    text-shadow: 0 0 15px rgba(0, 255, 133, 0.6);
+    transition: 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.27);
+    margin: 10px 0;
+}
+
+.hidden-val {
+    opacity: 0;
+    transform: scale(0.2) translateY(-50px);
+    pointer-events: none;
+    height: 0;
+    margin: 0;
+}
+
+.hl-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.hl-btn {
+    padding: clamp(12px, 3vw, 15px);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-higher {
+    background: rgba(0, 255, 133, 0.15);
+    color: #00ff85;
+    border: 2px solid #00ff85;
+}
+
+.btn-higher:hover {
+    background: #00ff85;
+    color: #38003c;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 133, 0.4);
+}
+
+.btn-lower {
+    background: rgba(255, 77, 77, 0.15);
+    color: #ff4d4d;
+    border: 2px solid #ff4d4d;
+}
+
+.btn-lower:hover {
+    background: #ff4d4d;
+    color: white;
+    transform: translateY(3px);
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+}
+
+.hl-vs {
+    width: 60px;
+    height: 60px;
+    background: white;
+    color: #38003c;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 10;
+    border: 5px solid #00ff85;
+    margin: -25px 0;
+    box-shadow: 0 0 20px rgba(0, 255, 133, 0.5);
+}
+
+@media(min-width: 768px) {
+    .hl-vs { margin: 0 -35px; }
 }
