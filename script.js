@@ -1040,12 +1040,14 @@ function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
 // ==========================================
 
 const premierPlayers = [
-    { name: "HAALAND", value: 180 }, { name: "FODEN", value: 130 }, { name: "SAKA", value: 130 },
-    { name: "RODRI", value: 110 }, { name: "RICE", value: 110 }, { name: "ODEGAARD", value: 95 },
-    { name: "BRUNO GUIMARAES", value: 85 }, { name: "RUBEN DIAS", value: 80 }, { name: "SALIBA", value: 80 },
-    { name: "ALVAREZ", value: 90 }, { name: "SZOBOSZLAI", value: 75 }, { name: "SALAH", value: 65 },
-    { name: "TRENT", value: 70 }, { name: "DE BRUYNE", value: 60 }, { name: "SON", value: 50 },
-    { name: "RASHFORD", value: 60 }, { name: "ALISSON", value: 35 }, { name: "VAN DIJK", value: 30 }
+    { name: "DONNARUMMA", value: 45 }, { name: "GVARDIOL", value: 70 }, { name: "MARC GUEHI", value: 65 },
+    { name: "RUBEN DIAS", value: 60 }, { name: "KHUSANOV", value: 35 }, { name: "STONES", value: 15 },
+    { name: "AKE", value: 15 }, { name: "O'REILLY", value: 50 }, { name: "AIT-NOURI", value: 40 },
+    { name: "MATHEUS NUNES", value: 45 }, { name: "RICO LEWIS", value: 32 }, { name: "RODRI", value: 65 },
+    { name: "NICO GONZALEZ", value: 45 }, { name: "REIJNDERS", value: 60 }, { name: "KOVACIC", value: 15 },
+    { name: "FODEN", value: 80 }, { name: "CHERKI", value: 65 }, { name: "BERNARDO SILVA", value: 27 },
+    { name: "DOKU", value: 65 }, { name: "SAVINHO", value: 40 }, { name: "SEMENYO", value: 75 },
+    { name: "HAALAND", value: 200 }, { name: "MARMOUSH", value: 60 },
 ];
 
 let hlState = { p1: null, p2: null, score: 0 };
