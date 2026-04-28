@@ -1073,10 +1073,10 @@ function renderHL() {
 
     document.getElementById('hl-name-1').innerText = hlState.p1.name;
     document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
-    document.getElementById('hl-img-1').src = `players/${hlState.p1.name}.jpg`;
+    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name}.jpg`;
 
     document.getElementById('hl-name-2').innerText = hlState.p2.name;
-    document.getElementById('hl-img-2').src = `players/${hlState.p2.name}.jpg`;
+    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name}.jpg`;
 }
 
 function checkHigherLower(guess) {
