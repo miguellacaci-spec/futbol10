@@ -1,5 +1,5 @@
 :root {
-    /* Color base genérico, se sobreescribe en cada pantalla */
+    /* Color base genérico, se sobreescribe dinámicamente en cada pantalla */
     --primary: #00ff87;
     --primary-glow: rgba(0, 255, 135, 0.3);
     --secondary: #6e2cf2;
@@ -10,8 +10,10 @@
     --error: #ff4d4d;
 }
 
-/* THEMES DINÁMICOS POR PANTALLA Y CATEGORÍA */
-/* Rosco -> Azul Oscuro */
+/* ==========================================
+   1. TEMAS DINÁMICOS POR CATEGORÍA
+   ========================================== */
+/* El Rosco -> Azul Oscuro */
 .rosco-game-card, #rosco-menu-screen .menu-card { border-color: #0044cc !important; }
 #rosco-screen {
     --primary: #0044cc;
@@ -20,8 +22,8 @@
 }
 
 /* LaLiga -> Rojo */
-.laliga-card, .hangman-game-card, .blur-game-card, .map-game-card { border-color: #ff4d4d !important; }
-#hangman-screen, #blur-screen, #map-screen {
+.laliga-card, .hangman-game-card, .blur-game-card, .aforos-game-card { border-color: #ff4d4d !important; }
+#hangman-screen, #blur-screen, #aforos-screen {
     --primary: #ff4d4d;
     --primary-glow: rgba(255, 77, 77, 0.3);
     --secondary: #cc0000;
@@ -51,9 +53,8 @@
     --secondary: #ccaa00;
 }
 
-
 /* ==========================================
-   1. BASE Y LAYOUT GENERAL (RESPONSIVE)
+   2. BASE Y LAYOUT GENERAL
    ========================================== */
 body, html {
     margin: 0;
@@ -91,7 +92,7 @@ body, html {
 .hidden { display: none !important; }
 
 /* ==========================================
-   2. TIPOGRAFÍA Y UI COMÚN (BOTONES, INPUTS)
+   3. TIPOGRAFÍA Y UI GLOBAL
    ========================================== */
 .logo {
     font-family: 'Orbitron', sans-serif;
@@ -158,16 +159,14 @@ input[type="text"], input[type="number"] {
 }
 input[type="text"]:focus, input[type="number"]:focus {
     outline: none;
-    border-color: var(--primary); /* Dinámico ahora */
+    border-color: var(--primary); 
     background: rgba(255,255,255,0.08);
 }
 input[type="number"]::-webkit-inner-spin-button, 
-input[type="number"]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; margin: 0; 
-}
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 .secondary-btn {
-    background: var(--primary); /* Cambiado a primary para que vaya a juego */
+    background: var(--primary); 
     color: var(--bg);
     border: none;
     padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 25px);
@@ -180,8 +179,10 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .secondary-btn:hover { filter: brightness(1.2); transform: scale(1.02); }
 
+.info-footer { margin-top: 15px; font-family: 'Orbitron', sans-serif; color: var(--primary); font-weight: bold; }
+
 /* ==========================================
-   3. TARJETAS DEL MENÚ Y FONDOS UNIFICADOS
+   4. TARJETAS DEL MENÚ Y FONDOS
    ========================================== */
 .menu-grid {
     display: grid;
@@ -195,7 +196,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .menu-card {
     background: var(--card);
-    padding: 2rem;
+    padding: 0 !important;
     border-radius: 20px;
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.05);
@@ -203,52 +204,33 @@ input[type="number"]::-webkit-outer-spin-button {
     text-align: center;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
 }
 .menu-card:hover {
     border-color: var(--primary);
     transform: translateY(-8px);
     box-shadow: 0 10px 30px var(--primary-glow);
 }
-.menu-card h3 { font-family: 'Orbitron', sans-serif; margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.4rem); }
-.menu-card p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
-.menu-card .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
-.coming-soon { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.8); pointer-events: none; }
-
-.laliga-card, .premier-card, .leyendas-card, .europeos-card,
-.rosco-game-card, .hangman-game-card, .blur-game-card, 
-.timemachine-game-card, .eleven-game-card, .hl-game-card,
-.map-game-card, .zoom-game-card {
-    position: relative;
-    padding: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    border: 1px solid rgba(255,255,255,0.1);
-}
 
 .card-info { position: relative; z-index: 2; text-align: center; pointer-events: none; padding: 10px; }
+.card-info h3 { font-family: 'Orbitron', sans-serif; margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.4rem); }
+.card-info p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
 
-.laliga-bg-image, .premier-bg-image, .leyendas-bg-image, .europeos-bg-image,
-.rosco-bg-image, .hangman-bg-image, .card-bg-image, 
-.timemachine-bg-image, .eleven-bg-image, .bg-rosco, .bg-laliga, .bg-premier, .bg-europeos, .bg-leyendas, .bg-ahorcado, .bg-blur, .bg-timemachine {
+.coming-soon { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.8); pointer-events: none; padding: 2rem !important; display: block; }
+.coming-soon .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+.card-bg, .bg-rosco, .bg-laliga, .bg-premier, .bg-europeos, .bg-leyendas, .bg-ahorcado, .bg-blur, .bg-timemachine {
     position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     background-size: cover; background-position: center;
     transition: 0.5s ease; z-index: 1; pointer-events: none;
     filter: brightness(0.4) blur(2px);
 }
-.hangman-bg-image, .timemachine-bg-image, .bg-ahorcado, .bg-timemachine { filter: brightness(0.4) blur(0px); }
-
-.laliga-card:hover .bg-laliga, .premier-card:hover .bg-premier,
-.leyendas-card:hover .bg-leyendas, .europeos-card:hover .bg-europeos,
-.rosco-game-card:hover .bg-rosco, .hangman-game-card:hover .bg-ahorcado,
-.blur-game-card:hover .bg-blur, .timemachine-game-card:hover .bg-timemachine,
-.eleven-game-card:hover .eleven-bg-image, .hl-game-card:hover .bg-premier, 
-.map-game-card:hover .bg-laliga, .zoom-game-card:hover .bg-premier, .menu-card:hover .card-bg {
-    filter: brightness(0.6) blur(0px);
-    transform: scale(1.1);
-}
+.menu-card:hover .card-bg { filter: brightness(0.6) blur(0px); transform: scale(1.1); }
+.bg-ahorcado, .bg-timemachine { filter: brightness(0.4) blur(0px); }
 
 .bg-laliga { background-image: url('players/fondo-laliga.jpg'); }
 .bg-premier { background-image: url('players/fondo-premier.jpg'); }
@@ -258,169 +240,110 @@ input[type="number"]::-webkit-outer-spin-button {
 .bg-ahorcado { background-image: url('players/fondo-ahorcado.jpg'); }
 .bg-blur { background-image: url('players/fondo-blur.jpg'); } 
 .bg-timemachine { background-image: url('events/fondo-timemachine.jpg'); }
-.eleven-bg-image { background-image: url('events/fondo-premier.jpg'); }
 
 /* ==========================================
-   4. AHORCADO (CANVAS CORREGIDO)
+   5. NUEVO LOGO CIBERNÉTICO F10
    ========================================== */
-.game-layout {
-    display: flex; gap: clamp(15px, 4vw, 50px); flex-wrap: wrap; justify-content: center;
-    width: 100%; max-width: 1100px;
+.logo-f10-container {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 30px; animation: pulseLogo 3s infinite alternate ease-in-out;
 }
+.f10-icon {
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(110, 44, 242, 0.15); border: 2px solid #6e2cf2;
+    border-radius: 15px; padding: 5px 25px;
+    box-shadow: 0 0 25px rgba(110, 44, 242, 0.5), inset 0 0 15px rgba(110, 44, 242, 0.3);
+    margin-bottom: 10px; transform: perspective(500px) rotateX(10deg);
+}
+.f-part {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 4.5rem); font-weight: 700;
+    color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); line-height: 1; margin-right: 8px;
+}
+.ten-part {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 12vw, 5rem); font-weight: 700;
+    color: #00ff87; text-shadow: 0 0 20px #00ff87; line-height: 1;
+}
+.logo-texto-inferior {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 4vw, 1.8rem); margin: 0;
+    color: white; letter-spacing: 5px; text-transform: uppercase;
+}
+.logo-texto-inferior span { color: #00ff87; text-shadow: 0 0 15px rgba(0,255,135,0.5); }
+@keyframes pulseLogo {
+    0% { transform: perspective(500px) rotateX(10deg) scale(1); filter: brightness(1); }
+    100% { transform: perspective(500px) rotateX(10deg) scale(1.05); filter: brightness(1.2); }
+}
+
+/* ==========================================
+   6. ESTILOS ESPECÍFICOS DE MINIJUEGOS
+   ========================================== */
+
+/* Ahorcado & Futdle (Teclados y Grids) */
+.game-layout { display: flex; gap: clamp(15px, 4vw, 50px); flex-wrap: wrap; justify-content: center; width: 100%; max-width: 1100px; }
 .canvas-side { display: flex; justify-content: center; width: 100%; max-width: 300px; }
-.canvas-side canvas {
-    background: #e0e0e0; border-radius: 20px; 
-    width: 100%; max-width: 220px; 
-    aspect-ratio: 220 / 280; 
-    height: auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid var(--card);
-}
+.canvas-side canvas { background: #e0e0e0; border-radius: 20px; width: 100%; max-width: 220px; aspect-ratio: 220 / 280; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid var(--card); }
 .play-side { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
-.word-container {
-    font-size: clamp(1.2rem, 5vw, 2.2rem); font-family: 'Orbitron', sans-serif;
-    letter-spacing: clamp(2px, 1vw, 5px); margin-bottom: 2vh; min-height: 40px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2); text-align: center;
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
-}
-
-.suggestions-box {
-    position: absolute; top: 100%; left: 0; width: 100%; z-index: 100;
-    background: #1c2128; border: 1px solid var(--primary);
-    border-top: none; border-radius: 0 0 12px 12px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-}
-.suggestions-box div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.suggestions-box div:hover { background: var(--secondary); }
-
-/* ==========================================
-   5. TECLADOS (AHORCADO Y FUTDLE)
-   ========================================== */
+.word-container { font-size: clamp(1.2rem, 5vw, 2.2rem); font-family: 'Orbitron', sans-serif; letter-spacing: clamp(2px, 1vw, 5px); margin-bottom: 2vh; min-height: 40px; text-shadow: 0 0 10px rgba(255,255,255,0.2); text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
 .keyboard-container { display: flex; flex-direction: column; gap: clamp(4px, 1.5vw, 10px); width: 100%; align-items: center; }
 .keyboard-row { display: flex; gap: clamp(3px, 1vw, 8px); justify-content: center; width: 100%; }
-.key {
-    width: clamp(25px, 8vw, 45px); height: clamp(35px, 10vw, 50px);
-    background: var(--card); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-weight: 700; transition: 0.2s; user-select: none;
-    font-size: clamp(0.8rem, 3vw, 1rem);
-}
+.key { width: clamp(25px, 8vw, 45px); height: clamp(35px, 10vw, 50px); background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; user-select: none; font-size: clamp(0.8rem, 3vw, 1rem); }
 .key:hover { border-color: var(--primary); color: var(--primary); transform: scale(1.05); }
 .key.used { opacity: 0.2; pointer-events: none; transform: scale(0.9); }
-.w-key.correct { background: var(--primary); color: var(--bg); border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow);}
-.w-key.present { background: #ffd700; color: var(--bg); border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
+.w-key.correct { background: #00ff87; color: #000; border-color: #00ff87; box-shadow: 0 0 10px rgba(0,255,135,0.5);}
+.w-key.present { background: #ffd700; color: #000; border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
 .w-key.absent { opacity: 0.2; pointer-events: none; }
 .wide-key { width: auto; min-width: clamp(40px, 12vw, 65px); padding: 0 5px; font-size: clamp(0.7rem, 2vw, 0.9rem); }
 
-/* ==========================================
-   6. BLUR GUESS
-   ========================================== */
-.blur-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
-.image-box {
-    max-width: 100%; width: clamp(200px, 70vw, 320px); height: auto; aspect-ratio: 1/1;
-    border-radius: 25px; border: 5px solid var(--primary);
-    box-shadow: 0 0 40px var(--primary-glow); margin-bottom: 1rem; box-sizing: border-box;
-}
-.image-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
-.info-footer { margin-top: 15px; font-family: 'Orbitron', sans-serif; color: var(--primary); font-weight: bold; }
+/* Autocompletar / Sugerencias */
+.suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; z-index: 100; background: #1c2128; border: 1px solid var(--primary); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+.suggestions-box div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.suggestions-box div:hover { background: var(--secondary); }
 
-/* ==========================================
-   7. MÁQUINA DEL TIEMPO
-   ========================================== */
-.tm-layout {
-    display: flex; flex-direction: column; align-items: center; gap: 2vh;
-    width: 100%; max-width: 500px;
-}
-.tm-title {
-    font-family: 'Orbitron', sans-serif; color: var(--primary);
-    font-size: clamp(1.1rem, 4vw, 1.5rem); letter-spacing: 2px; margin: 0;
-    text-shadow: 0 0 10px var(--primary-glow); text-align: center;
-}
-.tm-monitor {
-    position: relative; width: 100%; max-width: 320px; height: clamp(180px, 30vh, 250px);
-    border: 2px solid var(--primary-glow); border-radius: 15px; overflow: hidden;
-    box-shadow: 0 0 20px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.8); background: #000;
-}
+/* Blur Guess */
+.blur-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.image-box { max-width: 100%; width: clamp(200px, 70vw, 320px); height: auto; aspect-ratio: 1/1; border-radius: 25px; border: 5px solid var(--primary); box-shadow: 0 0 40px var(--primary-glow); margin-bottom: 1rem; box-sizing: border-box; }
+.image-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+/* Máquina del Tiempo */
+.tm-layout { display: flex; flex-direction: column; align-items: center; gap: 2vh; width: 100%; max-width: 500px; }
+.tm-title { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: clamp(1.1rem, 4vw, 1.5rem); letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px var(--primary-glow); text-align: center; }
+.tm-monitor { position: relative; width: 100%; max-width: 320px; height: clamp(180px, 30vh, 250px); border: 2px solid var(--primary-glow); border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.8); background: #000; }
 .tm-monitor img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; filter: sepia(0.3) contrast(1.1); }
-.tm-event-card {
-    background: var(--card); padding: clamp(10px, 2vh, 15px) !important; border-radius: 12px;
-    border: 1px solid var(--primary-glow); width: 100%; text-align: center;
-    font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-}
+.tm-event-card { background: var(--card); padding: clamp(10px, 2vh, 15px) !important; border-radius: 12px; border: 1px solid var(--primary-glow); width: 100%; text-align: center; font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
 .tm-controls { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
 .tm-controls input { text-align: center; font-size: clamp(1.2rem, 4vw, 1.5rem) !important; letter-spacing: 4px; color: var(--primary) !important; }
 .tm-status { display: flex; justify-content: space-between; align-items: center; font-size: clamp(0.75rem, 3vw, 0.9rem); font-family: 'Orbitron', sans-serif; }
 #tm-feedback { color: var(--primary); font-weight: bold; }
 .tm-lives-badge { background: rgba(255, 255, 255, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--primary); font-weight: bold; }
 
-/* ==========================================
-   8. XI HISTÓRICO EUROPEO
-   ========================================== */
+/* XI Histórico Europeos */
 .eleven-layout { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
 .eleven-header { text-align: center; margin-bottom: 2vh; }
-.pitch-container {
-    width: 100%; max-width: 600px; height: auto; min-height: clamp(300px, 50vh, 450px);
-    background: linear-gradient(0deg, #2e7d32 0%, #1b5e20 100%);
-    border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 10px;
-    display: flex; flex-direction: column; justify-content: space-evenly;
-    padding: 10px 2px; position: relative; box-sizing: border-box;
-    box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3);
-}
+.pitch-container { width: 100%; max-width: 600px; height: auto; min-height: clamp(300px, 50vh, 450px); background: linear-gradient(0deg, #2e7d32 0%, #1b5e20 100%); border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-evenly; padding: 10px 2px; position: relative; box-sizing: border-box; box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3); }
 .pitch-container::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255, 255, 255, 0.4); transform: translateY(-50%); }
 .pitch-container::after { content: ''; position: absolute; top: 50%; left: 50%; width: 20%; aspect-ratio: 1/1; border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 50%; transform: translate(-50%, -50%); }
 .pitch-row { display: flex; justify-content: space-around; width: 100%; z-index: 2; gap: 2px; }
-
 .player-slot { display: flex; flex-direction: column; align-items: center; width: clamp(45px, 18vw, 80px); text-align: center; transition: 0.3s; }
 .player-slot.clickable { cursor: pointer; }
 .player-slot.clickable:hover { transform: scale(1.1); }
 .player-slot .shirt { font-size: clamp(1.2rem, 5vw, 2rem); filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); transition: 0.3s; margin-bottom: 2px; }
 .player-slot .shirt.empty { opacity: 0.6; filter: grayscale(1); }
-
-.player-slot .name {
-    background: rgba(0, 0, 0, 0.7); color: white; font-size: clamp(0.5rem, 2vw, 0.75rem);
-    padding: 2px 4px; border-radius: 4px; font-family: 'Orbitron', sans-serif;
-    border: 1px solid rgba(255,255,255,0.2); line-height: 1.1;
-    width: 100%; box-sizing: border-box; word-wrap: break-word; white-space: normal;
-}
+.player-slot .name { background: rgba(0, 0, 0, 0.7); color: white; font-size: clamp(0.5rem, 2vw, 0.75rem); padding: 2px 4px; border-radius: 4px; font-family: 'Orbitron', sans-serif; border: 1px solid rgba(255,255,255,0.2); line-height: 1.1; width: 100%; box-sizing: border-box; word-wrap: break-word; white-space: normal; }
 .player-slot .hidden-name { color: #555; border-color: rgba(255,255,255,0.05); }
 .player-slot.revealed { animation: modalPop 0.4s ease-out; }
 
-/* ==========================================
-   9. EL ROSCO
-   ========================================== */
-.rosco-wrapper {
-    position: relative; margin: 2vh auto; 
-    width: 100%; max-width: 500px; aspect-ratio: 1/1; 
-    display: flex; align-items: center; justify-content: center;
-}
-
+/* El Rosco */
+.rosco-wrapper { position: relative; margin: 2vh auto; width: 100%; max-width: 500px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
 @media (max-width: 600px) { .rosco-wrapper { max-width: 320px; } }
-
 .rosco-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; }
-.rosco-letter {
-    position: absolute; width: clamp(25px, 6vw, 40px); height: clamp(25px, 6vw, 40px); background: #002288;
-    border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-    font-weight: bold; color: white; transform: translate(-50%, -50%); transition: 0.3s;
-    font-size: clamp(0.7rem, 2vw, 1rem);
-}
+.rosco-letter { position: absolute; width: clamp(25px, 6vw, 40px); height: clamp(25px, 6vw, 40px); background: #002288; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; transform: translate(-50%, -50%); transition: 0.3s; font-size: clamp(0.7rem, 2vw, 1rem); }
 .rosco-letter.current { background: white; color: #0044cc; box-shadow: 0 0 20px white; scale: 1.2; z-index: 10; }
-.rosco-letter.correct { background: #00ff87; border-color: #00ff87; } /* Aciertos en verde como es típico */
+.rosco-letter.correct { background: #00ff87; border-color: #00ff87; } 
 .rosco-letter.wrong { background: #ff4d4d; border-color: #ff4d4d; }
-
-.rosco-content { 
-    text-align: center; z-index: 5; 
-    width: 65%; 
-    max-width: 260px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
+.rosco-content { text-align: center; z-index: 5; width: 65%; max-width: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #rosco-player-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 3vw, 1.2rem); margin: 0 0 5px 0; color: white;}
 #rosco-letter-hint { font-size: clamp(2rem, 10vw, 4rem); color: var(--primary); margin: 0; font-family: 'Orbitron'; line-height: 1; }
-#rosco-definition { 
-    font-size: clamp(0.75rem, 3vw, 1rem); margin-bottom: 15px; 
-    max-height: 12vh; overflow-y: auto; 
-    padding: 0 5px; line-height: 1.4;
-}
+#rosco-definition { font-size: clamp(0.75rem, 3vw, 1rem); margin-bottom: 15px; max-height: 12vh; overflow-y: auto; padding: 0 5px; line-height: 1.4; }
 .rosco-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; width: 100%; }
-
 .timer-p1 { color: #00a8ff; transition: 0.3s; padding: 0 5px; }
 .timer-p2 { color: #ff4d4d; transition: 0.3s; padding: 0 5px; }
 .timer-active { transform: scale(1.3); font-weight: bold; display: inline-block; }
@@ -429,373 +352,51 @@ input[type="number"]::-webkit-outer-spin-button {
 .rosco-letter.current.current-p1 { color: #00a8ff !important; box-shadow: 0 0 20px #00a8ff !important; }
 .rosco-letter.current.current-p2 { color: #ff4d4d !important; box-shadow: 0 0 20px #ff4d4d !important; }
 
+/* Higher / Lower & Guerra de Aforos (Layout Unificado) */
+.hl-layout { display: flex; flex-direction: column; width: 100%; max-width: 900px; gap: 15px; align-items: center; justify-content: center; position: relative; margin-top: 1vh; }
+@media(min-width: 768px) { .hl-layout { flex-direction: row; gap: 30px; } }
+.hl-card { width: 100%; max-width: 320px; background: #1c2128; border: 2px solid var(--primary-glow); border-radius: 20px; overflow: hidden; position: relative; aspect-ratio: 4/5; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: 0.3s; }
+.hl-card:hover { border-color: var(--primary); box-shadow: 0 0 30px var(--primary-glow); }
+.hl-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.5; transition: opacity 0.5s; }
+.hl-card:hover img { opacity: 0.7; }
+.hl-info { position: relative; z-index: 1; text-align: center; padding: 30px 20px; background: linear-gradient(to top, rgba(11, 14, 20, 1) 0%, rgba(11, 14, 20, 0.8) 50%, transparent 100%); }
+.hl-info h3 { margin: 0 0 5px 0; font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 5vw, 1.8rem); color: white; text-shadow: 0 2px 5px rgba(0,0,0,1); }
+.hl-subtitle { color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem; }
+.hl-value { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: bold; color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); transition: 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.27); margin: 10px 0; }
+.hidden-val { opacity: 0; transform: scale(0.2) translateY(-50px); pointer-events: none; height: 0; margin: 0; }
+.hl-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+.hl-btn { padding: clamp(12px, 3vw, 15px); border: none; border-radius: 12px; font-family: 'Orbitron', sans-serif; font-size: clamp(1rem, 3vw, 1.2rem); font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; }
+.btn-higher { background: rgba(255, 255, 255, 0.1); color: var(--primary); border: 2px solid var(--primary); }
+.btn-higher:hover { background: var(--primary); color: var(--bg); transform: translateY(-3px); box-shadow: 0 5px 15px var(--primary-glow); }
+.btn-lower { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 2px solid #ff4d4d; }
+.btn-lower:hover { background: #ff4d4d; color: white; transform: translateY(3px); box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4); }
+.hl-vs { width: 60px; height: 60px; background: white; color: var(--bg); font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 10; border: 5px solid var(--primary); margin: -25px 0; box-shadow: 0 0 20px var(--primary-glow); }
+@media(min-width: 768px) { .hl-vs { margin: 0 -35px; } }
+
+/* Escudos Zoom (Premier) */
+.zoom-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+.zoom-box-container { width: clamp(200px, 60vw, 300px); aspect-ratio: 1/1; border-radius: 20px; border: 4px solid var(--primary); padding: 10px; background: var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-glow); margin-bottom: 20px; }
+.zoom-lens { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; }
+.zoom-lens img { width: 80%; height: 80%; object-fit: contain; transition: transform 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.27); will-change: transform; }
+
 /* ==========================================
-   10. MODALES (GENERAL Y FUTDLE)
+   7. MODALES GLOBALES
    ========================================== */
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center;
-    z-index: 9999; backdrop-filter: blur(5px); padding: 10px; box-sizing: border-box;
-}
-.modal-content {
-    background: var(--card); padding: clamp(1rem, 4vw, 2rem); border-radius: 20px;
-    border: 2px solid var(--primary); text-align: center; max-width: 500px; width: 100%;
-    max-height: 90svh; overflow-y: auto; 
-    box-shadow: 0 0 30px var(--primary-glow); animation: modalPop 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.27);
-    box-sizing: border-box;
-}
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px); padding: 10px; box-sizing: border-box; }
+.modal-content { background: var(--card); padding: clamp(1rem, 4vw, 2rem); border-radius: 20px; border: 2px solid var(--primary); text-align: center; max-width: 500px; width: 100%; max-height: 90svh; overflow-y: auto; box-shadow: 0 0 30px var(--primary-glow); animation: modalPop 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.27); box-sizing: border-box; }
 @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 #modal-title { font-family: 'Orbitron', sans-serif; color: var(--primary); margin-top: 0; font-size: clamp(1.2rem, 5vw, 1.8rem); }
 #modal-message { font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--text); margin: 1.5rem 0; }
 #modal-btn { background: var(--primary); color: var(--bg); border: none; padding: 12px 30px; border-radius: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; font-weight: bold;}
 #modal-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
 
+/* Futdle Grid */
 .wordle-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; align-items: center; width: 100%; }
 .wordle-row { display: flex; gap: clamp(2px, 1vw, 6px); justify-content: center; flex-wrap: nowrap; width: 100%; }
 .wordle-spacer { width: clamp(5px, 2vw, 15px); display: flex; justify-content: center; align-items: center; font-size: clamp(1rem, 3vw, 1.5rem); font-family: 'Orbitron', sans-serif; color: rgba(255,255,255,0.5); }
-.wordle-cell {
-    flex: 1; max-width: 45px; aspect-ratio: 1/1; background: rgba(28, 33, 40, 0.6);
-    border: 2px solid rgba(255,255,255,0.05); border-radius: 6px; display: flex; justify-content: center; align-items: center;
-    font-size: clamp(0.8rem, 4vw, 1.6rem); font-family: 'Orbitron', sans-serif; font-weight: bold; text-transform: uppercase;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box;
-}
+.wordle-cell { flex: 1; max-width: 45px; aspect-ratio: 1/1; background: rgba(28, 33, 40, 0.6); border: 2px solid rgba(255,255,255,0.05); border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: clamp(0.8rem, 4vw, 1.6rem); font-family: 'Orbitron', sans-serif; font-weight: bold; text-transform: uppercase; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; }
 .wordle-cell.active { border-color: var(--secondary); box-shadow: 0 0 15px rgba(110, 44, 242, 0.4), inset 0 0 10px rgba(110, 44, 242, 0.2); transform: scale(1.08); }
 .wordle-cell.revealed { transition: transform 0.6s ease, background 0.3s 0.3s, border-color 0.3s 0.3s; }
 .wordle-cell.revealed.correct { background: #00ff87; color: #000; border-color: #00ff87; box-shadow: 0 0 15px rgba(0,255,135,0.5); transform: rotateX(360deg); }
 .wordle-cell.revealed.present { background: #ffd700; color: #000; border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: rotateX(360deg); }
 .wordle-cell.revealed.absent { background: #0f1218; color: #444; border-color: #1a1e24; box-shadow: inset 0 0 15px rgba(0,0,0,1); transform: rotateX(360deg); }
-
-/* ==========================================
-   11. NUEVO LOGO CIBERNÉTICO F10
-   ========================================== */
-.logo-f10-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-    animation: pulseLogo 3s infinite alternate ease-in-out;
-}
-
-.f10-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(110, 44, 242, 0.15); 
-    border: 2px solid #6e2cf2;
-    border-radius: 15px;
-    padding: 5px 25px;
-    box-shadow: 0 0 25px rgba(110, 44, 242, 0.5), inset 0 0 15px rgba(110, 44, 242, 0.3);
-    margin-bottom: 10px;
-    transform: perspective(500px) rotateX(10deg);
-}
-
-.f-part {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(3rem, 10vw, 4.5rem);
-    font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-    line-height: 1;
-    margin-right: 8px;
-}
-
-.ten-part {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(3.5rem, 12vw, 5rem);
-    font-weight: 700;
-    color: #00ff87;
-    text-shadow: 0 0 20px #00ff87;
-    line-height: 1;
-}
-
-.logo-texto-inferior {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
-    margin: 0;
-    color: white;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
-
-.logo-texto-inferior span {
-    color: #00ff87;
-    text-shadow: 0 0 15px rgba(0,255,135,0.5);
-}
-
-@keyframes pulseLogo {
-    0% { transform: perspective(500px) rotateX(10deg) scale(1); filter: brightness(1); }
-    100% { transform: perspective(500px) rotateX(10deg) scale(1.05); filter: brightness(1.2); }
-}
-
-/* ==========================================
-   12. HIGHER OR LOWER (PREMIER LEAGUE)
-   ========================================== */
-.hl-layout {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 900px;
-    gap: 15px;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-top: 1vh;
-}
-
-@media(min-width: 768px) {
-    .hl-layout { flex-direction: row; gap: 30px; }
-}
-
-.hl-card {
-    width: 100%;
-    max-width: 320px;
-    background: #2a002d; 
-    border: 2px solid var(--primary-glow); 
-    border-radius: 20px;
-    overflow: hidden;
-    position: relative;
-    aspect-ratio: 4/5;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    transition: 0.3s;
-}
-
-.hl-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 0 30px var(--primary-glow);
-}
-
-.hl-card img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0.5;
-    transition: opacity 0.5s;
-}
-
-.hl-card:hover img { opacity: 0.7; }
-
-.hl-info {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 30px 20px;
-    background: linear-gradient(to top, rgba(11, 14, 20, 1) 0%, rgba(11, 14, 20, 0.8) 50%, transparent 100%);
-}
-
-.hl-info h3 {
-    margin: 0 0 5px 0;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.4rem, 5vw, 1.8rem);
-    color: white;
-    text-shadow: 0 2px 5px rgba(0,0,0,1);
-}
-
-.hl-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2rem, 8vw, 3rem);
-    font-weight: bold;
-    color: var(--primary);
-    text-shadow: 0 0 15px var(--primary-glow);
-    transition: 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.27);
-    margin: 10px 0;
-}
-
-.hidden-val {
-    opacity: 0;
-    transform: scale(0.2) translateY(-50px);
-    pointer-events: none;
-    height: 0;
-    margin: 0;
-}
-
-.hl-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.hl-btn {
-    padding: clamp(12px, 3vw, 15px);
-    border: none;
-    border-radius: 12px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-}
-
-.btn-higher {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--primary);
-    border: 2px solid var(--primary);
-}
-
-.btn-higher:hover {
-    background: var(--primary);
-    color: var(--bg);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px var(--primary-glow);
-}
-
-.btn-lower {
-    background: rgba(255, 77, 77, 0.15);
-    color: #ff4d4d;
-    border: 2px solid #ff4d4d;
-}
-
-.btn-lower:hover {
-    background: #ff4d4d;
-    color: white;
-    transform: translateY(3px);
-    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
-}
-
-.hl-vs {
-    width: 60px;
-    height: 60px;
-    background: white;
-    color: var(--bg);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    z-index: 10;
-    border: 5px solid var(--primary);
-    margin: -25px 0;
-    box-shadow: 0 0 20px var(--primary-glow);
-}
-
-@media(min-width: 768px) {
-    .hl-vs { margin: 0 -35px; }
-}
-
-/* ==========================================
-   13. MAPA ESTADIOS (GEOGRAFÍA ESPAÑA - LALIGA)
-   ========================================== */
-.map-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
-.stadium-target {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.2rem, 4vw, 1.5rem);
-    margin-bottom: 20px;
-    box-shadow: 0 0 15px var(--primary-glow);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/* El mapa distribuido visualmente por áreas CSS formando España */
-.cyber-map-grid {
-    display: grid;
-    grid-template-areas:
-        "galicia asturias cantabria vasco navarra ."
-        "galicia cyl cyl rioja aragon catalunya"
-        ". cyl cyl madrid aragon catalunya"
-        "extremadura clm clm clm valencia baleares"
-        "extremadura andalucia andalucia andalucia murcia ."
-        "canarias . . . . .";
-    gap: 6px;
-    width: 100%;
-    max-width: 500px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 15px;
-    border-radius: 15px;
-    border: 2px solid var(--card);
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-}
-
-.map-region {
-    background: rgba(28, 33, 40, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(15px, 3vw, 25px) 2px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(0.45rem, 1.8vw, 0.65rem);
-    color: var(--text-dim);
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-}
-
-.map-region:hover {
-    background: var(--primary-glow);
-    border-color: var(--primary);
-    color: white;
-    transform: scale(1.05);
-    z-index: 10;
-}
-
-.correct-reg { background: var(--primary-glow) !important; border-color: var(--primary) !important; color: white !important; box-shadow: 0 0 15px var(--primary-glow); }
-.wrong-reg { background: rgba(100, 100, 100, 0.5) !important; border-color: #555 !important; color: white !important; }
-
-/* Asignando cada recuadro a su espacio en el mapa de España */
-#reg-galicia { grid-area: galicia; }
-#reg-asturias { grid-area: asturias; }
-#reg-cantabria { grid-area: cantabria; }
-#reg-vasco { grid-area: vasco; }
-#reg-navarra { grid-area: navarra; }
-#reg-cyl { grid-area: cyl; }
-#reg-rioja { grid-area: rioja; }
-#reg-aragon { grid-area: aragon; }
-#reg-catalunya { grid-area: catalunya; }
-#reg-madrid { grid-area: madrid; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2); } /* Resalta la capital */
-#reg-extremadura { grid-area: extremadura; }
-#reg-clm { grid-area: clm; }
-#reg-valencia { grid-area: valencia; }
-#reg-baleares { grid-area: baleares; transform: translate(10px, 10px); }
-#reg-andalucia { grid-area: andalucia; }
-#reg-murcia { grid-area: murcia; }
-#reg-canarias { grid-area: canarias; transform: translateY(20px); }
-
-/* ==========================================
-   14. ESCUDOS ZOOM (PREMIER)
-   ========================================== */
-.zoom-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
-.zoom-box-container {
-    width: clamp(200px, 60vw, 300px);
-    aspect-ratio: 1/1;
-    border-radius: 20px;
-    border: 4px solid var(--primary);
-    padding: 10px;
-    background: var(--primary-glow);
-    box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-glow);
-    margin-bottom: 20px;
-}
-.zoom-lens {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    background: #ffffff; /* Fondo blanco por las transparencias png */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.zoom-lens img {
-    width: 80%; 
-    height: 80%;
-    object-fit: contain;
-    transition: transform 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.27);
-    will-change: transform;
-}
