@@ -348,16 +348,16 @@ const premierPlayers = [
 ];
 
 const estadiosLaLiga = [
-    { name: "SANTIAGO BERNABÉU", value: 85000 }, { name: "CAMP NOU", value: 99354 },
-    { name: "METROPOLITANO", value: 70460 }, { name: "BENITO VILLAMARÍN", value: 60721 },
-    { name: "LA CARTUJA", value: 39323 }, { name: "SAN MAMÉS", value: 53289 },
-    { name: "MESTALLA", value: 49430 }, { name: "RCD ESPANYOL", value: 40000 },
-    { name: "REALE ARENA", value: 39500 }, { name: "SÁNCHEZ-PIZJUÁN", value: 43883 },
-    { name: "EL SADAR", value: 23576 }, { name: "LA CERÁMICA", value: 23000 },
-    { name: "MENDIZORROZA", value: 19840 }, { name: "BALAÍDOS", value: 29000 },
-    { name: "VALLECAS", value: 14708 }, { name: "SON MOIX", value: 23142 },
-    { name: "COLISEUM", value: 16500 }, { name: "MONTILIVI", value: 14624 },
-    { name: "GRAN CANARIA", value: 32400 }, { name: "MARTÍNEZ VALERO", value: 31388 }
+    { name: " BERNABÉU", value: 83186 }, { name: "CAMP NOU", value: 99354 },
+    { name: "METROPOLITANO", value: 70692 }, { name: "LA CERÁMICA", value: 22000 },
+    { name: "BENITO VILLAMARÍN", value: 60721 }, { name: "COLISEUM", value: 16500 },
+    { name: "BALAIDOS", value: 24870 }, { name: "ANOETA", value: 40000 },
+    { name: "EL SADAR", value: 23576 }, { name: "SAN MAMÉS", value: 53289 },
+    { name: "VALLECAS", value: 14708 }, { name: "MESTALLA", value: 49430 },
+    { name: "RCDE STADIUM", value: 40445 }, { name: "MARTÍNEZ VALERO", value: 33732 },
+    { name: "MONTILIVI", value: 14624 }, { name: "MENDIZORROZA", value: 19840 },
+    { name: "SON MOIX", value: 26020 }, { name: "RAMÓN SÁNCHEZ-PIZJUÁN", value: 43864 },
+    { name: "CIUTAT DE VALENCIA", value: 23354 }, { name: "CARLOS TARTIERE", value: 30500 }
 ];
 
 const premierTeamsDB = [
