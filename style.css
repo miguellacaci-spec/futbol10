@@ -414,19 +414,20 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .wordle-cell.revealed.absent { background: #0f1218; color: #444; border-color: #1a1e24; box-shadow: inset 0 0 15px rgba(0,0,0,1); transform: rotateX(360deg); }
 
 /* ==========================================
-   TOP 10 LAYOUT
+   TOP 10 LAYOUT (COMPACTO CON BANDERAS)
    ========================================== */
-.top10-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; padding-bottom: 80px; position: relative; }
-.top10-header { text-align: center; width: 100%; }
-.top10-list { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-bottom: 20px; }
+.top10-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; padding-bottom: 70px; position: relative; }
+.top10-header { text-align: center; width: 100%; margin-bottom: 5px; }
+#top10-desc { margin-bottom: 10px !important; font-size: 0.85rem; }
+.top10-list { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-bottom: 10px; }
 
 .top10-item { 
     display: flex; 
     align-items: center; 
     background: rgba(255, 255, 255, 0.03); 
     border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 12px; 
-    padding: 12px 15px; 
+    border-radius: 8px; 
+    padding: 6px 12px; 
     font-family: 'Orbitron', sans-serif; 
     transition: all 0.4s ease; 
 }
@@ -435,23 +436,28 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     border-color: var(--primary); 
     box-shadow: inset 0 0 15px rgba(245, 207, 142, 0.1); 
 }
-.top10-rank { font-size: 1.4rem; font-weight: bold; color: rgba(255,255,255,0.2); width: 40px; text-align: center; }
+.top10-rank { font-size: 1.1rem; font-weight: bold; color: rgba(255,255,255,0.2); width: 30px; text-align: center; }
 .top10-item.revealed .top10-rank { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
 .top10-info { flex: 1; display: flex; justify-content: space-between; align-items: center; margin-left: 10px; }
-.top10-name { font-size: clamp(0.9rem, 3vw, 1.1rem); color: #fff; letter-spacing: 1px; font-weight: bold; }
-.top10-hint { font-size: clamp(0.7rem, 2.5vw, 0.9rem); color: var(--text-dim); text-align: right; }
+.top10-name { font-size: clamp(0.8rem, 2.5vw, 0.95rem); color: #fff; letter-spacing: 1px; font-weight: bold; }
+
+/* Flexbox para alinear bandera y texto perfectamente */
+.top10-hint { display: flex; align-items: center; gap: 6px; font-size: clamp(0.7rem, 2.5vw, 0.85rem); color: var(--text-dim); text-align: right; }
 .top10-item.revealed .top10-hint { color: var(--primary); opacity: 0.9; }
 
-/* Barra de input anclada (Sticky) */
+/* Estilo para las banderas en PNG */
+.flag-icon { width: 22px; height: auto; border-radius: 2px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+/* Barra de input anclada (Sticky) más compacta */
 .top10-input-area { 
     position: fixed; 
-    bottom: 20px; 
+    bottom: 10px; 
     max-width: 600px; 
     width: calc(100% - 2rem); 
     background: rgba(11, 14, 20, 0.95); 
-    padding: 15px; 
-    border-radius: 15px; 
+    padding: 10px; 
+    border-radius: 12px; 
     border: 1px solid var(--primary); 
     box-shadow: 0 -10px 30px rgba(0,0,0,0.8); 
     backdrop-filter: blur(10px); 
@@ -464,4 +470,5 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     25% { transform: translateX(-5px); }
     75% { transform: translateX(5px); }
 }
+.input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
 .input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
