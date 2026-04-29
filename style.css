@@ -1,4 +1,5 @@
 :root {
+    /* Color base genérico, se sobreescribe en cada pantalla */
     --primary: #00ff87;
     --primary-glow: rgba(0, 255, 135, 0.3);
     --secondary: #6e2cf2;
@@ -8,6 +9,48 @@
     --text-dim: #9096a2;
     --error: #ff4d4d;
 }
+
+/* THEMES DINÁMICOS POR PANTALLA Y CATEGORÍA */
+/* Rosco -> Azul Oscuro */
+.rosco-game-card, #rosco-menu-screen .menu-card { border-color: #0044cc !important; }
+#rosco-screen {
+    --primary: #0044cc;
+    --primary-glow: rgba(0, 68, 204, 0.3);
+    --secondary: #002288;
+}
+
+/* LaLiga -> Rojo */
+.laliga-card, .hangman-game-card, .blur-game-card, .map-game-card { border-color: #ff4d4d !important; }
+#hangman-screen, #blur-screen, #map-screen {
+    --primary: #ff4d4d;
+    --primary-glow: rgba(255, 77, 77, 0.3);
+    --secondary: #cc0000;
+}
+
+/* Premier -> Morado */
+.premier-card, .hl-game-card, .zoom-game-card { border-color: #9b59b6 !important; }
+#higherlower-screen, #zoom-screen {
+    --primary: #9b59b6;
+    --primary-glow: rgba(155, 89, 182, 0.3);
+    --secondary: #8e44ad;
+}
+
+/* Europeos -> Verde */
+.europeos-card, .eleven-game-card { border-color: #00ff87 !important; }
+#eleven-screen {
+    --primary: #00ff87;
+    --primary-glow: rgba(0, 255, 135, 0.3);
+    --secondary: #00cc66;
+}
+
+/* Leyendas -> Dorado */
+.leyendas-card, .timemachine-game-card { border-color: #ffd700 !important; }
+#timemachine-screen {
+    --primary: #ffd700;
+    --primary-glow: rgba(255, 215, 0, 0.3);
+    --secondary: #ccaa00;
+}
+
 
 /* ==========================================
    1. BASE Y LAYOUT GENERAL (RESPONSIVE)
@@ -94,6 +137,7 @@ body, html {
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(0.8rem, 2.5vw, 1rem);
     text-align: center;
+    border-color: var(--primary);
 }
 .score-board span { color: var(--primary); font-weight: bold; }
 
@@ -114,7 +158,7 @@ input[type="text"], input[type="number"] {
 }
 input[type="text"]:focus, input[type="number"]:focus {
     outline: none;
-    border-color: var(--secondary);
+    border-color: var(--primary); /* Dinámico ahora */
     background: rgba(255,255,255,0.08);
 }
 input[type="number"]::-webkit-inner-spin-button, 
@@ -123,8 +167,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .secondary-btn {
-    background: var(--secondary);
-    color: white;
+    background: var(--primary); /* Cambiado a primary para que vaya a juego */
+    color: var(--bg);
     border: none;
     padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 25px);
     border-radius: 12px;
@@ -163,7 +207,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .menu-card:hover {
     border-color: var(--primary);
     transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0, 255, 135, 0.1);
+    box-shadow: 0 10px 30px var(--primary-glow);
 }
 .menu-card h3 { font-family: 'Orbitron', sans-serif; margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.4rem); }
 .menu-card p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
@@ -182,12 +226,6 @@ input[type="number"]::-webkit-outer-spin-button {
     min-height: 200px;
     border: 1px solid rgba(255,255,255,0.1);
 }
-
-.timemachine-game-card:hover { border-color: #ffd700; transform: translateY(-8px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1); }
-.rosco-game-card { border-color: var(--secondary); }
-.hl-game-card { border-color: #00ff85; }
-.map-game-card { border-color: #ffd700; }
-.zoom-game-card { border-color: #00a8ff; }
 
 .card-info { position: relative; z-index: 2; text-align: center; pointer-events: none; padding: 10px; }
 
@@ -247,7 +285,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .suggestions-box {
     position: absolute; top: 100%; left: 0; width: 100%; z-index: 100;
-    background: #1c2128; border: 1px solid var(--secondary);
+    background: #1c2128; border: 1px solid var(--primary);
     border-top: none; border-radius: 0 0 12px 12px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.4);
 }
@@ -279,11 +317,11 @@ input[type="number"]::-webkit-outer-spin-button {
 .blur-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
 .image-box {
     max-width: 100%; width: clamp(200px, 70vw, 320px); height: auto; aspect-ratio: 1/1;
-    border-radius: 25px; border: 5px solid var(--card);
-    box-shadow: 0 0 40px rgba(110, 44, 242, 0.2); margin-bottom: 1rem; box-sizing: border-box;
+    border-radius: 25px; border: 5px solid var(--primary);
+    box-shadow: 0 0 40px var(--primary-glow); margin-bottom: 1rem; box-sizing: border-box;
 }
 .image-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
-.info-footer { margin-top: 15px; font-family: 'Orbitron', sans-serif; color: var(--error); }
+.info-footer { margin-top: 15px; font-family: 'Orbitron', sans-serif; color: var(--primary); font-weight: bold; }
 
 /* ==========================================
    7. MÁQUINA DEL TIEMPO
@@ -293,26 +331,26 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 100%; max-width: 500px;
 }
 .tm-title {
-    font-family: 'Orbitron', sans-serif; color: #ffd700;
+    font-family: 'Orbitron', sans-serif; color: var(--primary);
     font-size: clamp(1.1rem, 4vw, 1.5rem); letter-spacing: 2px; margin: 0;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); text-align: center;
+    text-shadow: 0 0 10px var(--primary-glow); text-align: center;
 }
 .tm-monitor {
     position: relative; width: 100%; max-width: 320px; height: clamp(180px, 30vh, 250px);
-    border: 2px solid rgba(255, 215, 0, 0.5); border-radius: 15px; overflow: hidden;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(0,0,0,0.8); background: #000;
+    border: 2px solid var(--primary-glow); border-radius: 15px; overflow: hidden;
+    box-shadow: 0 0 20px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.8); background: #000;
 }
 .tm-monitor img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; filter: sepia(0.3) contrast(1.1); }
 .tm-event-card {
     background: var(--card); padding: clamp(10px, 2vh, 15px) !important; border-radius: 12px;
-    border: 1px solid rgba(255, 215, 0, 0.2); width: 100%; text-align: center;
+    border: 1px solid var(--primary-glow); width: 100%; text-align: center;
     font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
 }
 .tm-controls { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
-.tm-controls input { text-align: center; font-size: clamp(1.2rem, 4vw, 1.5rem) !important; letter-spacing: 4px; color: #ffd700 !important; }
+.tm-controls input { text-align: center; font-size: clamp(1.2rem, 4vw, 1.5rem) !important; letter-spacing: 4px; color: var(--primary) !important; }
 .tm-status { display: flex; justify-content: space-between; align-items: center; font-size: clamp(0.75rem, 3vw, 0.9rem); font-family: 'Orbitron', sans-serif; }
-#tm-feedback { color: #ffd700; font-weight: bold; }
-.tm-lives-badge { background: rgba(255, 77, 77, 0.1); color: var(--error); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--error); font-weight: bold; }
+#tm-feedback { color: var(--primary); font-weight: bold; }
+.tm-lives-badge { background: rgba(255, 255, 255, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--primary); font-weight: bold; }
 
 /* ==========================================
    8. XI HISTÓRICO EUROPEO
@@ -359,14 +397,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .rosco-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; }
 .rosco-letter {
-    position: absolute; width: clamp(25px, 6vw, 40px); height: clamp(25px, 6vw, 40px); background: #0044cc;
+    position: absolute; width: clamp(25px, 6vw, 40px); height: clamp(25px, 6vw, 40px); background: #002288;
     border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
     font-weight: bold; color: white; transform: translate(-50%, -50%); transition: 0.3s;
     font-size: clamp(0.7rem, 2vw, 1rem);
 }
 .rosco-letter.current { background: white; color: #0044cc; box-shadow: 0 0 20px white; scale: 1.2; z-index: 10; }
-.rosco-letter.correct { background: var(--primary); }
-.rosco-letter.wrong { background: var(--error); }
+.rosco-letter.correct { background: #00ff87; border-color: #00ff87; } /* Aciertos en verde como es típico */
+.rosco-letter.wrong { background: #ff4d4d; border-color: #ff4d4d; }
 
 .rosco-content { 
     text-align: center; z-index: 5; 
@@ -374,7 +412,7 @@ input[type="number"]::-webkit-outer-spin-button {
     max-width: 260px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-#rosco-player-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 3vw, 1.2rem); margin: 0 0 5px 0; }
+#rosco-player-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 3vw, 1.2rem); margin: 0 0 5px 0; color: white;}
 #rosco-letter-hint { font-size: clamp(2rem, 10vw, 4rem); color: var(--primary); margin: 0; font-family: 'Orbitron'; line-height: 1; }
 #rosco-definition { 
     font-size: clamp(0.75rem, 3vw, 1rem); margin-bottom: 15px; 
@@ -386,8 +424,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .timer-p1 { color: #00a8ff; transition: 0.3s; padding: 0 5px; }
 .timer-p2 { color: #ff4d4d; transition: 0.3s; padding: 0 5px; }
 .timer-active { transform: scale(1.3); font-weight: bold; display: inline-block; }
-.title-p1 { color: #00a8ff; text-shadow: 0 0 10px rgba(0, 168, 255, 0.4); }
-.title-p2 { color: #ff4d4d; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); }
+.title-p1 { color: #00a8ff !important; text-shadow: 0 0 10px rgba(0, 168, 255, 0.4); }
+.title-p2 { color: #ff4d4d !important; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); }
 .rosco-letter.current.current-p1 { color: #00a8ff !important; box-shadow: 0 0 20px #00a8ff !important; }
 .rosco-letter.current.current-p2 { color: #ff4d4d !important; box-shadow: 0 0 20px #ff4d4d !important; }
 
@@ -409,7 +447,7 @@ input[type="number"]::-webkit-outer-spin-button {
 @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 #modal-title { font-family: 'Orbitron', sans-serif; color: var(--primary); margin-top: 0; font-size: clamp(1.2rem, 5vw, 1.8rem); }
 #modal-message { font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--text); margin: 1.5rem 0; }
-#modal-btn { background: var(--secondary); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; }
+#modal-btn { background: var(--primary); color: var(--bg); border: none; padding: 12px 30px; border-radius: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; font-weight: bold;}
 #modal-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
 
 .wordle-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; align-items: center; width: 100%; }
@@ -423,8 +461,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .wordle-cell.active { border-color: var(--secondary); box-shadow: 0 0 15px rgba(110, 44, 242, 0.4), inset 0 0 10px rgba(110, 44, 242, 0.2); transform: scale(1.08); }
 .wordle-cell.revealed { transition: transform 0.6s ease, background 0.3s 0.3s, border-color 0.3s 0.3s; }
-.wordle-cell.revealed.correct { background: var(--primary); color: var(--bg); border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); transform: rotateX(360deg); }
-.wordle-cell.revealed.present { background: #ffd700; color: var(--bg); border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: rotateX(360deg); }
+.wordle-cell.revealed.correct { background: #00ff87; color: #000; border-color: #00ff87; box-shadow: 0 0 15px rgba(0,255,135,0.5); transform: rotateX(360deg); }
+.wordle-cell.revealed.present { background: #ffd700; color: #000; border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: rotateX(360deg); }
 .wordle-cell.revealed.absent { background: #0f1218; color: #444; border-color: #1a1e24; box-shadow: inset 0 0 15px rgba(0,0,0,1); transform: rotateX(360deg); }
 
 /* ==========================================
@@ -443,7 +481,7 @@ input[type="number"]::-webkit-outer-spin-button {
     align-items: center;
     justify-content: center;
     background: rgba(110, 44, 242, 0.15); 
-    border: 2px solid var(--secondary);
+    border: 2px solid #6e2cf2;
     border-radius: 15px;
     padding: 5px 25px;
     box-shadow: 0 0 25px rgba(110, 44, 242, 0.5), inset 0 0 15px rgba(110, 44, 242, 0.3);
@@ -465,8 +503,8 @@ input[type="number"]::-webkit-outer-spin-button {
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(3.5rem, 12vw, 5rem);
     font-weight: 700;
-    color: var(--primary);
-    text-shadow: 0 0 20px var(--primary);
+    color: #00ff87;
+    text-shadow: 0 0 20px #00ff87;
     line-height: 1;
 }
 
@@ -480,8 +518,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .logo-texto-inferior span {
-    color: var(--primary);
-    text-shadow: 0 0 15px var(--primary-glow);
+    color: #00ff87;
+    text-shadow: 0 0 15px rgba(0,255,135,0.5);
 }
 
 @keyframes pulseLogo {
@@ -511,8 +549,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .hl-card {
     width: 100%;
     max-width: 320px;
-    background: #2a002d; /* Morado Premier oscuro */
-    border: 2px solid rgba(0, 255, 133, 0.3); /* Verde Flúor suave */
+    background: #2a002d; 
+    border: 2px solid var(--primary-glow); 
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -525,8 +563,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .hl-card:hover {
-    border-color: #00ff85;
-    box-shadow: 0 0 30px rgba(0, 255, 133, 0.2);
+    border-color: var(--primary);
+    box-shadow: 0 0 30px var(--primary-glow);
 }
 
 .hl-card img {
@@ -563,8 +601,8 @@ input[type="number"]::-webkit-outer-spin-button {
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(2rem, 8vw, 3rem);
     font-weight: bold;
-    color: #00ff85;
-    text-shadow: 0 0 15px rgba(0, 255, 133, 0.6);
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
     transition: 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.27);
     margin: 10px 0;
 }
@@ -597,16 +635,16 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .btn-higher {
-    background: rgba(0, 255, 133, 0.15);
-    color: #00ff85;
-    border: 2px solid #00ff85;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+    border: 2px solid var(--primary);
 }
 
 .btn-higher:hover {
-    background: #00ff85;
-    color: #38003c;
+    background: var(--primary);
+    color: var(--bg);
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 255, 133, 0.4);
+    box-shadow: 0 5px 15px var(--primary-glow);
 }
 
 .btn-lower {
@@ -626,7 +664,7 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 60px;
     height: 60px;
     background: white;
-    color: #38003c;
+    color: var(--bg);
     font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
@@ -635,9 +673,9 @@ input[type="number"]::-webkit-outer-spin-button {
     justify-content: center;
     border-radius: 50%;
     z-index: 10;
-    border: 5px solid #00ff85;
+    border: 5px solid var(--primary);
     margin: -25px 0;
-    box-shadow: 0 0 20px rgba(0, 255, 133, 0.5);
+    box-shadow: 0 0 20px var(--primary-glow);
 }
 
 @media(min-width: 768px) {
@@ -645,31 +683,38 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* ==========================================
-   13. MAPA ESTADIOS (RADAR CIBERNÉTICO)
+   13. MAPA ESTADIOS (GEOGRAFÍA ESPAÑA - LALIGA)
    ========================================== */
 .map-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
 .stadium-target {
-    background: rgba(255, 215, 0, 0.1);
-    color: #ffd700;
-    border: 1px solid #ffd700;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid var(--primary);
     padding: 10px 20px;
     border-radius: 8px;
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(1.2rem, 4vw, 1.5rem);
     margin-bottom: 20px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 15px var(--primary-glow);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
+/* El mapa distribuido visualmente por áreas CSS formando España */
 .cyber-map-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
+    grid-template-areas:
+        "galicia asturias cantabria vasco navarra ."
+        "galicia cyl cyl rioja aragon catalunya"
+        ". cyl cyl madrid aragon catalunya"
+        "extremadura clm clm clm valencia baleares"
+        "extremadura andalucia andalucia andalucia murcia ."
+        "canarias . . . . .";
+    gap: 6px;
     width: 100%;
     max-width: 500px;
     background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
+    padding: 15px;
     border-radius: 15px;
     border: 2px solid var(--card);
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
@@ -682,9 +727,9 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(15px, 4vw, 25px) 5px;
+    padding: clamp(15px, 3vw, 25px) 2px;
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(0.5rem, 2vw, 0.7rem);
+    font-size: clamp(0.45rem, 1.8vw, 0.65rem);
     color: var(--text-dim);
     text-align: center;
     cursor: pointer;
@@ -693,22 +738,34 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .map-region:hover {
-    background: rgba(0, 255, 135, 0.1);
+    background: var(--primary-glow);
     border-color: var(--primary);
     color: white;
-    transform: scale(1.02);
+    transform: scale(1.05);
     z-index: 10;
 }
 
-.correct-reg { background: rgba(0, 255, 135, 0.3) !important; border-color: var(--primary) !important; color: white !important; box-shadow: 0 0 15px var(--primary-glow); }
-.wrong-reg { background: rgba(255, 77, 77, 0.3) !important; border-color: var(--error) !important; color: white !important; }
+.correct-reg { background: var(--primary-glow) !important; border-color: var(--primary) !important; color: white !important; box-shadow: 0 0 15px var(--primary-glow); }
+.wrong-reg { background: rgba(100, 100, 100, 0.5) !important; border-color: #555 !important; color: white !important; }
 
-/* Ajustes de celdas para darle forma de mapa a la cuadrícula */
-#reg-galicia { grid-column: 1; }
-#reg-vasco { grid-column: 4; }
-#reg-madrid { grid-column: 2 / span 2; background: rgba(28, 33, 40, 0.95); } /* Centro */
-#reg-baleares { grid-column: 4; transform: translateX(10px) translateY(10px); }
-#reg-canarias { grid-column: 1; transform: translateY(20px); }
+/* Asignando cada recuadro a su espacio en el mapa de España */
+#reg-galicia { grid-area: galicia; }
+#reg-asturias { grid-area: asturias; }
+#reg-cantabria { grid-area: cantabria; }
+#reg-vasco { grid-area: vasco; }
+#reg-navarra { grid-area: navarra; }
+#reg-cyl { grid-area: cyl; }
+#reg-rioja { grid-area: rioja; }
+#reg-aragon { grid-area: aragon; }
+#reg-catalunya { grid-area: catalunya; }
+#reg-madrid { grid-area: madrid; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2); } /* Resalta la capital */
+#reg-extremadura { grid-area: extremadura; }
+#reg-clm { grid-area: clm; }
+#reg-valencia { grid-area: valencia; }
+#reg-baleares { grid-area: baleares; transform: translate(10px, 10px); }
+#reg-andalucia { grid-area: andalucia; }
+#reg-murcia { grid-area: murcia; }
+#reg-canarias { grid-area: canarias; transform: translateY(20px); }
 
 /* ==========================================
    14. ESCUDOS ZOOM (PREMIER)
@@ -718,10 +775,10 @@ input[type="number"]::-webkit-outer-spin-button {
     width: clamp(200px, 60vw, 300px);
     aspect-ratio: 1/1;
     border-radius: 20px;
-    border: 4px solid #00a8ff;
+    border: 4px solid var(--primary);
     padding: 10px;
-    background: rgba(0, 168, 255, 0.05);
-    box-shadow: 0 0 30px rgba(0, 168, 255, 0.2), inset 0 0 20px rgba(0, 168, 255, 0.1);
+    background: var(--primary-glow);
+    box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-glow);
     margin-bottom: 20px;
 }
 .zoom-lens {
@@ -730,13 +787,13 @@ input[type="number"]::-webkit-outer-spin-button {
     border-radius: 12px;
     overflow: hidden;
     position: relative;
-    background: #ffffff; /* Fondo blanco por si el escudo es PNG con transparencias */
+    background: #ffffff; /* Fondo blanco por las transparencias png */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .zoom-lens img {
-    width: 80%; /* Para dejar margen cuando se hace scale(1) */
+    width: 80%; 
     height: 80%;
     object-fit: contain;
     transition: transform 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.27);
