@@ -1,70 +1,32 @@
 // ==========================================
-// 1. BASES DE DATOS
+// 1. BASES DE DATOS & CONSTANTES GLOBALES
 // ==========================================
+const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 
 const players = [
-    // 1.Real Madrid
-    "COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", 
-    "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE",
-    "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA",
-    // 2.Atlético de Madrid
-    "OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", 
-    "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", 
-    "JULIAN ALVAREZ", "SORLOTH",
-    // 3.Barcelona 
-    "JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL",
-    "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI",
-    // 4.Villarreal
-    "DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", 
-    "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "ILIAS AKHOMACH", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE",
-    // 5.Betis
-    "ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", 
-    "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL",
-    // 6.Celta 
-    "RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "BELTRAN", "WILLIOT SWEDBERG", "BORJA IGLESIAS", 
-    "JUTGLA", "IAGO ASPAS", "CERVI", "BRYAN ZARAGOZA", 
-    // 7.Real Sociedad
-    "REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA",
-    "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON",
-    // 8.Athletic
-    "UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE",
-    "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA",
-    // 9-Valencia
-    "JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", 
-    "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ", 
-    // 10.Girona
-    "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", 
-    "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI",
-    // 11.Sevilla
-    "VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", 
-    "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY",  
-    // 12.Espanyol
+    "COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA",
+    "OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH",
+    "JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI",
+    "DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "ILIAS AKHOMACH", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE",
+    "ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL",
+    "RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "BELTRAN", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI", "BRYAN ZARAGOZA", 
+    "REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON",
+    "UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA",
+    "JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ", 
+    "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI",
+    "VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY",  
     "DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA",
-    // 13.Rayo 
-    "BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", 
-    "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO",
-    // 14.Osasuna 
-    "SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ",
-    "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR",
-    // 15.Mallorca
-    "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "DAVID LOPEZ", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES",
-    "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS",
-    // 16.Levante
+    "BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO",
+    "SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR",
+    "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "DAVID LOPEZ", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS",
     "RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES",
-    // 17.Elche 
     "IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA",
-    // 18.Getafe
-    "DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", 
-    "LUIS MILLA", "BORJA MAYORAL", "SATRIANO", 
-    // 19.Alaves
-    "SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", 
-    "MARIANO DIAZ",
-    // 20. Real Oviedo
+    "DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO", 
+    "SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ",
     "ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER"
 ];
 
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
-
 const roscoQuestions = [
     { letra: "A", preguntas: [{ respuesta: "ANCELOTTI", hint: "Nombre del único entrenador en ganar las 5 grandes ligas." }, { respuesta: "ANSU FATI", hint: "Nombre y apellido del jugador del Brighton que en el Barça heredó el 10 de Messi" }, { respuesta: "ARDA GULER", hint: "Nombre y apellido del jugador más caro de la selección de Turquía" }] },
     { letra: "B", preguntas: [{ respuesta: "BETIS", hint: "Equipo sevillano que ganó LaLiga en 1934/1935" }, { respuesta: "BELLINGHAM", hint: "Nombre del jugador ingles del Madrid proveniente del Dortmund" }, { respuesta: "BENZEMA", hint: "Ganador del Balón de Oro 2022" }] },
@@ -181,29 +143,47 @@ const elevenMatches = [
     }
 ];
 
-function obtenerDosRoscos() {
-    let r1 = [], r2 = [];
-    roscoQuestions.forEach(item => {
-        let options = [...item.preguntas];
-        options.sort(() => Math.random() - 0.5); 
-        r1.push({ letra: item.letra, respuesta: options[0].respuesta, hint: options[0].hint });
-        let idx2 = options.length > 1 ? 1 : 0;
-        r2.push({ letra: item.letra, respuesta: options[idx2].respuesta, hint: options[idx2].hint });
-    });
-    return [r1, r2];
-}
+const premierPlayers = [
+    { name: "DONNARUMMA", value: 45 }, { name: "GVARDIOL", value: 70 }, { name: "MARC GUEHI", value: 65 },
+    { name: "RUBEN DIAS", value: 60 }, { name: "KHUSANOV", value: 35 }, { name: "STONES", value: 15 },
+    { name: "AKE", value: 15 }, { name: "O'REILLY", value: 50 }, { name: "AIT-NOURI", value: 40 },
+    { name: "MATHEUS NUNES", value: 45 }, { name: "RICO LEWIS", value: 32 }, { name: "RODRI", value: 65 },
+    { name: "NICO GONZALEZ", value: 45 }, { name: "REIJNDERS", value: 60 }, { name: "KOVACIC", value: 15 },
+    { name: "FODEN", value: 80 }, { name: "CHERKI", value: 65 }, { name: "BERNARDO SILVA", value: 27 },
+    { name: "DOKU", value: 65 }, { name: "SAVINHO", value: 40 }, { name: "SEMENYO", value: 75 },
+    { name: "HAALAND", value: 200 }, { name: "MARMOUSH", value: 60 }
+];
+
+const estadiosLaLiga = [
+    { name: "SANTIAGO BERNABÉU", value: 85000 }, { name: "CAMP NOU", value: 99354 },
+    { name: "METROPOLITANO", value: 70460 }, { name: "BENITO VILLAMARÍN", value: 60721 },
+    { name: "LA CARTUJA", value: 39323 }, { name: "SAN MAMÉS", value: 53289 },
+    { name: "MESTALLA", value: 49430 }, { name: "RCD ESPANYOL", value: 40000 },
+    { name: "REALE ARENA", value: 39500 }, { name: "SÁNCHEZ-PIZJUÁN", value: 43883 },
+    { name: "EL SADAR", value: 23576 }, { name: "LA CERÁMICA", value: 23000 },
+    { name: "MENDIZORROZA", value: 19840 }, { name: "BALAÍDOS", value: 29000 },
+    { name: "VALLECAS", value: 14708 }, { name: "SON MOIX", value: 23142 },
+    { name: "COLISEUM", value: 16500 }, { name: "MONTILIVI", value: 14624 },
+    { name: "GRAN CANARIA", value: 32400 }, { name: "MARTÍNEZ VALERO", value: 31388 }
+];
+
+const premierTeamsDB = [
+    "ARSENAL", "ASTON VILLA", "CHELSEA", "EVERTON", "LIVERPOOL", 
+    "MANCHESTER CITY", "MANCHESTER UNITED", "NEWCASTLE", "TOTTENHAM", "WEST HAM", "BRIGHTON"
+];
 
 // ==========================================
-// 2. ESTADOS DE LOS JUEGOS
+// 2. ESTADOS GLOBALES DE LOS JUEGOS
 // ==========================================
-
-const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
+let currentCategory = "";
 let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
 let blurState = { player: "", blur: 30, lives: 5, streak: 0 };
 let timeMachineState = { event: "", year: 0, lives: 5, streak: 0 };
 let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalPlayers: 11 };
 let wordleState = { targetPlayer: "", answer: "", guesses: [], currentGuess: "", maxGuesses: 6, wordLength: 5 };
-let currentCategory = "";
+let hlState = { p1: null, p2: null, score: 0 };
+let aforosState = { p1: null, p2: null, score: 0 };
+let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
 
 let roscoState = {
     mode: 'individual',
@@ -248,66 +228,44 @@ function showCategory(category) {
         grid.innerHTML = `
             <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
                 <div class="card-bg bg-ahorcado"></div>
-                <div class="card-info">
-                    <h3>Ahorcado</h3>
-                    <p>Nivel Clásico</p>
-                </div>
+                <div class="card-info"><h3>Ahorcado</h3><p>Nivel Clásico</p></div>
             </div>
             <div class="menu-card blur-game-card" onclick="showGame('blur')">
                 <div class="card-bg bg-blur"></div> 
-                <div class="card-info">
-                    <h3>Blur Guess</h3>
-                    <p>Adivina el jugador</p>
-                </div>
+                <div class="card-info"><h3>Blur Guess</h3><p>Adivina el jugador</p></div>
             </div>
-            <div class="menu-card map-game-card" onclick="showGame('map')">
+            <div class="menu-card aforos-game-card" onclick="showGame('aforos')">
                 <div class="card-bg bg-laliga"></div>
-                <div class="card-info">
-                    <h3>Radar Estadios</h3>
-                    <p>Geografía de LaLiga</p>
-                </div>
+                <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
             </div>`;
     } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
             <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
                 <div class="card-bg bg-timemachine"></div>
-                <div class="card-info">
-                    <h3>Máquina del Tiempo</h3>
-                    <p>¿En qué año fue?</p>
-                </div>
+                <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
             </div>
             <div class="menu-card coming-soon">
                 <span class="icon">📈</span>
-                <h3>Higher or Lower</h3>
-                <p>Próximamente</p>
+                <h3>Higher or Lower</h3><p>Próximamente</p>
             </div>`;
     } else if (category === 'europeos') {
         title.innerHTML = "JUEGOS <span>EUROPEOS</span>";
         grid.innerHTML = `
             <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
                 <div class="card-bg bg-europeos"></div>
-                <div class="card-info">
-                    <h3>XI Histórico</h3>
-                    <p>Adivina con Futdle</p>
-                </div>
+                <div class="card-info"><h3>XI Histórico</h3><p>Adivina con Futdle</p></div>
             </div>`;
     } else {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
                 <div class="card-bg bg-premier"></div>
-                <div class="card-info">
-                    <h3>Higher / Lower</h3>
-                    <p>Valor de Mercado</p>
-                </div>
+                <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
                 <div class="card-bg bg-premier"></div>
-                <div class="card-info">
-                    <h3>Escudos Zoom</h3>
-                    <p>Reconoce el detalle</p>
-                </div>
+                <div class="card-info"><h3>Escudos Zoom</h3><p>Reconoce el detalle</p></div>
             </div>`;
     }
 }
@@ -322,12 +280,28 @@ function showGame(gameId) {
         if(gameId === 'timemachine') initTimeMachine();
         if(gameId === 'eleven') initElevenGame();
         if(gameId === 'higherlower') initHigherLower(); 
-        if(gameId === 'map') initMapGame();
+        if(gameId === 'aforos') initAforosGame();
         if(gameId === 'zoom') initZoomGame();
     }
 }
 
 function backToCategory() { showCategory(currentCategory); }
+
+// ==========================================
+// 4. FUNCIONES DE UTILIDAD (MODALES, AUTOCOMPLETAR)
+// ==========================================
+
+function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
+    const modal = document.getElementById('custom-modal');
+    document.getElementById('modal-title').innerText = titulo;
+    document.getElementById('modal-message').innerText = mensaje;
+    
+    modal.classList.remove('hidden');
+    document.getElementById('modal-btn').onclick = () => {
+        modal.classList.add('hidden');
+        if (accionAlCerrar) accionAlCerrar();
+    };
+}
 
 function setupAutocomplete(inputId, suggestionId) {
     const input = document.getElementById(inputId);
@@ -350,10 +324,23 @@ function setupAutocomplete(inputId, suggestionId) {
     });
 }
 
+function obtenerDosRoscos() {
+    let r1 = [], r2 = [];
+    roscoQuestions.forEach(item => {
+        let options = [...item.preguntas];
+        options.sort(() => Math.random() - 0.5); 
+        r1.push({ letra: item.letra, respuesta: options[0].respuesta, hint: options[0].hint });
+        let idx2 = options.length > 1 ? 1 : 0;
+        r2.push({ letra: item.letra, respuesta: options[idx2].respuesta, hint: options[idx2].hint });
+    });
+    return [r1, r2];
+}
+
 // ==========================================
-// 4. LÓGICA: AHORCADO
+// 5. LÓGICA DE JUEGOS INDIVIDUALES
 // ==========================================
 
+// --- AHORCADO ---
 function initHangman() {
     gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
     gameState.guessed = [];
@@ -396,7 +383,10 @@ function handleInput(char) {
         gameState.mistakes++;
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
         drawCanvas(gameState.mistakes);
-        if (gameState.mistakes >= 6) gameOver();
+        if (gameState.mistakes >= 6) {
+            gameState.streak = 0;
+            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+        }
     } else {
         updateDisplay();
     }
@@ -414,25 +404,23 @@ function updateDisplay() {
     
     document.getElementById('wordDisplay').innerHTML = displayHTML;
     
-    if (!document.getElementById('wordDisplay').textContent.includes("_")) victory();
+    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+        gameState.streak++;
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+    }
 }
 
 function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (nVal === nWord && nVal !== "") victory();
-    else gameOver();
-}
-
-function victory() {
-    gameState.streak++;
-    mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => { initHangman(); });
-}
-
-function gameOver() {
-    gameState.streak = 0;
-    mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => { initHangman(); });
+    if (nVal === nWord && nVal !== "") {
+        gameState.streak++;
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+    } else {
+        gameState.streak = 0;
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+    }
 }
 
 function drawCanvas(step) {
@@ -456,10 +444,7 @@ function drawCanvas(step) {
     if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); }
 }
 
-// ==========================================
-// 5. LÓGICA: BLUR GUESS
-// ==========================================
-
+// --- BLUR GUESS ---
 function initBlurGame() {
     blurState.player = players[Math.floor(Math.random() * players.length)].toUpperCase();
     blurState.blur = 30;
@@ -482,18 +467,14 @@ function checkBlurGuess() {
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => { 
-            mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => { initBlurGame(); }); 
-        }, 300);
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => initBlurGame()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
         if (blurState.lives <= 0) {
             blurState.streak = 0;
             document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => { 
-                mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => { initBlurGame(); }); 
-            }, 300);
+            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
         } else {
             document.getElementById('blur-lives').innerText = blurState.lives;
             document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
@@ -502,10 +483,7 @@ function checkBlurGuess() {
     }
 }
 
-// ==========================================
-// 6. LÓGICA: MÁQUINA DEL TIEMPO
-// ==========================================
-
+// --- TIME MACHINE ---
 function initTimeMachine() {
     const randomEvent = timeMachineEvents[Math.floor(Math.random() * timeMachineEvents.length)];
     timeMachineState.event = randomEvent.event;
@@ -515,7 +493,6 @@ function initTimeMachine() {
     document.getElementById('tm-lives').innerText = timeMachineState.lives;
     document.getElementById('tm-streak').innerText = timeMachineState.streak;
     document.getElementById('tm-event-text').innerText = timeMachineState.event;
-    
     document.getElementById('tm-image').src = `events/${randomEvent.foto}.jpg`;
     document.getElementById('tmInput').value = "";
     document.getElementById('tm-feedback').innerText = "";
@@ -526,38 +503,32 @@ function initTimeMachine() {
 function checkTimeMachineGuess() {
     const inputField = document.getElementById('tmInput');
     const guess = parseInt(inputField.value);
-    
     if(isNaN(guess)) return;
 
     if (guess === timeMachineState.year) {
         timeMachineState.streak++;
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => { initTimeMachine(); });
+        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => initTimeMachine());
     } else {
         timeMachineState.lives--;
         if (timeMachineState.lives <= 0) {
             timeMachineState.streak = 0;
-            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => { initTimeMachine(); });
+            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => initTimeMachine());
         } else {
             document.getElementById('tm-lives').innerText = timeMachineState.lives;
-            let hint = guess < timeMachineState.year ? "⬆️ Es MÁS reciente (Año mayor)" : "⬇️ Es MÁS antiguo (Año menor)";
-            document.getElementById('tm-feedback').innerText = hint;
+            document.getElementById('tm-feedback').innerText = guess < timeMachineState.year ? "⬆️ Es MÁS reciente" : "⬇️ Es MÁS antiguo";
             inputField.value = "";
             inputField.focus();
         }
     }
 }
 
-// ==========================================
-// 7. LÓGICA: EL ROSCO
-// ==========================================
-
+// --- EL ROSCO ---
 function initRosco(mode) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('rosco-screen').classList.remove('hidden');
 
     const circle = document.getElementById('rosco-circle');
     circle.innerHTML = "";
-    
     if (roscoState.timerInterval) clearInterval(roscoState.timerInterval);
     
     let [q1, q2] = obtenerDosRoscos();
@@ -617,7 +588,6 @@ function renderRoscoTurn() {
     
     if (roscoState.mode === 'multiplayer') {
         currentEl.classList.add(roscoState.currentPlayer === 1 ? 'current-p1' : 'current-p2');
-        
         const titleEl = document.getElementById('rosco-player-title');
         titleEl.textContent = `Turno: Jugador ${roscoState.currentPlayer}`;
         titleEl.className = roscoState.currentPlayer === 1 ? 'title-p1' : 'title-p2';
@@ -635,7 +605,6 @@ function renderRoscoTurn() {
 
 function startRoscoTimer() {
     if(roscoState.timerInterval) clearInterval(roscoState.timerInterval);
-    
     roscoState.timerInterval = setInterval(() => {
         const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
         roscoState[pKey].timeLeft--;
@@ -646,9 +615,7 @@ function startRoscoTimer() {
             document.getElementById(`rosco-timer-${pKey}`).textContent = roscoState[pKey].timeLeft;
         }
         
-        if (roscoState[pKey].timeLeft <= 0) {
-            handlePlayerEnd();
-        }
+        if (roscoState[pKey].timeLeft <= 0) handlePlayerEnd();
     }, 1000);
 }
 
@@ -680,7 +647,6 @@ function checkRosco() {
     const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
     const state = roscoState[pKey];
     const q = state.questions[state.currentIndex];
-    
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nAns = q.respuesta.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -693,9 +659,7 @@ function checkRosco() {
     }
 }
 
-function pasapalabra() {
-    advanceRoscoTurn(false); 
-}
+function pasapalabra() { advanceRoscoTurn(false); }
 
 function advanceRoscoTurn(keepTurn) {
     const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
@@ -714,7 +678,6 @@ function advanceRoscoTurn(keepTurn) {
     if(!pending) {
         state.done = true;
         const other = roscoState.currentPlayer === 1 ? 2 : 1;
-        
         if (roscoState.mode === 'individual' || roscoState[`p${other}`].done) {
             endRosco("¡ROSCO COMPLETADO!");
         } else {
@@ -730,17 +693,13 @@ function advanceRoscoTurn(keepTurn) {
     
     if (!keepTurn && roscoState.mode === 'multiplayer') {
         const other = roscoState.currentPlayer === 1 ? 2 : 1;
-        if (!roscoState[`p${other}`].done) {
-            roscoState.currentPlayer = other;
-        }
+        if (!roscoState[`p${other}`].done) roscoState.currentPlayer = other;
     }
-    
     renderRoscoTurn();
 }
 
 function endRosco(msg) {
     clearInterval(roscoState.timerInterval);
-    
     if (roscoState.mode === 'individual') {
         let aciertos = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
         mostrarMensajePro("FIN DEL JUEGO", `${msg}\nAciertos: ${aciertos}`, () => showMenu());
@@ -748,7 +707,6 @@ function endRosco(msg) {
         let aciertosP1 = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
         let aciertosP2 = Object.values(roscoState.p2.results).filter(r => r === 'correct').length;
         let winnerMsg = aciertosP1 > aciertosP2 ? "¡GANA EL JUGADOR 1! 🔵" : (aciertosP2 > aciertosP1 ? "¡GANA EL JUGADOR 2! 🔴" : "¡EMPATE TÉCNICO! 🤝");
-        
         mostrarMensajePro("FIN DEL PARTIDO", `${msg}\n${winnerMsg}\n\nJ1 Azul: ${aciertosP1} aciertos\nJ2 Rojo: ${aciertosP2} aciertos`, () => showMenu());
     }
 }
@@ -758,13 +716,9 @@ function salirDelRosco() {
     showMenu();
 }
 
-// ==========================================
-// 8. LÓGICA: XI HISTÓRICO EUROPEO
-// ==========================================
-
+// --- XI HISTÓRICO EUROPEO (FUTDLE) ---
 function initElevenGame() {
     if (elevenState.timer) clearInterval(elevenState.timer);
-    
     elevenState.match = elevenMatches[Math.floor(Math.random() * elevenMatches.length)];
     elevenState.guessed = [];
     elevenState.timeLeft = 180; 
@@ -773,7 +727,6 @@ function initElevenGame() {
     updateElevenTimerDisplay();
     document.getElementById('eleven-team').innerText = elevenState.match.team;
     document.getElementById('eleven-desc').innerText = elevenState.match.desc;
-    
     renderPitch();
     startElevenTimer();
 }
@@ -785,7 +738,7 @@ function startElevenTimer() {
         if(elevenState.timeLeft <= 0) {
             clearInterval(elevenState.timer);
             closeFutdleModal();
-            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => { initElevenGame(); });
+            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => initElevenGame());
         }
     }, 1000);
 }
@@ -799,24 +752,19 @@ function updateElevenTimerDisplay() {
 function renderPitch() {
     const pitch = document.getElementById('pitch');
     pitch.innerHTML = "";
-
     elevenState.match.xi.forEach((linea) => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'pitch-row';
-        
         linea.forEach((playerObj) => {
             const playerDiv = document.createElement('div');
             playerDiv.className = 'player-slot';
-            
             if (elevenState.guessed.includes(playerObj.name)) {
                 playerDiv.classList.add('revealed');
                 playerDiv.innerHTML = `<div class="shirt">👕</div><div class="name">${playerObj.name}</div>`;
             } else {
                 playerDiv.classList.add('clickable');
                 playerDiv.innerHTML = `<div class="shirt empty">❓</div><div class="name hidden-name">---</div>`;
-                playerDiv.onclick = () => {
-                    openFutdleForPlayer(playerObj);
-                };
+                playerDiv.onclick = () => openFutdleForPlayer(playerObj);
             }
             rowDiv.appendChild(playerDiv);
         });
@@ -827,15 +775,9 @@ function renderPitch() {
 function checkElevenWin() {
     if (elevenState.guessed.length === elevenState.totalPlayers) {
         clearInterval(elevenState.timer);
-        setTimeout(() => {
-            mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => { initElevenGame(); });
-        }, 500);
+        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => initElevenGame()), 500);
     }
 }
-
-// ==========================================
-// 9. LÓGICA: FUTDLE (INTEGRADO EN XI)
-// ==========================================
 
 function openFutdleForPlayer(playerObj) {
     wordleState.targetPlayer = playerObj.name;
@@ -848,17 +790,13 @@ function openFutdleForPlayer(playerObj) {
     while(wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-') {
         wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
     }
-    
     document.getElementById('futdle-hint').innerText = `Pista: ${playerObj.hint}`;
     document.getElementById('futdle-modal').classList.remove('hidden');
-    
     renderWordleGrid();
     renderWordleKeyboard();
 }
 
-function closeFutdleModal() {
-    document.getElementById('futdle-modal').classList.add('hidden');
-}
+function closeFutdleModal() { document.getElementById('futdle-modal').classList.add('hidden'); }
 
 function renderWordleGrid() {
     const grid = document.getElementById('wordle-grid');
@@ -866,12 +804,10 @@ function renderWordleGrid() {
     for (let i = 0; i < wordleState.maxGuesses; i++) {
         const row = document.createElement('div');
         row.className = 'wordle-row';
-        
         const guess = wordleState.guesses[i] || (i === wordleState.guesses.length ? wordleState.currentGuess : "");
         
         for (let j = 0; j < wordleState.wordLength; j++) {
             const targetChar = wordleState.answer[j];
-            
             if (targetChar === ' ' || targetChar === '-') {
                 const spacer = document.createElement('div');
                 spacer.className = 'wordle-spacer';
@@ -882,15 +818,10 @@ function renderWordleGrid() {
                 cell.className = 'wordle-cell';
                 const letter = guess[j] || "";
                 cell.innerText = letter;
-                
-                if (letter && i === wordleState.guesses.length) {
-                    cell.classList.add('active'); 
-                }
-                
+                if (letter && i === wordleState.guesses.length) cell.classList.add('active'); 
                 if (i < wordleState.guesses.length) {
                     cell.classList.add('revealed'); 
-                    const status = getWordleLetterStatus(guess, j);
-                    cell.classList.add(status);
+                    cell.classList.add(getWordleLetterStatus(guess, j));
                 }
                 row.appendChild(cell);
             }
@@ -911,7 +842,6 @@ function renderWordleKeyboard() {
     const container = document.getElementById('wordle-keyboard');
     container.innerHTML = ''; 
     const layout = ["QWERTYUIOP", "ASDFGHJKLÑ", "⌫ZXCVBNM↵"];
-    
     layout.forEach(row => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'keyboard-row';
@@ -956,23 +886,18 @@ function handleWordleKey(key) {
         if (wordleState.currentGuess.length === wordleState.wordLength) submitWordleGuess();
     } else if (key === 'BACKSPACE') {
         if (wordleState.currentGuess.length > 0) {
-            while (wordleState.currentGuess.length > 0 && 
-                  (wordleState.currentGuess.slice(-1) === ' ' || wordleState.currentGuess.slice(-1) === '-')) {
+            while (wordleState.currentGuess.length > 0 && (wordleState.currentGuess.slice(-1) === ' ' || wordleState.currentGuess.slice(-1) === '-')) {
                 wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
             }
-            if (wordleState.currentGuess.length > 0) {
-                wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
-            }
-            while (wordleState.currentGuess.length < wordleState.wordLength && 
-                  (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
+            if (wordleState.currentGuess.length > 0) wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
+            while (wordleState.currentGuess.length < wordleState.wordLength && (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
                 wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
             }
             renderWordleGrid();
         }
     } else if (wordleState.currentGuess.length < wordleState.wordLength && /^[A-ZÑ]$/.test(key)) {
         wordleState.currentGuess += key;
-        while (wordleState.currentGuess.length < wordleState.wordLength && 
-              (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
+        while (wordleState.currentGuess.length < wordleState.wordLength && (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
             wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
         }
         renderWordleGrid();
@@ -983,7 +908,6 @@ function submitWordleGuess() {
     wordleState.guesses.push(wordleState.currentGuess);
     const isWin = wordleState.currentGuess === wordleState.answer;
     wordleState.currentGuess = "";
-    
     renderWordleGrid();
     updateWordleKeyboard();
 
@@ -997,13 +921,155 @@ function submitWordleGuess() {
     } else if (wordleState.guesses.length >= wordleState.maxGuesses) {
         setTimeout(() => {
             closeFutdleModal();
-            mostrarMensajePro("❌ ¡FALLASTE!", "El jugador era: " + wordleState.targetPlayer + ". \n¡Prueba con otro mientras te quede tiempo!", () => {});
+            mostrarMensajePro("❌ ¡FALLASTE!", "El jugador era: " + wordleState.targetPlayer + ". \n¡Prueba con otro mientras te quede tiempo!");
         }, 1000);
     }
 }
 
+// --- HIGHER OR LOWER (PREMIER) ---
+function initHigherLower() {
+    hlState.score = 0;
+    document.getElementById('hl-score').innerText = hlState.score;
+    hlState.p1 = premierPlayers[Math.floor(Math.random() * premierPlayers.length)];
+    pickNewPlayer2();
+    renderHL();
+}
+
+function pickNewPlayer2() {
+    let available = premierPlayers.filter(p => p.name !== hlState.p1.name);
+    hlState.p2 = available[Math.floor(Math.random() * available.length)];
+}
+
+function renderHL() {
+    document.getElementById('hl-controls').classList.remove('hidden');
+    document.getElementById('hl-val-2').classList.add('hidden-val');
+    document.getElementById('hl-val-2').innerText = "???";
+
+    document.getElementById('hl-name-1').innerText = hlState.p1.name;
+    document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
+    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name}.jpg`;
+
+    document.getElementById('hl-name-2').innerText = hlState.p2.name;
+    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name}.jpg`;
+}
+
+function checkHigherLower(guess) {
+    let v1 = hlState.p1.value;
+    let v2 = hlState.p2.value;
+    let isCorrect = (guess === 'higher' && v2 >= v1) || (guess === 'lower' && v2 <= v1);
+
+    document.getElementById('hl-controls').classList.add('hidden');
+    const val2El = document.getElementById('hl-val-2');
+    val2El.innerText = v2 + " M€";
+    val2El.classList.remove('hidden-val');
+
+    setTimeout(() => {
+        if (isCorrect) {
+            hlState.score++;
+            document.getElementById('hl-score').innerText = hlState.score;
+            hlState.p1 = hlState.p2;
+            pickNewPlayer2();
+            renderHL();
+        } else {
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
+        }
+    }, 1500);
+}
+
+// --- GUERRA DE AFOROS (LALIGA) ---
+function initAforosGame() {
+    aforosState.score = 0;
+    document.getElementById('aforos-score').innerText = aforosState.score;
+    aforosState.p1 = estadiosLaLiga[Math.floor(Math.random() * estadiosLaLiga.length)];
+    pickNewEstadio2();
+    renderAforos();
+}
+
+function pickNewEstadio2() {
+    let available = estadiosLaLiga.filter(p => p.name !== aforosState.p1.name);
+    aforosState.p2 = available[Math.floor(Math.random() * available.length)];
+}
+
+function renderAforos() {
+    document.getElementById('aforos-controls').classList.remove('hidden');
+    document.getElementById('aforos-val-2').classList.add('hidden-val');
+    document.getElementById('aforos-val-2').innerText = "???";
+
+    document.getElementById('aforos-name-1').innerText = aforosState.p1.name;
+    document.getElementById('aforos-val-1').innerText = aforosState.p1.value.toLocaleString('es-ES');
+    document.getElementById('aforos-img-1').src = `estadios/${aforosState.p1.name.replace(/ /g, "_")}.jpg`; 
+
+    document.getElementById('aforos-name-2').innerText = aforosState.p2.name;
+    document.getElementById('aforos-img-2').src = `estadios/${aforosState.p2.name.replace(/ /g, "_")}.jpg`;
+}
+
+function checkAforos(guess) {
+    let v1 = aforosState.p1.value;
+    let v2 = aforosState.p2.value;
+    let isCorrect = (guess === 'higher' && v2 >= v1) || (guess === 'lower' && v2 <= v1);
+
+    document.getElementById('aforos-controls').classList.add('hidden');
+    const val2El = document.getElementById('aforos-val-2');
+    val2El.innerText = v2.toLocaleString('es-ES');
+    val2El.classList.remove('hidden-val');
+
+    setTimeout(() => {
+        if (isCorrect) {
+            aforosState.score++;
+            document.getElementById('aforos-score').innerText = aforosState.score;
+            aforosState.p1 = aforosState.p2;
+            pickNewEstadio2();
+            renderAforos();
+        } else {
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => initAforosGame());
+        }
+    }, 1500);
+}
+
+// --- ESCUDOS ZOOM (PREMIER) ---
+function initZoomGame() {
+    zoomState.team = premierTeamsDB[Math.floor(Math.random() * premierTeamsDB.length)];
+    zoomState.lives = 5;
+    zoomState.currentScale = 4;
+    document.getElementById('zoom-lives').innerText = zoomState.lives;
+    document.getElementById('zoom-streak').innerText = zoomState.streak;
+    document.getElementById('zoomInput').value = "";
+    document.getElementById('zoom-suggestions').innerHTML = "";
+    
+    const img = document.getElementById('zoom-image');
+    img.src = `teams/${zoomState.team}.png`; 
+    img.style.transform = `scale(${zoomState.currentScale})`;
+    
+    const randomX = Math.floor(Math.random() * 60) + 20; 
+    const randomY = Math.floor(Math.random() * 60) + 20;
+    img.style.transformOrigin = `${randomX}% ${randomY}%`;
+}
+
+function checkZoomGuess() {
+    const val = document.getElementById('zoomInput').value.toUpperCase().trim();
+    if (val === zoomState.team) {
+        zoomState.streak++;
+        document.getElementById('zoom-image').style.transform = "scale(1)"; 
+        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()), 800);
+    } else {
+        zoomState.lives--;
+        document.getElementById('zoom-lives').innerText = zoomState.lives;
+        
+        if (zoomState.lives <= 0) {
+            zoomState.streak = 0;
+            document.getElementById('zoom-image').style.transform = "scale(1)";
+            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()), 800);
+        } else {
+            zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6);
+            document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
+            document.getElementById('zoomInput').value = "";
+            document.getElementById('zoomInput').focus();
+        }
+    }
+}
+
 // ==========================================
-// 10. EVENT LISTENERS GENERALES
+// 6. EVENT LISTENERS GENERALES
 // ==========================================
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
@@ -1042,198 +1108,3 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'zoomInput') checkZoomGuess(); 
     }
 });
-
-function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
-    const modal = document.getElementById('custom-modal');
-    document.getElementById('modal-title').innerText = titulo;
-    document.getElementById('modal-message').innerText = mensaje;
-    
-    modal.classList.remove('hidden');
-
-    document.getElementById('modal-btn').onclick = () => {
-        modal.classList.add('hidden');
-        if (accionAlCerrar) accionAlCerrar();
-    };
-}
-
-
-// ==========================================
-// 12. LÓGICA: HIGHER OR LOWER (PREMIER)
-// ==========================================
-
-const premierPlayers = [
-    { name: "DONNARUMMA", value: 45 }, { name: "GVARDIOL", value: 70 }, { name: "MARC GUEHI", value: 65 },
-    { name: "RUBEN DIAS", value: 60 }, { name: "KHUSANOV", value: 35 }, { name: "STONES", value: 15 },
-    { name: "AKE", value: 15 }, { name: "O'REILLY", value: 50 }, { name: "AIT-NOURI", value: 40 },
-    { name: "MATHEUS NUNES", value: 45 }, { name: "RICO LEWIS", value: 32 }, { name: "RODRI", value: 65 },
-    { name: "NICO GONZALEZ", value: 45 }, { name: "REIJNDERS", value: 60 }, { name: "KOVACIC", value: 15 },
-    { name: "FODEN", value: 80 }, { name: "CHERKI", value: 65 }, { name: "BERNARDO SILVA", value: 27 },
-    { name: "DOKU", value: 65 }, { name: "SAVINHO", value: 40 }, { name: "SEMENYO", value: 75 },
-    { name: "HAALAND", value: 200 }, { name: "MARMOUSH", value: 60 },
-];
-
-let hlState = { p1: null, p2: null, score: 0 };
-
-function initHigherLower() {
-    hlState.score = 0;
-    document.getElementById('hl-score').innerText = hlState.score;
-    
-    hlState.p1 = premierPlayers[Math.floor(Math.random() * premierPlayers.length)];
-    pickNewPlayer2();
-    renderHL();
-}
-
-function pickNewPlayer2() {
-    let available = premierPlayers.filter(p => p.name !== hlState.p1.name);
-    hlState.p2 = available[Math.floor(Math.random() * available.length)];
-}
-
-function renderHL() {
-    document.getElementById('hl-controls').classList.remove('hidden');
-    document.getElementById('hl-val-2').classList.add('hidden-val');
-    document.getElementById('hl-val-2').innerText = "???";
-
-    document.getElementById('hl-name-1').innerText = hlState.p1.name;
-    document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
-    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name}.jpg`;
-
-    document.getElementById('hl-name-2').innerText = hlState.p2.name;
-    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name}.jpg`;
-}
-
-function checkHigherLower(guess) {
-    let v1 = hlState.p1.value;
-    let v2 = hlState.p2.value;
-    let isCorrect = false;
-
-    if (guess === 'higher' && v2 >= v1) isCorrect = true;
-    if (guess === 'lower' && v2 <= v1) isCorrect = true;
-
-    document.getElementById('hl-controls').classList.add('hidden');
-    const val2El = document.getElementById('hl-val-2');
-    val2El.innerText = v2 + " M€";
-    val2El.classList.remove('hidden-val');
-
-    setTimeout(() => {
-        if (isCorrect) {
-            hlState.score++;
-            document.getElementById('hl-score').innerText = hlState.score;
-            hlState.p1 = hlState.p2;
-            pickNewPlayer2();
-            renderHL();
-        } else {
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => {
-                initHigherLower();
-            });
-        }
-    }, 1500);
-}
-
-
-// ==========================================
-// 13. LÓGICA: MAPA DE ESTADIOS (LALIGA)
-// ==========================================
-const stadiumData = [
-    { name: "SANTIAGO BERNABÉU", reg: "reg-madrid" }, { name: "METROPOLITANO", reg: "reg-madrid" },
-    { name: "CAMP NOU", reg: "reg-catalunya" }, { name: "MONTJUÏC", reg: "reg-catalunya" },
-    { name: "MESTALLA", reg: "reg-valencia" }, { name: "LA CERÁMICA", reg: "reg-valencia" },
-    { name: "SAN MAMÉS", reg: "reg-vasco" }, { name: "REALE ARENA", reg: "reg-vasco" },
-    { name: "MENDIZORROZA", reg: "reg-vasco" }, { name: "EL SADAR", reg: "reg-navarra" },
-    { name: "BENITO VILLAMÍN", reg: "reg-andalucia" }, { name: "SÁNCHEZ-PIZJUÁN", reg: "reg-andalucia" },
-    { name: "BALAÍDOS", reg: "reg-galicia" }, { name: "RIAZOR", reg: "reg-galicia" },
-    { name: "SON MOIX", reg: "reg-baleares" }, { name: "GRAN CANARIA", reg: "reg-canarias" },
-    { name: "LA ROMAREDA", reg: "reg-aragon" }, { name: "EL MOLINÓN", reg: "reg-asturias" },
-    { name: "NUEVO LOS CÁRMENES", reg: "reg-andalucia" }, { name: "JOSÉ ZORRILLA", reg: "reg-cyl" }
-];
-
-let mapState = { target: null, lives: 3, streak: 0 };
-
-function initMapGame() {
-    mapState.target = stadiumData[Math.floor(Math.random() * stadiumData.length)];
-    mapState.lives = 3;
-    document.getElementById('map-lives').innerText = mapState.lives;
-    document.getElementById('map-streak').innerText = mapState.streak;
-    document.getElementById('stadium-name').innerText = mapState.target.name;
-    
-    document.querySelectorAll('.map-region').forEach(el => {
-        el.classList.remove('correct-reg', 'wrong-reg');
-    });
-}
-
-function checkMapRegion(clickedRegId) {
-    const clickedElement = document.getElementById(clickedRegId);
-    
-    if (clickedRegId === mapState.target.reg) {
-        clickedElement.classList.add('correct-reg');
-        mapState.streak++;
-        setTimeout(() => {
-            mostrarMensajePro("📍 ¡LOCALIZADO!", `Efectivamente, ${mapState.target.name} está ahí.`, () => initMapGame());
-        }, 400);
-    } else {
-        clickedElement.classList.add('wrong-reg');
-        mapState.lives--;
-        document.getElementById('map-lives').innerText = mapState.lives;
-        
-        if (mapState.lives <= 0) {
-            mapState.streak = 0;
-            document.getElementById(mapState.target.reg).classList.add('correct-reg');
-            setTimeout(() => {
-                mostrarMensajePro("❌ ¡TE PERDISTE!", `El ${mapState.target.name} estaba en la zona verde.`, () => initMapGame());
-            }, 800);
-        }
-    }
-}
-
-// ==========================================
-// 14. LÓGICA: ESCUDOS ZOOM (PREMIER)
-// ==========================================
-const premierTeamsDB = [
-    "ARSENAL", "ASTON VILLA", "CHELSEA", "EVERTON", "LIVERPOOL", 
-    "MANCHESTER CITY", "MANCHESTER UNITED", "NEWCASTLE", "TOTTENHAM", "WEST HAM", "BRIGHTON"
-];
-let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
-
-function initZoomGame() {
-    zoomState.team = premierTeamsDB[Math.floor(Math.random() * premierTeamsDB.length)];
-    zoomState.lives = 5;
-    zoomState.currentScale = 4;
-    document.getElementById('zoom-lives').innerText = zoomState.lives;
-    document.getElementById('zoom-streak').innerText = zoomState.streak;
-    document.getElementById('zoomInput').value = "";
-    document.getElementById('zoom-suggestions').innerHTML = "";
-    
-    const img = document.getElementById('zoom-image');
-    img.src = `teams/${zoomState.team}.png`; 
-    img.style.transform = `scale(${zoomState.currentScale})`;
-    
-    const randomX = Math.floor(Math.random() * 60) + 20; 
-    const randomY = Math.floor(Math.random() * 60) + 20;
-    img.style.transformOrigin = `${randomX}% ${randomY}%`;
-}
-
-function checkZoomGuess() {
-    const val = document.getElementById('zoomInput').value.toUpperCase().trim();
-    if (val === zoomState.team) {
-        zoomState.streak++;
-        document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => { 
-            mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()); 
-        }, 800);
-    } else {
-        zoomState.lives--;
-        document.getElementById('zoom-lives').innerText = zoomState.lives;
-        
-        if (zoomState.lives <= 0) {
-            zoomState.streak = 0;
-            document.getElementById('zoom-image').style.transform = "scale(1)";
-            setTimeout(() => { 
-                mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()); 
-            }, 800);
-        } else {
-            zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6); // Va reduciendo el zoom
-            document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
-            document.getElementById('zoomInput').value = "";
-            document.getElementById('zoomInput').focus();
-        }
-    }
-}
