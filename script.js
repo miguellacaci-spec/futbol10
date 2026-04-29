@@ -1,4 +1,3 @@
-
 // ==========================================
 // 1. BASES DE DATOS & CONSTANTES GLOBALES
 // ==========================================
@@ -388,6 +387,24 @@ let roscoState = {
 };
 
 // ==========================================
+// 2.5 SISTEMA DE INTENTOS DIARIOS
+// ==========================================
+function obtenerFechaEspana() {
+    return new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid' });
+}
+
+function puedeJugar(gameId) {
+    const hoy = obtenerFechaEspana();
+    const jugado = localStorage.getItem(`f10_${gameId}_${hoy}`);
+    return !jugado;
+}
+
+function registrarIntento(gameId) {
+    const hoy = obtenerFechaEspana();
+    localStorage.setItem(`f10_${gameId}_${hoy}`, "true");
+}
+
+// ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
 
@@ -436,7 +453,7 @@ function showCategory(category) {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
             <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
-                <div class="card-bg bg-timemachine"></div> <!-- AQUÍ LLAMA AL FONDO -->
+                <div class="card-bg bg-timemachine"></div>
                 <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
             </div>
             <div class="menu-card coming-soon">
@@ -454,7 +471,7 @@ function showCategory(category) {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
-                <div class="card-bg bg-higherlower"></div> <!-- AQUÍ LLAMA AL FONDO -->
+                <div class="card-bg bg-higherlower"></div>
                 <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
@@ -465,6 +482,15 @@ function showCategory(category) {
 }
 
 function showGame(gameId) {
+    if (!puedeJugar(gameId)) {
+        mostrarMensajePro(
+            "⏳ ¡INTENTO AGOTADO!", 
+            "Ya has jugado a este minijuego hoy.\nVuelve mañana (reinicio a las 00:00 hora española).", 
+            null
+        );
+        return;
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
     if(target) {
@@ -579,7 +605,8 @@ function handleInput(char) {
         drawCanvas(gameState.mistakes);
         if (gameState.mistakes >= 6) {
             gameState.streak = 0;
-            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+            registrarIntento('hangman');
+            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => showMenu());
         }
     } else {
         updateDisplay();
@@ -600,7 +627,8 @@ function updateDisplay() {
     
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => showMenu());
     }
 }
 
@@ -610,10 +638,12 @@ function solveFullWord() {
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     if (nVal === nWord && nVal !== "") {
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => showMenu());
     } else {
         gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => showMenu());
     }
 }
 
@@ -661,14 +691,16 @@ function checkBlurGuess() {
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => initBlurGame()), 300);
+        registrarIntento('blur');
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => showMenu()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
         if (blurState.lives <= 0) {
             blurState.streak = 0;
             document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
+            registrarIntento('blur');
+            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => showMenu()), 300);
         } else {
             document.getElementById('blur-lives').innerText = blurState.lives;
             document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
@@ -701,12 +733,14 @@ function checkTimeMachineGuess() {
 
     if (guess === timeMachineState.year) {
         timeMachineState.streak++;
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => initTimeMachine());
+        registrarIntento('timemachine');
+        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => showMenu());
     } else {
         timeMachineState.lives--;
         if (timeMachineState.lives <= 0) {
             timeMachineState.streak = 0;
-            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => initTimeMachine());
+            registrarIntento('timemachine');
+            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => showMenu());
         } else {
             document.getElementById('tm-lives').innerText = timeMachineState.lives;
             document.getElementById('tm-feedback').innerText = guess < timeMachineState.year ? "⬆️ Es MÁS reciente" : "⬇️ Es MÁS antiguo";
@@ -718,6 +752,15 @@ function checkTimeMachineGuess() {
 
 // --- EL ROSCO ---
 function initRosco(mode) {
+    if (!puedeJugar(`rosco_${mode}`)) {
+        mostrarMensajePro(
+            "⏳ ¡INTENTO AGOTADO!", 
+            "Ya has jugado a este modo del Rosco hoy.\nVuelve mañana.", 
+            null
+        );
+        return;
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('rosco-screen').classList.remove('hidden');
 
@@ -894,6 +937,7 @@ function advanceRoscoTurn(keepTurn) {
 
 function endRosco(msg) {
     clearInterval(roscoState.timerInterval);
+    registrarIntento(`rosco_${roscoState.mode}`);
     if (roscoState.mode === 'individual') {
         let aciertos = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
         mostrarMensajePro("FIN DEL JUEGO", `${msg}\nAciertos: ${aciertos}`, () => showMenu());
@@ -932,7 +976,8 @@ function startElevenTimer() {
         if(elevenState.timeLeft <= 0) {
             clearInterval(elevenState.timer);
             closeFutdleModal();
-            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => initElevenGame());
+            registrarIntento('eleven');
+            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => showMenu());
         }
     }, 1000);
 }
@@ -969,7 +1014,8 @@ function renderPitch() {
 function checkElevenWin() {
     if (elevenState.guessed.length === elevenState.totalPlayers) {
         clearInterval(elevenState.timer);
-        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => initElevenGame()), 500);
+        registrarIntento('eleven');
+        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => showMenu()), 500);
     }
 }
 
@@ -1165,7 +1211,8 @@ function checkHigherLower(guess) {
             pickNewPlayer2();
             renderHL();
         } else {
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
+            registrarIntento('higherlower');
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => showMenu());
         }
     }, 1500);
 }
@@ -1215,7 +1262,8 @@ function checkAforos(guess) {
             pickNewEstadio2();
             renderAforos();
         } else {
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => initAforosGame());
+            registrarIntento('aforos');
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => showMenu());
         }
     }, 1500);
 }
@@ -1244,7 +1292,8 @@ function checkZoomGuess() {
     if (val === zoomState.team) {
         zoomState.streak++;
         document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()), 800);
+        registrarIntento('zoom');
+        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => showMenu()), 800);
     } else {
         zoomState.lives--;
         document.getElementById('zoom-lives').innerText = zoomState.lives;
@@ -1252,7 +1301,8 @@ function checkZoomGuess() {
         if (zoomState.lives <= 0) {
             zoomState.streak = 0;
             document.getElementById('zoom-image').style.transform = "scale(1)";
-            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()), 800);
+            registrarIntento('zoom');
+            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => showMenu()), 800);
         } else {
             zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6);
             document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
