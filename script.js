@@ -365,6 +365,26 @@ const premierTeamsDB = [
     "MANCHESTER CITY", "MANCHESTER UNITED", "NEWCASTLE", "TOTTENHAM", "WEST HAM", "BRIGHTON"
 ];
 
+const top10DB = [
+    {
+        id: 'goleadores_champions',
+        title: 'TOP 10 GOLEADORES',
+        desc: 'Máximos anotadores históricos de la Champions League',
+        items: [
+            { rank: 1, name: "CRISTIANO RONALDO", hint: "🇵🇹 140 Goles", revealed: false },
+            { rank: 2, name: "LIONEL MESSI", hint: "🇦🇷 129 Goles", revealed: false },
+            { rank: 3, name: "ROBERT LEWANDOWSKI", hint: "🇵🇱 94 Goles", revealed: false },
+            { rank: 4, name: "KARIM BENZEMA", hint: "🇫🇷 90 Goles", revealed: false },
+            { rank: 5, name: "RAUL GONZALEZ", hint: "🇪🇸 71 Goles", revealed: false },
+            { rank: 6, name: "RUUD VAN NISTELROOY", hint: "🇳🇱 56 Goles", revealed: false },
+            { rank: 7, name: "THOMAS MULLER", hint: "🇩🇪 54 Goles", revealed: false },
+            { rank: 8, name: "THIERRY HENRY", hint: "🇫🇷 50 Goles", revealed: false },
+            { rank: 9, name: "ALFREDO DI STEFANO", hint: "🇦🇷 49 Goles", revealed: false },
+            { rank: 10, name: "ANDRIY SHEVCHENKO", hint: "🇺🇦 48 Goles", revealed: false }
+        ]
+    }
+];
+
 // ==========================================
 // 2. ESTADOS GLOBALES DE LOS JUEGOS
 // ==========================================
@@ -377,6 +397,7 @@ let wordleState = { targetPlayer: "", answer: "", guesses: [], currentGuess: "",
 let hlState = { p1: null, p2: null, score: 0 };
 let aforosState = { p1: null, p2: null, score: 0 };
 let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
+let top10State = { currentList: null, guessedCount: 0 };
 
 let roscoState = {
     mode: 'individual',
@@ -385,6 +406,24 @@ let roscoState = {
     p1: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false },
     p2: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false }
 };
+
+// ==========================================
+// 2.5 SISTEMA DE INTENTOS DIARIOS
+// ==========================================
+function obtenerFechaEspana() {
+    return new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid' });
+}
+
+function puedeJugar(gameId) {
+    const hoy = obtenerFechaEspana();
+    const jugado = localStorage.getItem(`f10_${gameId}_${hoy}`);
+    return !jugado;
+}
+
+function registrarIntento(gameId) {
+    const hoy = obtenerFechaEspana();
+    localStorage.setItem(`f10_${gameId}_${hoy}`, "true");
+}
 
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
@@ -435,7 +474,7 @@ function showCategory(category) {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
             <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
-                <div class="card-bg bg-timemachine"></div> <!-- AQUÍ LLAMA AL FONDO -->
+                <div class="card-bg bg-timemachine"></div>
                 <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
             </div>
             <div class="menu-card coming-soon">
@@ -453,7 +492,7 @@ function showCategory(category) {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
-                <div class="card-bg bg-higherlower"></div> <!-- AQUÍ LLAMA AL FONDO -->
+                <div class="card-bg bg-higherlower"></div>
                 <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
@@ -464,6 +503,15 @@ function showCategory(category) {
 }
 
 function showGame(gameId) {
+    if (!puedeJugar(gameId)) {
+        mostrarMensajePro(
+            "⏳ ¡INTENTO AGOTADO!", 
+            "Ya has jugado a este minijuego hoy.\nVuelve mañana (reinicio a las 00:00 hora española).", 
+            null
+        );
+        return;
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
     if(target) {
@@ -475,6 +523,7 @@ function showGame(gameId) {
         if(gameId === 'higherlower') initHigherLower(); 
         if(gameId === 'aforos') initAforosGame();
         if(gameId === 'zoom') initZoomGame();
+        if(gameId === 'top10') initTop10(); 
     }
 }
 
@@ -578,7 +627,8 @@ function handleInput(char) {
         drawCanvas(gameState.mistakes);
         if (gameState.mistakes >= 6) {
             gameState.streak = 0;
-            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+            registrarIntento('hangman');
+            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => showMenu());
         }
     } else {
         updateDisplay();
@@ -599,7 +649,8 @@ function updateDisplay() {
     
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => showMenu());
     }
 }
 
@@ -609,10 +660,12 @@ function solveFullWord() {
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     if (nVal === nWord && nVal !== "") {
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => showMenu());
     } else {
         gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+        registrarIntento('hangman');
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => showMenu());
     }
 }
 
@@ -660,14 +713,16 @@ function checkBlurGuess() {
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => initBlurGame()), 300);
+        registrarIntento('blur');
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => showMenu()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
         if (blurState.lives <= 0) {
             blurState.streak = 0;
             document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
+            registrarIntento('blur');
+            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => showMenu()), 300);
         } else {
             document.getElementById('blur-lives').innerText = blurState.lives;
             document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
@@ -700,12 +755,14 @@ function checkTimeMachineGuess() {
 
     if (guess === timeMachineState.year) {
         timeMachineState.streak++;
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => initTimeMachine());
+        registrarIntento('timemachine');
+        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => showMenu());
     } else {
         timeMachineState.lives--;
         if (timeMachineState.lives <= 0) {
             timeMachineState.streak = 0;
-            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => initTimeMachine());
+            registrarIntento('timemachine');
+            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => showMenu());
         } else {
             document.getElementById('tm-lives').innerText = timeMachineState.lives;
             document.getElementById('tm-feedback').innerText = guess < timeMachineState.year ? "⬆️ Es MÁS reciente" : "⬇️ Es MÁS antiguo";
@@ -717,6 +774,15 @@ function checkTimeMachineGuess() {
 
 // --- EL ROSCO ---
 function initRosco(mode) {
+    if (!puedeJugar(`rosco_${mode}`)) {
+        mostrarMensajePro(
+            "⏳ ¡INTENTO AGOTADO!", 
+            "Ya has jugado a este modo del Rosco hoy.\nVuelve mañana.", 
+            null
+        );
+        return;
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('rosco-screen').classList.remove('hidden');
 
@@ -893,6 +959,7 @@ function advanceRoscoTurn(keepTurn) {
 
 function endRosco(msg) {
     clearInterval(roscoState.timerInterval);
+    registrarIntento(`rosco_${roscoState.mode}`);
     if (roscoState.mode === 'individual') {
         let aciertos = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
         mostrarMensajePro("FIN DEL JUEGO", `${msg}\nAciertos: ${aciertos}`, () => showMenu());
@@ -931,7 +998,8 @@ function startElevenTimer() {
         if(elevenState.timeLeft <= 0) {
             clearInterval(elevenState.timer);
             closeFutdleModal();
-            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => initElevenGame());
+            registrarIntento('eleven');
+            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => showMenu());
         }
     }, 1000);
 }
@@ -968,7 +1036,8 @@ function renderPitch() {
 function checkElevenWin() {
     if (elevenState.guessed.length === elevenState.totalPlayers) {
         clearInterval(elevenState.timer);
-        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => initElevenGame()), 500);
+        registrarIntento('eleven');
+        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => showMenu()), 500);
     }
 }
 
@@ -1029,25 +1098,20 @@ function getWordleLetterStatus(guess, index) {
 
     const answer = wordleState.answer;
 
-    // 1. Si está en la posición exacta, es verde (correct)
     if (answer[index] === letter) return "correct";
 
-    // 2. Contar cuántas veces aparece esta letra en la respuesta real
     let totalInAnswer = 0;
     for (let i = 0; i < answer.length; i++) {
         if (answer[i] === letter) totalInAnswer++;
     }
 
-    // 3. Contar cuántas de esas letras ya están colocadas perfectamente (verdes) en todo el intento
     let exactMatches = 0;
     for (let i = 0; i < answer.length; i++) {
         if (guess[i] === letter && answer[i] === letter) exactMatches++;
     }
 
-    // 4. Las "amarillas" disponibles son el total menos las que ya están en verde
     let availableYellows = totalInAnswer - exactMatches;
 
-    // 5. Contar cuántas "amarillas" de esta misma letra ya hemos repartido ANTES de esta posición (de izquierda a derecha)
     let previousYellowsUsed = 0;
     for (let i = 0; i < index; i++) {
         if (guess[i] === letter && answer[i] !== letter) {
@@ -1055,7 +1119,6 @@ function getWordleLetterStatus(guess, index) {
         }
     }
 
-    // 6. Si aún nos quedan amarillas disponibles, la marcamos. Si no, se queda en gris (absent).
     if (previousYellowsUsed < availableYellows) {
         return "present";
     }
@@ -1196,7 +1259,8 @@ function checkHigherLower(guess) {
             pickNewPlayer2();
             renderHL();
         } else {
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
+            registrarIntento('higherlower');
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => showMenu());
         }
     }, 1500);
 }
@@ -1246,7 +1310,8 @@ function checkAforos(guess) {
             pickNewEstadio2();
             renderAforos();
         } else {
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => initAforosGame());
+            registrarIntento('aforos');
+            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => showMenu());
         }
     }, 1500);
 }
@@ -1275,7 +1340,8 @@ function checkZoomGuess() {
     if (val === zoomState.team) {
         zoomState.streak++;
         document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()), 800);
+        registrarIntento('zoom');
+        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => showMenu()), 800);
     } else {
         zoomState.lives--;
         document.getElementById('zoom-lives').innerText = zoomState.lives;
@@ -1283,7 +1349,8 @@ function checkZoomGuess() {
         if (zoomState.lives <= 0) {
             zoomState.streak = 0;
             document.getElementById('zoom-image').style.transform = "scale(1)";
-            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()), 800);
+            registrarIntento('zoom');
+            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => showMenu()), 800);
         } else {
             zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6);
             document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
@@ -1293,6 +1360,82 @@ function checkZoomGuess() {
     }
 }
 
+// --- EL TOP 10 ---
+function initTop10() {
+    const randomList = top10DB[Math.floor(Math.random() * top10DB.length)];
+    top10State.currentList = JSON.parse(JSON.stringify(randomList));
+    top10State.guessedCount = 0;
+    
+    document.getElementById('top10-title').innerText = top10State.currentList.title;
+    document.getElementById('top10-desc').innerText = top10State.currentList.desc;
+    document.getElementById('top10-score').innerText = '0';
+    document.getElementById('top10Input').value = "";
+    document.getElementById('top10-suggestions').innerHTML = "";
+    
+    renderTop10List();
+    setTimeout(() => document.getElementById('top10Input').focus(), 100);
+}
+
+function renderTop10List() {
+    const listContainer = document.getElementById('top10-list');
+    listContainer.innerHTML = "";
+    
+    top10State.currentList.items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `top10-item ${item.revealed ? 'revealed' : ''}`;
+        
+        const nameDisplay = item.revealed ? item.name : '????????????';
+        
+        div.innerHTML = `
+            <div class="top10-rank">${item.rank}</div>
+            <div class="top10-info">
+                <span class="top10-name">${nameDisplay}</span>
+                <span class="top10-hint">${item.hint}</span>
+            </div>
+        `;
+        listContainer.appendChild(div);
+    });
+}
+
+function checkTop10Guess() {
+    const inputEl = document.getElementById('top10Input');
+    const val = inputEl.value.toUpperCase().trim();
+    if(!val) return;
+    
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let found = false;
+    
+    top10State.currentList.items.forEach(item => {
+        if (!item.revealed) {
+            const nAns = item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const words = nAns.split(' ');
+            
+            if (nVal === nAns || words.includes(nVal) || nVal === words[words.length - 1]) {
+                item.revealed = true;
+                top10State.guessedCount++;
+                found = true;
+            }
+        }
+    });
+    
+    if (found) {
+        inputEl.value = "";
+        document.getElementById('top10-score').innerText = top10State.guessedCount;
+        renderTop10List();
+        
+        if (top10State.guessedCount === 10) {
+            registrarIntento('top10');
+            setTimeout(() => mostrarMensajePro("🏆 ¡TOP 10 COMPLETADO!", "¡Conoces a la élite del fútbol al detalle!", () => showMenu()), 800);
+        }
+    } else {
+        inputEl.classList.add("input-error");
+        setTimeout(() => {
+            inputEl.classList.remove("input-error");
+        }, 400);
+    }
+}
+
+
 // ==========================================
 // 6. EVENT LISTENERS GENERALES
 // ==========================================
@@ -1300,6 +1443,7 @@ function checkZoomGuess() {
 setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
 setupAutocomplete('zoomInput', 'zoom-suggestions'); 
+setupAutocomplete('top10Input', 'top10-suggestions');
 
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
@@ -1307,6 +1451,7 @@ document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
 document.getElementById('btnRoscoCheck').onclick = checkRosco;
 document.getElementById('btnPasapalabra').onclick = pasapalabra;
 document.getElementById('btnZoomCheck').onclick = checkZoomGuess; 
+document.getElementById('btnTop10Check').onclick = checkTop10Guess;
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
@@ -1331,5 +1476,6 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'roscoInput') checkRosco();
         if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
         if (document.activeElement.id === 'zoomInput') checkZoomGuess(); 
+        if (document.activeElement.id === 'top10Input') checkTop10Guess();
     }
 });
