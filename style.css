@@ -234,6 +234,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 
 .bg-laliga { background-image: url('players/fondo-laliga.jpg'); }
 .bg-premier { background-image: url('players/fondo-premier.jpg'); }
+.bg-higherlower { background-image: url('players/fondo-valormercado.jpg'); }
 .bg-leyendas { background-image: url('players/fondo-leyendas.jpg'); }
 .bg-europeos { background-image: url('players/fondo-once.jpg'); }
 .bg-rosco { background-image: url('players/fondo-rosco.jpg'); }
