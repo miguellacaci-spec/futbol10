@@ -263,7 +263,7 @@ function showCategory(category) {
             <div class="menu-card map-game-card" onclick="showGame('map')">
                 <div class="card-bg bg-laliga"></div>
                 <div class="card-info">
-                    <h3 style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">Radar Estadios</h3>
+                    <h3>Radar Estadios</h3>
                     <p>Geografía de LaLiga</p>
                 </div>
             </div>`;
@@ -273,7 +273,7 @@ function showCategory(category) {
             <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
                 <div class="card-bg bg-timemachine"></div>
                 <div class="card-info">
-                    <h3 style="color: #ffd700;">Máquina del Tiempo</h3>
+                    <h3>Máquina del Tiempo</h3>
                     <p>¿En qué año fue?</p>
                 </div>
             </div>
@@ -298,14 +298,14 @@ function showCategory(category) {
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
                 <div class="card-bg bg-premier"></div>
                 <div class="card-info">
-                    <h3 style="color: #00ff85; text-shadow: 0 0 10px rgba(0, 255, 133, 0.4);">Higher / Lower</h3>
+                    <h3>Higher / Lower</h3>
                     <p>Valor de Mercado</p>
                 </div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
                 <div class="card-bg bg-premier"></div>
                 <div class="card-info">
-                    <h3 style="color: #00a8ff; text-shadow: 0 0 10px rgba(0, 168, 255, 0.4);">Escudos Zoom</h3>
+                    <h3>Escudos Zoom</h3>
                     <p>Reconoce el detalle</p>
                 </div>
             </div>`;
@@ -1191,17 +1191,20 @@ const premierTeamsDB = [
     "ARSENAL", "ASTON VILLA", "CHELSEA", "EVERTON", "LIVERPOOL", 
     "MANCHESTER CITY", "MANCHESTER UNITED", "NEWCASTLE", "TOTTENHAM", "WEST HAM", "BRIGHTON"
 ];
-let zoomState = { team: "", streak: 0 };
+let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
 
 function initZoomGame() {
     zoomState.team = premierTeamsDB[Math.floor(Math.random() * premierTeamsDB.length)];
+    zoomState.lives = 5;
+    zoomState.currentScale = 4;
+    document.getElementById('zoom-lives').innerText = zoomState.lives;
     document.getElementById('zoom-streak').innerText = zoomState.streak;
     document.getElementById('zoomInput').value = "";
     document.getElementById('zoom-suggestions').innerHTML = "";
     
     const img = document.getElementById('zoom-image');
     img.src = `teams/${zoomState.team}.png`; 
-    img.style.transform = "scale(4)";
+    img.style.transform = `scale(${zoomState.currentScale})`;
     
     const randomX = Math.floor(Math.random() * 60) + 20; 
     const randomY = Math.floor(Math.random() * 60) + 20;
@@ -1217,10 +1220,20 @@ function checkZoomGuess() {
             mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()); 
         }, 800);
     } else {
-        zoomState.streak = 0;
-        document.getElementById('zoom-image').style.transform = "scale(1)";
-        setTimeout(() => { 
-            mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()); 
-        }, 800);
+        zoomState.lives--;
+        document.getElementById('zoom-lives').innerText = zoomState.lives;
+        
+        if (zoomState.lives <= 0) {
+            zoomState.streak = 0;
+            document.getElementById('zoom-image').style.transform = "scale(1)";
+            setTimeout(() => { 
+                mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()); 
+            }, 800);
+        } else {
+            zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6); // Va reduciendo el zoom
+            document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
+            document.getElementById('zoomInput').value = "";
+            document.getElementById('zoomInput').focus();
+        }
     }
 }
