@@ -254,6 +254,67 @@
             </div>
         </div>
 
+        <div id="map-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">PUNTOS: <span id="map-streak">0</span></div>
+            </nav>
+
+            <div class="map-layout">
+                <h2 class="logo" style="font-size: 1.2rem; margin-bottom: 5px;">UBICA EL <span>ESTADIO</span></h2>
+                <div class="stadium-target" id="stadium-name">Cargando...</div>
+                
+                <div class="cyber-map-grid">
+                    <div class="map-region" id="reg-galicia" onclick="checkMapRegion('reg-galicia')">GALICIA</div>
+                    <div class="map-region" id="reg-asturias" onclick="checkMapRegion('reg-asturias')">ASTURIAS</div>
+                    <div class="map-region" id="reg-cantabria" onclick="checkMapRegion('reg-cantabria')">CANTABRIA</div>
+                    <div class="map-region" id="reg-vasco" onclick="checkMapRegion('reg-vasco')">P. VASCO</div>
+                    
+                    <div class="map-region" id="reg-cyl" onclick="checkMapRegion('reg-cyl')">C. Y LEÓN</div>
+                    <div class="map-region" id="reg-rioja" onclick="checkMapRegion('reg-rioja')">LA RIOJA</div>
+                    <div class="map-region" id="reg-navarra" onclick="checkMapRegion('reg-navarra')">NAVARRA</div>
+                    <div class="map-region" id="reg-aragon" onclick="checkMapRegion('reg-aragon')">ARAGÓN</div>
+                    <div class="map-region" id="reg-catalunya" onclick="checkMapRegion('reg-catalunya')">CATALUÑA</div>
+                    
+                    <div class="map-region" id="reg-madrid" onclick="checkMapRegion('reg-madrid')">MADRID</div>
+                    <div class="map-region" id="reg-clm" onclick="checkMapRegion('reg-clm')">C. LA MANCHA</div>
+                    <div class="map-region" id="reg-valencia" onclick="checkMapRegion('reg-valencia')">C. VALENCIANA</div>
+                    <div class="map-region" id="reg-baleares" onclick="checkMapRegion('reg-baleares')">BALEARES</div>
+                    
+                    <div class="map-region" id="reg-extremadura" onclick="checkMapRegion('reg-extremadura')">EXTREMADURA</div>
+                    <div class="map-region" id="reg-andalucia" onclick="checkMapRegion('reg-andalucia')" style="grid-column: span 2;">ANDALUCÍA</div>
+                    <div class="map-region" id="reg-murcia" onclick="checkMapRegion('reg-murcia')">MURCIA</div>
+                    <div class="map-region" id="reg-canarias" onclick="checkMapRegion('reg-canarias')">CANARIAS</div>
+                </div>
+                <div class="info-footer">FALLOS PERMITIDOS: <span id="map-lives">3</span></div>
+            </div>
+        </div>
+
+        <div id="zoom-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn" style="border-color: #00a8ff; color: #00a8ff;">← ATRÁS</button>
+                <div class="score-board" style="border-color: #00a8ff;">RACHA: <span id="zoom-streak" style="color: #00a8ff;">0</span></div>
+            </nav>
+
+            <div class="zoom-layout">
+                <h2 class="logo" style="font-size: 1.5rem; margin-bottom: 2vh; text-shadow: 0 0 15px rgba(0, 168, 255, 0.5);">RECONOCE EL <span>ESCUDO</span></h2>
+                
+                <div class="zoom-box-container">
+                    <div class="zoom-lens">
+                        <img id="zoom-image" src="" alt="Escudo Zoom">
+                    </div>
+                </div>
+
+                <div class="input-container" style="max-width: 320px;">
+                    <div class="input-group">
+                        <input type="text" id="zoomInput" placeholder="Nombre del equipo..." autocomplete="off">
+                        <button id="btnZoomCheck" class="secondary-btn" style="background: #00a8ff;">ADIVINAR</button>
+                    </div>
+                    <div id="zoom-suggestions" class="suggestions-box"></div>
+                </div>
+            </div>
+        </div>
+
     </div> 
     
     <div id="custom-modal" class="modal-overlay hidden">
