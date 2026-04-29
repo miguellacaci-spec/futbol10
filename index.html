@@ -60,6 +60,7 @@
                         <p>Minijuegos de Iconos</p>
                     </div>
                 </div>
+                
                 <!-- TARJETA TOP 10 -->
                 <div class="menu-card top10-card" onclick="showGame('top10')">
                     <div class="card-bg bg-top10"></div>
@@ -279,29 +280,30 @@
                     </div>
                 </div>
             </div>
-            <!-- JUEGO: TOP 10 RANKING -->
-            <div id="top10-screen" class="screen hidden">
-                <nav class="game-nav">
-                    <button onclick="showMenu()" class="back-btn">← INICIO</button>
-                    <div class="score-board">ACIERTOS: <span id="top10-score">0</span>/10</div>
-                </nav>
-                <div class="top10-layout">
-                    <div class="top10-header">
-                        <h2 id="top10-title" class="logo" style="font-size: 1.6rem; margin-bottom: 5px;">TÍTULO DEL TOP</h2>
-                         <p id="top10-desc" style="color: var(--primary); font-family: 'Orbitron'; margin-bottom: 20px;">Descripción detallada</p>
-                    </div>
-        
-                    <div class="top10-list" id="top10-list">
-            <!-- Los 10 recuadros se generarán aquí con JS -->
-                    </div>
+        </div>
 
-                    <div class="input-container top10-input-area">
-                        <div class="input-group">
-                            <input type="text" id="top10Input" placeholder="Adivina un jugador..." autocomplete="off">
-                            <button id="btnTop10Check" class="secondary-btn">ENVIAR</button>
-                        </div>
-                        <div id="top10-suggestions" class="suggestions-box"></div>
+        <!-- JUEGO: TOP 10 RANKING -->
+        <div id="top10-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <div class="score-board">ACIERTOS: <span id="top10-score">0</span>/10</div>
+            </nav>
+            <div class="top10-layout">
+                <div class="top10-header">
+                    <h2 id="top10-title" class="logo" style="font-size: 1.6rem; margin-bottom: 5px;">TÍTULO DEL TOP</h2>
+                    <p id="top10-desc" style="color: var(--primary); font-family: 'Orbitron'; margin-bottom: 20px;">Descripción detallada</p>
+                </div>
+                
+                <div class="top10-list" id="top10-list">
+                    <!-- Los 10 recuadros se generarán aquí con JS -->
+                </div>
+
+                <div class="input-container top10-input-area">
+                    <div class="input-group">
+                        <input type="text" id="top10Input" placeholder="Adivina un jugador..." autocomplete="off">
+                        <button id="btnTop10Check" class="secondary-btn">ENVIAR</button>
                     </div>
+                    <div id="top10-suggestions" class="suggestions-box"></div>
                 </div>
             </div>
         </div>
