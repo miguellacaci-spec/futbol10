@@ -259,6 +259,13 @@ function showCategory(category) {
                     <h3>Blur Guess</h3>
                     <p>Adivina el jugador</p>
                 </div>
+            </div>
+            <div class="menu-card map-game-card" onclick="showGame('map')">
+                <div class="card-bg bg-laliga"></div>
+                <div class="card-info">
+                    <h3 style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">Radar Estadios</h3>
+                    <p>Geografía de LaLiga</p>
+                </div>
             </div>`;
     } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
@@ -286,7 +293,6 @@ function showCategory(category) {
                 </div>
             </div>`;
     } else {
-        // PREMIER LEAGUE - HIGHER OR LOWER AÑADIDO AQUÍ
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
@@ -294,6 +300,13 @@ function showCategory(category) {
                 <div class="card-info">
                     <h3 style="color: #00ff85; text-shadow: 0 0 10px rgba(0, 255, 133, 0.4);">Higher / Lower</h3>
                     <p>Valor de Mercado</p>
+                </div>
+            </div>
+            <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
+                <div class="card-bg bg-premier"></div>
+                <div class="card-info">
+                    <h3 style="color: #00a8ff; text-shadow: 0 0 10px rgba(0, 168, 255, 0.4);">Escudos Zoom</h3>
+                    <p>Reconoce el detalle</p>
                 </div>
             </div>`;
     }
@@ -308,7 +321,9 @@ function showGame(gameId) {
         if(gameId === 'blur') initBlurGame();
         if(gameId === 'timemachine') initTimeMachine();
         if(gameId === 'eleven') initElevenGame();
-        if(gameId === 'higherlower') initHigherLower(); // Añadido aquí
+        if(gameId === 'higherlower') initHigherLower(); 
+        if(gameId === 'map') initMapGame();
+        if(gameId === 'zoom') initZoomGame();
     }
 }
 
@@ -321,7 +336,11 @@ function setupAutocomplete(inputId, suggestionId) {
         const val = input.value.toUpperCase().trim();
         box.innerHTML = "";
         if (val.length < 2) return;
-        const matches = players.filter(p => p.includes(val)).slice(0, 4);
+        
+        let sourceArray = players;
+        if (inputId === 'zoomInput') sourceArray = premierTeamsDB;
+        
+        const matches = sourceArray.filter(p => p.includes(val)).slice(0, 4);
         matches.forEach(match => {
             const div = document.createElement('div');
             div.textContent = match;
@@ -989,12 +1008,14 @@ function submitWordleGuess() {
 
 setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
+setupAutocomplete('zoomInput', 'zoom-suggestions'); 
 
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
 document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
 document.getElementById('btnRoscoCheck').onclick = checkRosco;
 document.getElementById('btnPasapalabra').onclick = pasapalabra;
+document.getElementById('btnZoomCheck').onclick = checkZoomGuess; 
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
@@ -1018,6 +1039,7 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'blurInput') checkBlurGuess();
         if (document.activeElement.id === 'roscoInput') checkRosco();
         if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
+        if (document.activeElement.id === 'zoomInput') checkZoomGuess(); 
     }
 });
 
@@ -1105,4 +1127,100 @@ function checkHigherLower(guess) {
             });
         }
     }, 1500);
+}
+
+
+// ==========================================
+// 13. LÓGICA: MAPA DE ESTADIOS (LALIGA)
+// ==========================================
+const stadiumData = [
+    { name: "SANTIAGO BERNABÉU", reg: "reg-madrid" }, { name: "METROPOLITANO", reg: "reg-madrid" },
+    { name: "CAMP NOU", reg: "reg-catalunya" }, { name: "MONTJUÏC", reg: "reg-catalunya" },
+    { name: "MESTALLA", reg: "reg-valencia" }, { name: "LA CERÁMICA", reg: "reg-valencia" },
+    { name: "SAN MAMÉS", reg: "reg-vasco" }, { name: "REALE ARENA", reg: "reg-vasco" },
+    { name: "MENDIZORROZA", reg: "reg-vasco" }, { name: "EL SADAR", reg: "reg-navarra" },
+    { name: "BENITO VILLAMÍN", reg: "reg-andalucia" }, { name: "SÁNCHEZ-PIZJUÁN", reg: "reg-andalucia" },
+    { name: "BALAÍDOS", reg: "reg-galicia" }, { name: "RIAZOR", reg: "reg-galicia" },
+    { name: "SON MOIX", reg: "reg-baleares" }, { name: "GRAN CANARIA", reg: "reg-canarias" },
+    { name: "LA ROMAREDA", reg: "reg-aragon" }, { name: "EL MOLINÓN", reg: "reg-asturias" },
+    { name: "NUEVO LOS CÁRMENES", reg: "reg-andalucia" }, { name: "JOSÉ ZORRILLA", reg: "reg-cyl" }
+];
+
+let mapState = { target: null, lives: 3, streak: 0 };
+
+function initMapGame() {
+    mapState.target = stadiumData[Math.floor(Math.random() * stadiumData.length)];
+    mapState.lives = 3;
+    document.getElementById('map-lives').innerText = mapState.lives;
+    document.getElementById('map-streak').innerText = mapState.streak;
+    document.getElementById('stadium-name').innerText = mapState.target.name;
+    
+    document.querySelectorAll('.map-region').forEach(el => {
+        el.classList.remove('correct-reg', 'wrong-reg');
+    });
+}
+
+function checkMapRegion(clickedRegId) {
+    const clickedElement = document.getElementById(clickedRegId);
+    
+    if (clickedRegId === mapState.target.reg) {
+        clickedElement.classList.add('correct-reg');
+        mapState.streak++;
+        setTimeout(() => {
+            mostrarMensajePro("📍 ¡LOCALIZADO!", `Efectivamente, ${mapState.target.name} está ahí.`, () => initMapGame());
+        }, 400);
+    } else {
+        clickedElement.classList.add('wrong-reg');
+        mapState.lives--;
+        document.getElementById('map-lives').innerText = mapState.lives;
+        
+        if (mapState.lives <= 0) {
+            mapState.streak = 0;
+            document.getElementById(mapState.target.reg).classList.add('correct-reg');
+            setTimeout(() => {
+                mostrarMensajePro("❌ ¡TE PERDISTE!", `El ${mapState.target.name} estaba en la zona verde.`, () => initMapGame());
+            }, 800);
+        }
+    }
+}
+
+// ==========================================
+// 14. LÓGICA: ESCUDOS ZOOM (PREMIER)
+// ==========================================
+const premierTeamsDB = [
+    "ARSENAL", "ASTON VILLA", "CHELSEA", "EVERTON", "LIVERPOOL", 
+    "MANCHESTER CITY", "MANCHESTER UNITED", "NEWCASTLE", "TOTTENHAM", "WEST HAM", "BRIGHTON"
+];
+let zoomState = { team: "", streak: 0 };
+
+function initZoomGame() {
+    zoomState.team = premierTeamsDB[Math.floor(Math.random() * premierTeamsDB.length)];
+    document.getElementById('zoom-streak').innerText = zoomState.streak;
+    document.getElementById('zoomInput').value = "";
+    document.getElementById('zoom-suggestions').innerHTML = "";
+    
+    const img = document.getElementById('zoom-image');
+    img.src = `teams/${zoomState.team}.png`; 
+    img.style.transform = "scale(4)";
+    
+    const randomX = Math.floor(Math.random() * 60) + 20; 
+    const randomY = Math.floor(Math.random() * 60) + 20;
+    img.style.transformOrigin = `${randomX}% ${randomY}%`;
+}
+
+function checkZoomGuess() {
+    const val = document.getElementById('zoomInput').value.toUpperCase().trim();
+    if (val === zoomState.team) {
+        zoomState.streak++;
+        document.getElementById('zoom-image').style.transform = "scale(1)"; 
+        setTimeout(() => { 
+            mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()); 
+        }, 800);
+    } else {
+        zoomState.streak = 0;
+        document.getElementById('zoom-image').style.transform = "scale(1)";
+        setTimeout(() => { 
+            mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()); 
+        }, 800);
+    }
 }
