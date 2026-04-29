@@ -502,15 +502,14 @@ function showCategory(category) {
     }
 }
 
-function showGame(gameId) {
-    if (!puedeJugar(gameId)) {
-        mostrarMensajePro(
-            "⏳ ¡INTENTO AGOTADO!", 
-            "Ya has jugado a este minijuego hoy.\nVuelve mañana (reinicio a las 00:00 hora española).", 
-            null
-        );
-        return;
-    }
+if (!puedeJugar(gameId)) {
+        mostrarMensajePro(
+            "⏳ ¡INTENTO AGOTADO!", 
+            "Ya has jugado a este minijuego hoy.\nVuelve mañana (reinicio a las 00:00 hora española).", 
+            null
+        );
+        return;
+    }
 
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
