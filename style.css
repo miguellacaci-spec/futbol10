@@ -471,4 +471,3 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     75% { transform: translateX(5px); }
 }
 .input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
-.input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
