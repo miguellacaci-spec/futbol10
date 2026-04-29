@@ -371,16 +371,16 @@ const top10DB = [
         title: 'TOP 10 GOLEADORES',
         desc: 'Máximos anotadores históricos de la Champions League',
         items: [
-            { rank: 1, name: "CRISTIANO RONALDO", hint: "<img src='banderas/foto-portugal.png' class='flag-icon'> 140 Goles", revealed: false },
+            { rank: 1, name: "CRISTIANO RONALDO", hint: "<img src='banderas/foto-portugal.png' class='flag-icon'> 141 Goles", revealed: false },
             { rank: 2, name: "LIONEL MESSI", hint: "<img src='banderas/foto-argentina.png' class='flag-icon'> 129 Goles", revealed: false },
-            { rank: 3, name: "ROBERT LEWANDOWSKI", hint: "<img src='banderas/foto-polonia.png' class='flag-icon'> 94 Goles", revealed: false },
+            { rank: 3, name: "ROBERT LEWANDOWSKI", hint: "<img src='banderas/foto-polonia.png' class='flag-icon'> 109 Goles", revealed: false },
             { rank: 4, name: "KARIM BENZEMA", hint: "<img src='banderas/foto-francia.png' class='flag-icon'> 90 Goles", revealed: false },
             { rank: 5, name: "RAUL GONZALEZ", hint: "<img src='banderas/foto-espana.png' class='flag-icon'> 71 Goles", revealed: false },
-            { rank: 6, name: "RUUD VAN NISTELROOY", hint: "<img src='banderas/foto-paises_bajos.png' class='flag-icon'> 56 Goles", revealed: false },
-            { rank: 7, name: "THOMAS MULLER", hint: "<img src='banderas/foto-alemania.png' class='flag-icon'> 54 Goles", revealed: false },
-            { rank: 8, name: "THIERRY HENRY", hint: "<img src='banderas/foto-francia.png' class='flag-icon'> 50 Goles", revealed: false },
-            { rank: 9, name: "ALFREDO DI STEFANO", hint: "<img src='banderas/foto-argentina.png' class='flag-icon'> 49 Goles", revealed: false },
-            { rank: 10, name: "ANDRIY SHEVCHENKO", hint: "<img src='banderas/foto-ucrania.png' class='flag-icon'> 48 Goles", revealed: false }
+            { rank: 6, name: "KYLIAN MBAPPE", hint: "<img src='banderas/foto-francia.png' class='flag-icon'> 70 Goles", revealed: false },
+            { rank: 7, name: "RUUD VAN NISTELROOY", hint: "<img src='banderas/foto-paises_bajos.png' class='flag-icon'> 60 Goles", revealed: false },
+            { rank: 8, name: "ANDRIY SHEVCHENKO", hint: "<img src='banderas/foto-ucrania.png' class='flag-icon'> 59 Goles", revealed: false },
+            { rank: 9, name: "ERLING HAALAND", hint: "<img src='banderas/foto-noruega.png' class='flag-icon'> 57 Goles", revealed: false },
+            { rank: 10, name: "THOMAS MULLER", hint: "<img src='banderas/foto-alemania.png' class='flag-icon'> 57 Goles", revealed: false }
         ]
     }
 ];
