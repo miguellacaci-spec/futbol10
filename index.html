@@ -9,8 +9,9 @@
 </head>
 <body>
     <div id="app">
+        
+        <!-- PANTALLA: MENÚ PRINCIPAL -->
         <div id="menu-screen" class="screen">
-            
             <div class="logo-f10-container">
                 <div class="f10-icon">
                     <div class="f-part">F</div>
@@ -62,6 +63,7 @@
             </div>
         </div>
 
+        <!-- PANTALLA: SELECCIÓN DE CATEGORÍA -->
         <div id="category-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
@@ -70,6 +72,7 @@
             <div class="menu-grid" id="category-games-grid"></div>
         </div>
 
+        <!-- PANTALLA: MENÚ DEL ROSCO -->
         <div id="rosco-menu-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← ATRÁS</button>
@@ -93,17 +96,18 @@
             </div>
         </div>
 
+        <!-- ================= MINIJUEGOS ================= -->
+
+        <!-- JUEGO: AHORCADO -->
         <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="streak">0</span></div>
             </nav>
-
             <div class="game-layout">
                 <div class="canvas-side">
                     <canvas id="hangmanCanvas" width="220" height="280"></canvas>
                 </div>
-                
                 <div class="play-side">
                     <div class="word-container" id="wordDisplay"></div>
                     <div id="qwerty-keyboard" class="keyboard-container"></div>
@@ -119,13 +123,13 @@
             </div>
         </div>
 
+        <!-- JUEGO: BLUR GUESS -->
         <div id="blur-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="blur-streak">0</span></div>
             </nav>
-
-            <div class="blur-container" style="display:flex; flex-direction:column; align-items:center;">
+            <div class="blur-container">
                 <div class="image-box">
                     <img id="playerImg" src="" alt="Jugador">
                 </div>
@@ -140,29 +144,21 @@
             </div>
         </div>
 
+        <!-- JUEGO: TIME MACHINE -->
         <div id="timemachine-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="tm-streak">0</span></div>
             </nav>
-
             <div class="tm-layout">
                 <h2 class="tm-title">¿EN QUÉ AÑO OCURRIÓ?</h2>
-                
-                <div class="tm-monitor">
-                    <img id="tm-image" src="" alt="Evento Histórico">
-                </div>
-
-                <div id="tm-event-text" class="tm-event-card">
-                    Cargando evento...
-                </div>
-
+                <div class="tm-monitor"><img id="tm-image" src="" alt="Evento Histórico"></div>
+                <div id="tm-event-text" class="tm-event-card">Cargando evento...</div>
                 <div class="tm-controls">
                     <div class="input-group">
                         <input type="number" id="tmInput" placeholder="AÑO" autocomplete="off">
                         <button id="btnTmCheck" class="secondary-btn">ENVIAR</button>
                     </div>
-                    
                     <div class="tm-status">
                         <span id="tm-feedback"></span>
                         <span class="tm-lives-badge">INTENTOS: <span id="tm-lives">5</span></span>
@@ -171,27 +167,23 @@
             </div>
         </div>
 
+        <!-- JUEGO: XI HISTÓRICO EUROPEO -->
         <div id="eleven-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">TIEMPO: <span id="eleven-timer">03:00</span></div>
             </nav>
-
             <div class="eleven-layout">
                 <div class="eleven-header">
                     <h2 id="eleven-team" class="logo" style="font-size: 1.8rem; margin-bottom: 5px;">Equipo</h2>
                     <p id="eleven-desc" style="color: var(--primary); font-family: 'Orbitron';">Descripción</p>
                 </div>
-
-                <div class="pitch-container" id="pitch">
-                </div>
-                
-                <p style="color: var(--text-dim); margin-top: 15px; font-family: 'Orbitron'; text-align: center;">
-                    Toca un jugador '❓' para adivinarlo
-                </p>
+                <div class="pitch-container" id="pitch"></div>
+                <p style="color: var(--text-dim); margin-top: 15px; font-family: 'Orbitron'; text-align: center;">Toca un jugador '❓' para adivinarlo</p>
             </div>
         </div>
         
+        <!-- JUEGO: EL ROSCO -->
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
@@ -217,34 +209,29 @@
             </div>
         </div> 
 
-        <div id="higherlower-screen" class="screen hidden" style="background: linear-gradient(135deg, #1a0b2e 0%, #0b0e14 100%);">
+        <!-- JUEGO: HIGHER OR LOWER (PREMIER) -->
+        <div id="higherlower-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">PUNTOS: <span id="hl-score">0</span></div>
             </nav>
-
             <h2 class="logo" style="font-size: 1.5rem; margin-bottom: 2vh;">VALOR DE <span>MERCADO</span></h2>
-
             <div class="hl-layout">
                 <div class="hl-card">
                     <img id="hl-img-1" src="" alt="Jugador 1">
                     <div class="hl-info">
                         <h3 id="hl-name-1">Jugador 1</h3>
-                        <p style="color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem;">Tiene un valor de</p>
+                        <p class="hl-subtitle">Tiene un valor de</p>
                         <div class="hl-value" id="hl-val-1">0 M€</div>
                     </div>
                 </div>
-                
                 <div class="hl-vs">VS</div>
-                
                 <div class="hl-card">
                     <img id="hl-img-2" src="" alt="Jugador 2">
                     <div class="hl-info">
                         <h3 id="hl-name-2">Jugador 2</h3>
-                        <p style="color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem;">Tiene un valor...</p>
-                        
+                        <p class="hl-subtitle">Tiene un valor...</p>
                         <div class="hl-value hidden-val" id="hl-val-2">???</div>
-                        
                         <div class="hl-buttons" id="hl-controls">
                             <button class="hl-btn btn-higher" onclick="checkHigherLower('higher')">▲ MAYOR</button>
                             <button class="hl-btn btn-lower" onclick="checkHigherLower('lower')">▼ MENOR</button>
@@ -254,57 +241,51 @@
             </div>
         </div>
 
-        <div id="map-screen" class="screen hidden">
+        <!-- JUEGO: GUERRA DE AFOROS (LALIGA) -->
+        <div id="aforos-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-                <div class="score-board">PUNTOS: <span id="map-streak">0</span></div>
+                <div class="score-board">PUNTOS: <span id="aforos-score">0</span></div>
             </nav>
-
-            <div class="map-layout">
-                <h2 class="logo" style="font-size: 1.2rem; margin-bottom: 5px;">UBICA EL <span>ESTADIO</span></h2>
-                <div class="stadium-target" id="stadium-name">Cargando...</div>
-                
-                <div class="cyber-map-grid">
-                    <div class="map-region" id="reg-galicia" onclick="checkMapRegion('reg-galicia')">GALICIA</div>
-                    <div class="map-region" id="reg-asturias" onclick="checkMapRegion('reg-asturias')">ASTURIAS</div>
-                    <div class="map-region" id="reg-cantabria" onclick="checkMapRegion('reg-cantabria')">CANTABRIA</div>
-                    <div class="map-region" id="reg-vasco" onclick="checkMapRegion('reg-vasco')">P. VASCO</div>
-                    
-                    <div class="map-region" id="reg-cyl" onclick="checkMapRegion('reg-cyl')">C. Y LEÓN</div>
-                    <div class="map-region" id="reg-rioja" onclick="checkMapRegion('reg-rioja')">LA RIOJA</div>
-                    <div class="map-region" id="reg-navarra" onclick="checkMapRegion('reg-navarra')">NAVARRA</div>
-                    <div class="map-region" id="reg-aragon" onclick="checkMapRegion('reg-aragon')">ARAGÓN</div>
-                    <div class="map-region" id="reg-catalunya" onclick="checkMapRegion('reg-catalunya')">CATALUÑA</div>
-                    
-                    <div class="map-region" id="reg-madrid" onclick="checkMapRegion('reg-madrid')">MADRID</div>
-                    <div class="map-region" id="reg-clm" onclick="checkMapRegion('reg-clm')">C. LA MANCHA</div>
-                    <div class="map-region" id="reg-valencia" onclick="checkMapRegion('reg-valencia')">C. VALENCIANA</div>
-                    <div class="map-region" id="reg-baleares" onclick="checkMapRegion('reg-baleares')">BALEARES</div>
-                    
-                    <div class="map-region" id="reg-extremadura" onclick="checkMapRegion('reg-extremadura')">EXTREMADURA</div>
-                    <div class="map-region" id="reg-andalucia" onclick="checkMapRegion('reg-andalucia')">ANDALUCÍA</div>
-                    <div class="map-region" id="reg-murcia" onclick="checkMapRegion('reg-murcia')">MURCIA</div>
-                    <div class="map-region" id="reg-canarias" onclick="checkMapRegion('reg-canarias')">CANARIAS</div>
+            <h2 class="logo" style="font-size: 1.5rem; margin-bottom: 2vh;">GUERRA DE <span>AFOROS</span></h2>
+            <div class="hl-layout">
+                <div class="hl-card">
+                    <img id="aforos-img-1" src="" alt="Estadio 1">
+                    <div class="hl-info">
+                        <h3 id="aforos-name-1">Estadio 1</h3>
+                        <p class="hl-subtitle">Tiene una capacidad de</p>
+                        <div class="hl-value" id="aforos-val-1">0</div>
+                    </div>
                 </div>
-                <div class="info-footer" style="margin-top:20px;">FALLOS PERMITIDOS: <span id="map-lives">3</span></div>
+                <div class="hl-vs">VS</div>
+                <div class="hl-card">
+                    <img id="aforos-img-2" src="" alt="Estadio 2">
+                    <div class="hl-info">
+                        <h3 id="aforos-name-2">Estadio 2</h3>
+                        <p class="hl-subtitle">Tiene una capacidad...</p>
+                        <div class="hl-value hidden-val" id="aforos-val-2">???</div>
+                        <div class="hl-buttons" id="aforos-controls">
+                            <button class="hl-btn btn-higher" onclick="checkAforos('higher')">▲ MAYOR</button>
+                            <button class="hl-btn btn-lower" onclick="checkAforos('lower')">▼ MENOR</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- JUEGO: ZOOM ESCUDOS (PREMIER) -->
         <div id="zoom-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="zoom-streak">0</span></div>
             </nav>
-
             <div class="zoom-layout">
                 <h2 class="logo" style="font-size: 1.5rem; margin-bottom: 2vh;">RECONOCE EL <span>ESCUDO</span></h2>
-                
                 <div class="zoom-box-container">
                     <div class="zoom-lens">
                         <img id="zoom-image" src="" alt="Escudo Zoom">
                     </div>
                 </div>
-
                 <div class="input-container" style="max-width: 320px;">
                     <div class="input-group">
                         <input type="text" id="zoomInput" placeholder="Nombre del equipo..." autocomplete="off">
@@ -318,6 +299,7 @@
 
     </div> 
     
+    <!-- MODALES GLOBALES -->
     <div id="custom-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2 id="modal-title">TÍTULO</h2>
