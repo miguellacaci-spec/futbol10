@@ -502,14 +502,7 @@ function showCategory(category) {
     }
 }
 
-if (!puedeJugar(gameId)) {
-        mostrarMensajePro(
-            "⏳ ¡INTENTO AGOTADO!", 
-            "Ya has jugado a este minijuego hoy.\nVuelve mañana (reinicio a las 00:00 hora española).", 
-            null
-        );
-        return;
-    }
+
 
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
@@ -773,15 +766,7 @@ function checkTimeMachineGuess() {
 
 // --- EL ROSCO ---
 function initRosco(mode) {
-    if (!puedeJugar(`rosco_${mode}`)) {
-        mostrarMensajePro(
-            "⏳ ¡INTENTO AGOTADO!", 
-            "Ya has jugado a este modo del Rosco hoy.\nVuelve mañana.", 
-            null
-        );
-        return;
-    }
-
+    
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('rosco-screen').classList.remove('hidden');
 
