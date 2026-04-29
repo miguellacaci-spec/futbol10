@@ -172,7 +172,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .laliga-card, .premier-card, .leyendas-card, .europeos-card,
 .rosco-game-card, .hangman-game-card, .blur-game-card, 
-.timemachine-game-card, .eleven-game-card, .hl-game-card {
+.timemachine-game-card, .eleven-game-card, .hl-game-card,
+.map-game-card, .zoom-game-card {
     position: relative;
     padding: 0 !important;
     display: flex;
@@ -185,6 +186,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .timemachine-game-card:hover { border-color: #ffd700; transform: translateY(-8px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1); }
 .rosco-game-card { border-color: var(--secondary); }
 .hl-game-card { border-color: #00ff85; }
+.map-game-card { border-color: #ffd700; }
+.zoom-game-card { border-color: #00a8ff; }
 
 .card-info { position: relative; z-index: 2; text-align: center; pointer-events: none; padding: 10px; }
 
@@ -203,7 +206,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .leyendas-card:hover .bg-leyendas, .europeos-card:hover .bg-europeos,
 .rosco-game-card:hover .bg-rosco, .hangman-game-card:hover .bg-ahorcado,
 .blur-game-card:hover .bg-blur, .timemachine-game-card:hover .bg-timemachine,
-.eleven-game-card:hover .eleven-bg-image, .hl-game-card:hover .bg-premier, .menu-card:hover .card-bg {
+.eleven-game-card:hover .eleven-bg-image, .hl-game-card:hover .bg-premier, 
+.map-game-card:hover .bg-laliga, .zoom-game-card:hover .bg-premier, .menu-card:hover .card-bg {
     filter: brightness(0.6) blur(0px);
     transform: scale(1.1);
 }
@@ -638,4 +642,103 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @media(min-width: 768px) {
     .hl-vs { margin: 0 -35px; }
+}
+
+/* ==========================================
+   13. MAPA ESTADIOS (RADAR CIBERNÉTICO)
+   ========================================== */
+.map-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
+.stadium-target {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cyber-map-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    width: 100%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid var(--card);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.map-region {
+    background: rgba(28, 33, 40, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(15px, 4vw, 25px) 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.7rem);
+    color: var(--text-dim);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.map-region:hover {
+    background: rgba(0, 255, 135, 0.1);
+    border-color: var(--primary);
+    color: white;
+    transform: scale(1.02);
+    z-index: 10;
+}
+
+.correct-reg { background: rgba(0, 255, 135, 0.3) !important; border-color: var(--primary) !important; color: white !important; box-shadow: 0 0 15px var(--primary-glow); }
+.wrong-reg { background: rgba(255, 77, 77, 0.3) !important; border-color: var(--error) !important; color: white !important; }
+
+/* Ajustes de celdas para darle forma de mapa a la cuadrícula */
+#reg-galicia { grid-column: 1; }
+#reg-vasco { grid-column: 4; }
+#reg-madrid { grid-column: 2 / span 2; background: rgba(28, 33, 40, 0.95); } /* Centro */
+#reg-baleares { grid-column: 4; transform: translateX(10px) translateY(10px); }
+#reg-canarias { grid-column: 1; transform: translateY(20px); }
+
+/* ==========================================
+   14. ESCUDOS ZOOM (PREMIER)
+   ========================================== */
+.zoom-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+.zoom-box-container {
+    width: clamp(200px, 60vw, 300px);
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    border: 4px solid #00a8ff;
+    padding: 10px;
+    background: rgba(0, 168, 255, 0.05);
+    box-shadow: 0 0 30px rgba(0, 168, 255, 0.2), inset 0 0 20px rgba(0, 168, 255, 0.1);
+    margin-bottom: 20px;
+}
+.zoom-lens {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #ffffff; /* Fondo blanco por si el escudo es PNG con transparencias */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.zoom-lens img {
+    width: 80%; /* Para dejar margen cuando se hace scale(1) */
+    height: 80%;
+    object-fit: contain;
+    transition: transform 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.27);
+    will-change: transform;
 }
