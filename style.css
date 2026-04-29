@@ -229,18 +229,20 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     transition: 0.5s ease; z-index: 1; pointer-events: none;
     filter: brightness(0.4) blur(2px);
 }
+
 .menu-card:hover .card-bg { filter: brightness(0.6) blur(0px); transform: scale(1.1); }
 .bg-ahorcado, .bg-timemachine { filter: brightness(0.4) blur(0px); }
 
+/* RUTAS DE TUS IMÁGENES */
 .bg-laliga { background-image: url('players/fondo-laliga.jpg'); }
 .bg-premier { background-image: url('players/fondo-premier.jpg'); }
-.bg-higherlower { background-image: url('players/fondo-valormercado.jpg'); }
+.bg-higherlower { background-image: url('players/fondo-valormercado.jpg'); } /* Tu fondo nuevo */
 .bg-leyendas { background-image: url('players/fondo-leyendas.jpg'); }
 .bg-europeos { background-image: url('players/fondo-once.jpg'); }
 .bg-rosco { background-image: url('players/fondo-rosco.jpg'); }
 .bg-ahorcado { background-image: url('players/fondo-ahorcado.jpg'); }
 .bg-blur { background-image: url('players/fondo-blur.jpg'); } 
-.bg-timemachine { background-image: url('events/fondo-maquina.jpg'); }
+.bg-timemachine { background-image: url('events/fondo-maquina.jpg'); } /* Tu fondo nuevo */
 
 /* ==========================================
    5. NUEVO LOGO CIBERNÉTICO F10
