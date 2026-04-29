@@ -371,16 +371,16 @@ const top10DB = [
         title: 'TOP 10 GOLEADORES',
         desc: 'Máximos anotadores históricos de la Champions League',
         items: [
-            { rank: 1, name: "CRISTIANO RONALDO", hint: "<img src='banderas/foto-portugal.jpg' class='flag-icon'> 141 Goles", revealed: false },
-            { rank: 2, name: "LIONEL MESSI", hint: "<img src='banderas/foto-argentina.jpg' class='flag-icon'> 129 Goles", revealed: false },
-            { rank: 3, name: "ROBERT LEWANDOWSKI", hint: "<img src='banderas/foto-polonia.jpg' class='flag-icon'> 109 Goles", revealed: false },
-            { rank: 4, name: "KARIM BENZEMA", hint: "<img src='banderas/foto-francia.jpg' class='flag-icon'> 90 Goles", revealed: false },
-            { rank: 5, name: "RAUL GONZALEZ", hint: "<img src='banderas/foto-espana.jpg' class='flag-icon'> 71 Goles", revealed: false },
-            { rank: 6, name: "KYLIAN MBAPPE", hint: "<img src='banderas/foto-francia.jpg' class='flag-icon'> 70 Goles", revealed: false },
-            { rank: 7, name: "RUUD VAN NISTELROOY", hint: "<img src='banderas/foto-paises_bajos.jpg' class='flag-icon'> 60 Goles", revealed: false },
-            { rank: 8, name: "ANDRIY SHEVCHENKO", hint: "<img src='banderas/foto-ucrania.jpg' class='flag-icon'> 59 Goles", revealed: false },
-            { rank: 9, name: "ERLING HAALAND", hint: "<img src='banderas/foto-noruega.jpg' class='flag-icon'> 57 Goles", revealed: false },
-            { rank: 10, name: "THOMAS MULLER", hint: "<img src='banderas/foto-alemania.jpg' class='flag-icon'> 57 Goles", revealed: false }
+            { rank: 1, name: "CRISTIANO RONALDO", flag: "portugal", goals: "141 Goles", revealed: false },
+            { rank: 2, name: "LIONEL MESSI", flag: "argentina", goals: "129 Goles", revealed: false },
+            { rank: 3, name: "ROBERT LEWANDOWSKI", flag: "polonia", goals: "109 Goles", revealed: false },
+            { rank: 4, name: "KARIM BENZEMA", flag: "francia", goals: "90 Goles", revealed: false },
+            { rank: 5, name: "RAUL GONZALEZ", flag: "espana", goals: "71 Goles", revealed: false },
+            { rank: 6, name: "KYLIAN MBAPPE", flag: "francia", goals: "70 Goles", revealed: false },
+            { rank: 7, name: "RUUD VAN NISTELROOY", flag: "paises_bajos", goals: "60 Goles", revealed: false },
+            { rank: 8, name: "ANDRIY SHEVCHENKO", flag: "ucrania", goals: "59 Goles", revealed: false },
+            { rank: 9, name: "ERLING HAALAND", flag: "noruega", goals: "57 Goles", revealed: false },
+            { rank: 10, name: "THOMAS MULLER", flag: "alemania", goals: "57 Goles", revealed: false }
         ]
     }
 ];
@@ -1386,11 +1386,15 @@ function renderTop10List() {
         
         const nameDisplay = item.revealed ? item.name : '????????????';
         
+        // Ahora construimos la imagen de forma dinámica y segura
         div.innerHTML = `
             <div class="top10-rank">${item.rank}</div>
             <div class="top10-info">
                 <span class="top10-name">${nameDisplay}</span>
-                <span class="top10-hint">${item.hint}</span>
+                <span class="top10-hint">
+                    <img src="banderas/foto-${item.flag}.jpg" alt="${item.flag}" class="flag-icon"> 
+                    ${item.goals}
+                </span>
             </div>
         `;
         listContainer.appendChild(div);
