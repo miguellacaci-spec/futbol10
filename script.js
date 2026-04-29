@@ -1026,8 +1026,40 @@ function renderWordleGrid() {
 function getWordleLetterStatus(guess, index) {
     const letter = guess[index];
     if (!letter || letter === ' ' || letter === '-') return "ignore";
-    if (wordleState.answer[index] === letter) return "correct";
-    if (wordleState.answer.includes(letter)) return "present";
+
+    const answer = wordleState.answer;
+
+    // 1. Si está en la posición exacta, es verde (correct)
+    if (answer[index] === letter) return "correct";
+
+    // 2. Contar cuántas veces aparece esta letra en la respuesta real
+    let totalInAnswer = 0;
+    for (let i = 0; i < answer.length; i++) {
+        if (answer[i] === letter) totalInAnswer++;
+    }
+
+    // 3. Contar cuántas de esas letras ya están colocadas perfectamente (verdes) en todo el intento
+    let exactMatches = 0;
+    for (let i = 0; i < answer.length; i++) {
+        if (guess[i] === letter && answer[i] === letter) exactMatches++;
+    }
+
+    // 4. Las "amarillas" disponibles son el total menos las que ya están en verde
+    let availableYellows = totalInAnswer - exactMatches;
+
+    // 5. Contar cuántas "amarillas" de esta misma letra ya hemos repartido ANTES de esta posición (de izquierda a derecha)
+    let previousYellowsUsed = 0;
+    for (let i = 0; i < index; i++) {
+        if (guess[i] === letter && answer[i] !== letter) {
+            previousYellowsUsed++;
+        }
+    }
+
+    // 6. Si aún nos quedan amarillas disponibles, la marcamos. Si no, se queda en gris (absent).
+    if (previousYellowsUsed < availableYellows) {
+        return "present";
+    }
+
     return "absent";
 }
 
