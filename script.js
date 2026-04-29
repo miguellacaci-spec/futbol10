@@ -1,3 +1,23 @@
+// Añade esto al inicio de tu script.js
+function checkDailyAttempt(gameId) {
+    const now = new Date();
+    // Ajuste a hora española (UTC+1 o +2)
+    const dateStr = now.toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid' });
+    const key = `attempt_${gameId}_${dateStr}`;
+    
+    if (localStorage.getItem(key)) {
+        mostrarMensajePro("¡AGOTADO!", "Ya has jugado este minijuego hoy. Vuelve mañana.");
+        return false;
+    }
+    return true;
+}
+
+// Para registrar que ya jugó (llámalo cuando pierda o gane)
+function registerAttempt(gameId) {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid' });
+    localStorage.setItem(`attempt_${gameId}_${dateStr}`, "true");
+}
 // ==========================================
 // 1. BASES DE DATOS & CONSTANTES GLOBALES
 // ==========================================
