@@ -238,11 +238,11 @@ function showCategory(category) {
                 <div class="card-bg bg-laliga"></div>
                 <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
             </div>`;
-    } else if (category === 'leyendas') {
+   } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
             <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
-                <div class="card-bg bg-timemachine"></div>
+                <div class="card-bg bg-timemachine"></div> <!-- AQUÍ LLAMA AL FONDO -->
                 <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
             </div>
             <div class="menu-card coming-soon">
@@ -260,7 +260,7 @@ function showCategory(category) {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
-                <div class="card-bg bg-higherlower"></div>
+                <div class="card-bg bg-higherlower"></div> <!-- AQUÍ LLAMA AL FONDO -->
                 <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
