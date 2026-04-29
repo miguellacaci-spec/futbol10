@@ -28,33 +28,195 @@ const players = [
 
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 const roscoQuestions = [
-    { letra: "A", preguntas: [{ respuesta: "ANCELOTTI", hint: "Nombre del único entrenador en ganar las 5 grandes ligas." }, { respuesta: "ANSU FATI", hint: "Nombre y apellido del jugador del Brighton que en el Barça heredó el 10 de Messi" }, { respuesta: "ARDA GULER", hint: "Nombre y apellido del jugador más caro de la selección de Turquía" }] },
-    { letra: "B", preguntas: [{ respuesta: "BETIS", hint: "Equipo sevillano que ganó LaLiga en 1934/1935" }, { respuesta: "BELLINGHAM", hint: "Nombre del jugador ingles del Madrid proveniente del Dortmund" }, { respuesta: "BENZEMA", hint: "Ganador del Balón de Oro 2022" }] },
-    { letra: "C", preguntas: [{ respuesta: "COURTOIS", hint: "Apellido del MVP en la final de la Champions en 2021/2022." }, { respuesta: "CADIZ", hint: "Equipo andaluz conocido como el 'Submarino Amarillo'" }, { respuesta: "CARVAJAL", hint: "Lateral derecho eterno de la selección y el Real Madrid" }] },
-    { letra: "D", preguntas: [{ respuesta: "DANI OLMO", hint: "Fichaje estrella del Barça 2024" }, { respuesta: "DE PAUL", hint: "Apellido del jugador argentino que juega con Messi en el Inter de Miami." }, { respuesta: "DE BRUYNE", hint: "Genio belga del Manchester City" }] },
-    { letra: "E", preguntas: [{ respuesta: "ENDRICK", hint: "Joven promesa brasileña fichada por el Real Madrid" }, { respuesta: "EMPOLI", hint: "Equipo modesto de la Serie A italiana" }, { respuesta: "ETO'O", hint: "Legendario delantero camerunés del Barça e Inter" }] },
-    { letra: "F", preguntas: [{ respuesta: "FORLAN", hint: "Delantero uruguayo que brilló en el Atlético y Villarreal" }, { respuesta: "FALCAO", hint: "El 'Tigre' que goleó en el Atleti y Rayo Vallecano" }, { respuesta: "FEYENOORD", hint: "Histórico equipo de los Países Bajos (Rotterdam)" }] },
-    { letra: "G", preguntas: [{ respuesta: "GAVI", hint: "Intenso centrocampista canterano del FC Barcelona" }, { respuesta: "GRIEZMANN", hint: "Apellido del maximum goleador histórico del Atlético de Madrid." }, { respuesta: "GIRONA", hint: "Equipo revelación de LaLiga en la 2023/2024." }] },
-    { letra: "H", preguntas: [{ respuesta: "HAALAND", hint: "El 'Androide' noruego del Manchester City" }, { respuesta: "HULK", hint: "Delantero brasileño famoso por su potencia física" }, { respuesta: "HERNANDEZ", hint: "Apellido de los hermanos Lucas y Theo" }] },
-    { letra: "I", preguntas: [{ respuesta: "ISCO", hint: "Magia malagueña que ahora brilla en el Betis" }, { respuesta: "INIESTA", hint: "Autor del gol que nos dio el Mundial 2010" }, { respuesta: "INTER", hint: "Club italiano que viste de 'nerazzurro'" }] },
-    { letra: "J", preguntas: [{ respuesta: "JOAQUIN", hint: "Leyenda del Betis conocida por su arte y fintas" }, { respuesta: "JOAO FELIX", hint: "Talentoso mediapunta portugués" }, { respuesta: "JUVENTUS", hint: "La 'Vecchia Signora' del fútbol italiano." }] },
-    { letra: "K", preguntas: [{ respuesta: "KROOS", hint: "El 'Metrónomo' alemán retirado en 2024" }, { respuesta: "KANE", hint: "Goleador inglés que se marchó al Bayern" }, { respuesta: "KUN AGUERO", hint: "Histórico 10 del City que tuvo que retirarse en el Barça" }] },
-    { letra: "L", preguntas: [{ respuesta: "LEWANDOWSKI", hint: "Bota de Oro polaca y 9 del Barça" }, { respuesta: "LIVERPOOL", hint: "Club inglés que nunca camina solo" }, { respuesta: "LAMINE YAMAL", hint: "El adolescente récord del Barça y la Selección" }] },
-    { letra: "M", preguntas: [{ respuesta: "MESSI", hint: "Para muchos, el mejor jugador de la historia" }, { respuesta: "MODRIC", hint: "El eterno 10 croata del Real Madrid" }, { respuesta: "MBAPPE", hint: "La gran estrella francesa que llegó al Bernabéu" }] },
-    { letra: "N", preguntas: [{ respuesta: "NEYMAR", hint: "Magia brasileña, ex del Santos, Barça y PSG" }, { respuesta: "NAPOLES", hint: "Club donde Maradona es un Dios" }, { respuesta: "NICO WILLIAMS", hint: "Extremo veloz del Athletic y héroe de la Eurocopa" }] },
-    { letra: "Ñ", preguntas: [{ respuesta: "ESPAÑA", hint: "Contiene la Ñ: Campeona de la Eurocopa del 2024." }, { respuesta: "CAICEDO", hint: "Contiene la Ñ: Delantero ecuatoriano ex del Espanyol" }, { respuesta: "REGINO", hint: "Contiene la Ñ: Apellido de un canterano o jugador clásico" }] },
-    { letra: "O", preguntas: [{ respuesta: "OBLAK", hint: "Muro esloveno bajo los palos del Atlético" }, { respuesta: "OSASUNA", hint: "Equipo que juega en el Sadar" }, { respuesta: "ODEGAARD", hint: "Capitán del Arsenal con pasado madridista" }] },
-    { letra: "P", preguntas: [{ respuesta: "PEDRI", hint: "El canario que pone la pausa en el Camp Nou" }, { respuesta: "PELE", hint: "O Rei del fútbol brasileño" }, { respuesta: "PULISIC", hint: "El 'Capitán América' del AC Milan" }] },
-    { letra: "Q", preguntas: [{ respuesta: "QUINI", hint: "Mítico delantero asturiano de Sporting y Barça" }, { respuesta: "QUERETARO", hint: "Club mexicano donde jugó Ronaldinho." }, { respuesta: "QUATTRINI", hint: "Apellido de algún jugador clásico del calcio" }] },
-    { letra: "R", preguntas: [{ respuesta: "RONALDO", hint: "El 'Fenómeno' brasileño" }, { respuesta: "RAUL", hint: "El eterno capitán del Real Madrid" }, { respuesta: "RODRYGO", hint: "Rayo brasileño del ataque blanco" }] },
-    { letra: "S", preguntas: [{ respuesta: "SIMEONE", hint: "El 'Cholo', alma del banquillo atlético" }, { respuesta: "SUAREZ", hint: "El 'Pistolero' uruguayo ex del Barça y Atleti" }, { respuesta: "SALAH", hint: "El 'Faraón' del Liverpool" }] },
-    { letra: "T", preguntas: [{ respuesta: "TER STEGEN", hint: "Portero alemán del FC Barcelona" }, { respuesta: "TOTTENHAM", hint: "Club de Londres que juega en un estadio futurista" }, { respuesta: "TCHOUAMENI", hint: "Pivote francés de gran despliegue físico del Madrid" }] },
-    { letra: "U", preguntas: [{ respuesta: "UDINESE", hint: "Club italiano de la ciudad de Udine" }, { respuesta: "UMTITI", hint: "Central francés que fue campeón del mundo en 2018" }, { respuesta: "UNAI SIMON", hint: "Portero titular de la Selección Española" }] },
-    { letra: "V", preguntas: [{ respuesta: "VINICIUS", hint: "Extremo brasileño, candidato al Balón de Oro" }, { respuesta: "VALENCIA", hint: "Equipo que juega en Mestalla" }, { respuesta: "VILLARREAL", hint: "El equipo del 'Submarino Amarillo' de Castellón" }] },
-    { letra: "W", preguntas: [{ respuesta: "WIRTZ", hint: "Joven estrella alemana del Leverkusen" }, { respuesta: "WOLVERHAMPTON", hint: "Primer equipo de las 5 grandes ligas que descendió en la temporada 2025/2026." }, { respuesta: "WALKER", hint: "Lateral derecho velocísimo del Manchester City" }] },
-    { letra: "X", preguntas: [{ respuesta: "XAVI", hint: "Maestro del mediocampo y ex-entrenador del Barça" }, { respuesta: "XHAKA", hint: "Líder suizo del centro del campo" }, { respuesta: "XABI ALONSO", hint: "Entrenador de moda que hizo historia con el Leverkusen" }] },
-    { letra: "Y", preguntas: [{ respuesta: "YASHIN", hint: "Apellido del único portero con un Balón de Oro." }, { respuesta: "YAMAL", hint: "Apellido del ganador del trofeo Kopa en la temporada 2023/2024 y 2024/2025." }, { respuesta: "YESTE", hint: "Mítico zurdo del Athletic Club" }] },
-    { letra: "Z", preguntas: [{ respuesta: "ZIDANE", hint: "Apellido del jugador que marcó de volea en la final de la Champions del 2002." }, { respuesta: "ZUBIMENDI", hint: "Elegante mediocentro de la Real Sociedad" }, { respuesta: "ZAMORA", hint: "Trofeo al portero menos goleado de LaLiga." }] }
+    { letra: "A", preguntas: [
+        { respuesta: "ANCELOTTI", hint: "Apellido del único entrenador en ganar las 5 grandes ligas." },
+        { respuesta: "ANSU FATI", hint: "Nombre y apellido del jugador que heredó el 10 de Messi en el Barça." },
+        { respuesta: "ARDA GULER", hint: "Nombre y apellido del jugador más caro actual de Turquía." },
+        { respuesta: "ALISSON", hint: "Nombre del portero ganador del trofeo Yashin en 2019." },
+        { respuesta: "ASTON VILLA", hint: "Nombre del equipo que juega en el Villa Park." }
+    ]},
+    { letra: "B", preguntas: [
+        { respuesta: "BELLINGHAM", hint: "Apellido del jugador que ganó el trofeo Kopa en 2023." },
+        { respuesta: "BENZEMA", hint: "Apellido del ganador del Balón de Oro 2022." },
+        { respuesta: "BETIS", hint: "Equipo español subcampeón de la Conference League en la temporada 2024/2025." },
+        { respuesta: "BONMATI", hint: "Apellido de la jugadora con más Ballon d'Or de la historia." },
+        { respuesta: "BAYER LEVERKUSEN", hint: "Ganador de la Bundesliga alemana en la temporada 2023/2024." }
+    ]},
+    { letra: "C", preguntas: [
+        { respuesta: "CARVAJAL", hint: "Apellido del 'Pitbull' de Leganés." },
+        { respuesta: "COURTOIS", hint: "Apellido del MVP de la final de Champions 2021/2022." },
+        { respuesta: "CRISTIANO", hint: "Nombre del máximo goleador de la historia." },
+        { respuesta: "CONTE", hint: "Apellido del actual entrenador del Nápoles." },
+        { respuesta: "CHELSEA", hint: "Ganador de la Copa Mundial de Clubes en la temporada 2025/2026." }
+    ]},
+    { letra: "D", preguntas: [
+        { respuesta: "DANI OLMO", hint: "Nombre y apellido del fichaje del Barcelona en 2024 proveniente del Leipzig." },
+        { respuesta: "DE BRUYNE", hint: "Apellido del mediocentro belga del Napoles." },
+        { respuesta: "DI MARIA", hint: "Apellido del 'Fideo'." },
+        { respuesta: "DORTMUND", hint: "Club alemán famoso por su 'Muro Amarillo'." },
+        { respuesta: "DYBALA", hint: "Apellido de 'La Joya' que jugó con Messi y Cristiano." }
+    ]},
+    { letra: "E", preguntas: [
+        { respuesta: "ENDRICK", hint: "Nombre del jugador estrella del Lyon cedido por el Madrid." },
+        { respuesta: "ETO'O", hint: "Nombre del delantero camerunés que ganó el triplete con Barça e Inter consecutivamente." },
+        { respuesta: "EMERY", hint: "Apellido del actual entrenador del Aston Villa." },
+        { respuesta: "EDERSON", hint: "DIFÍCIL: Portero del City conocido por su excelente juego de pies." },
+        { respuesta: "EINTRACHT", hint: "DIFÍCIL: Equipo de Frankfurt que invadió el Camp Nou en la Europa League 2022." }
+    ]},
+    { letra: "F", preguntas: [
+        { respuesta: "FALCAO", hint: "FÁCIL: El 'Tigre' colombiano que triunfó en Oporto, Atlético y Rayo." },
+        { respuesta: "FEYENOORD", hint: "MEDIA: Histórico club de los Países Bajos con sede en Rotterdam." },
+        { respuesta: "FLICK", hint: "MEDIA: Entrenador alemán que asumió el banquillo del Barça en 2024 tras Xavi." },
+        { respuesta: "FORLAN", hint: "DIFÍCIL: Bota de oro uruguaya que brilló en Villarreal y Atlético de Madrid." },
+        { respuesta: "FODEN", hint: "DIFÍCIL: El 'Stockport Iniesta', canterano estrella del Manchester City." }
+    ]},
+    { letra: "G", preguntas: [
+        { respuesta: "GAVI", hint: "FÁCIL: Joven centrocampista del Barça conocido por su garra y jugar con los cordones sueltos." },
+        { respuesta: "GRIEZMANN", hint: "FÁCIL: Máximo goleador histórico del Atlético de Madrid." },
+        { respuesta: "GIRONA", hint: "MEDIA: Club catalán que fue la gran revelación de LaLiga 2023/2024." },
+        { respuesta: "GYOKERES", hint: "DIFÍCIL: Delantero sueco sensación del Sporting de Portugal en las últimas temporadas." },
+        { respuesta: "GUNDOGAN", hint: "DIFÍCIL: Centrocampista alemán que regresó al Man City tras un año en el Barça." }
+    ]},
+    { letra: "H", preguntas: [
+        { respuesta: "HAALAND", hint: "FÁCIL: El 'Androide' noruego, máximo goleador del Manchester City." },
+        { respuesta: "HARRY KANE", hint: "FÁCIL: Capitán de Inglaterra que dejó el Tottenham para ir al Bayern Múnich." },
+        { respuesta: "HULK", hint: "MEDIA: Potente delantero brasileño famoso por su disparo lejano." },
+        { respuesta: "HULL CITY", hint: "DIFÍCIL: Club inglés apodado los 'Tigers' que suele alternar entre Premier y Championship." },
+        { respuesta: "HUMMELS", hint: "DIFÍCIL: Central alemán que tras una vida en Dortmund fichó por la Roma en 2024." }
+    ]},
+    { letra: "I", preguntas: [
+        { respuesta: "INIESTA", hint: "FÁCIL: El autor del gol que dio a España su primer Mundial." },
+        { respuesta: "ISCO", hint: "MEDIA: Malagueño que recuperó su mejor nivel en el Real Betis tras salir del Sevilla." },
+        { respuesta: "INTER", hint: "MEDIA: Actual campeón de la Serie A y finalista de Champions en 2023." },
+        { respuesta: "IMMOBILE", hint: "DIFÍCIL: Delantero italiano, bota de oro en 2020, que se marchó al Besiktas en 2024." },
+        { respuesta: "IÑAKI WILLIAMS", hint: "DIFÍCIL: El mayor de los hermanos Williams, récord de partidos seguidos en LaLiga." }
+    ]},
+    { letra: "J", preguntas: [
+        { respuesta: "JOAQUIN", hint: "FÁCIL: El eterno 17 del Betis, retirado recientemente con el récord de partidos en liga." },
+        { respuesta: "JUVENTUS", hint: "MEDIA: La 'Vecchia Signora' del fútbol italiano." },
+        { respuesta: "JOAO FELIX", hint: "MEDIA: Talentoso portugués que ha pasado por Atleti, Chelsea y Barça." },
+        { respuesta: "JULIAN ALVAREZ", hint: "DIFÍCIL: La 'Araña' que dejó el City por el Atlético de Madrid en 2024." },
+        { respuesta: "JUDE", hint: "DIFÍCIL: Nombre de pila del mayor de los Bellingham." }
+    ]},
+    { letra: "K", preguntas: [
+        { respuesta: "KROOS", hint: "FÁCIL: El 'Metrónomo' alemán que se retiró tras ganar la Champions y la Euro 2024." },
+        { respuesta: "KOPA", hint: "MEDIA: Nombre del trofeo que se otorga al mejor jugador joven del mundo." },
+        { respuesta: "KUN AGUERO", hint: "MEDIA: Máximo goleador extranjero de la Premier League y leyenda del City." },
+        { respuesta: "KVARATSKHELIA", hint: "DIFÍCIL: Extremo georgiano estrella del Nápoles apodado 'Kvaradona'." },
+        { respuesta: "KIMMICH", hint: "DIFÍCIL: El polivalente líder del centro del campo del Bayern y la selección alemana." }
+    ]},
+    { letra: "L", preguntas: [
+        { respuesta: "LEWANDOWSKI", hint: "FÁCIL: El 9 polaco del FC Barcelona, ganador de dos premios The Best." },
+        { respuesta: "LAMINE YAMAL", hint: "FÁCIL: El jugador más joven en marcar y ganar una Eurocopa (2024)." },
+        { respuesta: "LIVERPOOL", hint: "MEDIA: Club inglés que canta el 'You'll Never Walk Alone'." },
+        { respuesta: "LAUTARO", hint: "DIFÍCIL: El 'Toro' argentino, capitán y goleador del Inter de Milán." },
+        { respuesta: "LUKAKU", hint: "DIFÍCIL: Delantero belga que ha pasado por casi todos los grandes de Italia e Inglaterra." }
+    ]},
+    { letra: "M", preguntas: [
+        { respuesta: "MESSI", hint: "FÁCIL: Ganador de 8 Balones de Oro y campeón del mundo en 2022." },
+        { respuesta: "MBAPPE", hint: "FÁCIL: La estrella francesa que fichó por el Real Madrid en 2024." },
+        { respuesta: "MODRIC", hint: "MEDIA: El 'eterno' 10 croata del Real Madrid, Balón de Oro 2018." },
+        { respuesta: "MALLORCA", hint: "DIFÍCIL: Equipo balear que llegó a la final de la Copa del Rey en 2024." },
+        { respuesta: "MAIGNAN", hint: "DIFÍCIL: Portero titular de Francia y del AC Milan tras la era Lloris." }
+    ]},
+    { letra: "N", preguntas: [
+        { respuesta: "NEYMAR", hint: "FÁCIL: El 10 de Brasil que formó la MSN en el Barça y ahora juega en Arabia." },
+        { respuesta: "NICO WILLIAMS", hint: "FÁCIL: Extremo del Athletic Club y gran sensación de la Eurocopa 2024." },
+        { respuesta: "NAPOLES", hint: "MEDIA: El club donde Maradona ganó dos 'Scudettos'." },
+        { respuesta: "NEUER", hint: "MEDIA: Portero alemán que revolucionó el puesto jugando como líbero." },
+        { respuesta: "NIZA", hint: "DIFÍCIL: Club de la Costa Azul francesa que suele pelear puestos europeos." }
+    ]},
+    { letra: "Ñ", preguntas: [
+        { respuesta: "ESPAÑA", hint: "FÁCIL: CONTIENE LA Ñ: Selección campeona de la Eurocopa 2024." },
+        { respuesta: "CAICEDO", hint: "MEDIA: CONTIENE LA Ñ: Delantero ecuatoriano ex del Espanyol (Felipe)." },
+        { respuesta: "PEÑA", hint: "MEDIA: CONTIENE LA Ñ: Apellido del portero suplente habitual del Barça (Iñaki)." },
+        { respuesta: "RONALDIÑO", hint: "DIFÍCIL: CONTIENE LA Ñ: El astro brasileño que devolvió la sonrisa al Barça (escrito con eñe)." },
+        { respuesta: "REGINO", hint: "DIFÍCIL: CONTIENE LA Ñ: Nombre de un mítico canterano del Real Madrid." }
+    ]},
+    { letra: "O", preguntas: [
+        { respuesta: "OBLAK", hint: "FÁCIL: El guardián esloveno de la portería del Atlético de Madrid." },
+        { respuesta: "ODEGAARD", hint: "MEDIA: Noruego que no triunfó en el Madrid pero es capitán del Arsenal." },
+        { respuesta: "OSASUNA", hint: "MEDIA: Equipo de Pamplona que juega en el Estadio El Sadar." },
+        { respuesta: "OLMO", hint: "DIFÍCIL: Apellido del jugador que salvó bajo palos un gol en la final de la Euro 2024." },
+        { respuesta: "OPENDA", hint: "DIFÍCIL: Delantero belga, máximo goleador del RB Leipzig actualmente." }
+    ]},
+    { letra: "P", preguntas: [
+        { respuesta: "PEDRI", hint: "FÁCIL: El joven talento canario, brújula del FC Barcelona." },
+        { respuesta: "PELE", hint: "FÁCIL: 'O Rei', el único jugador en ganar 3 Mundiales." },
+        { respuesta: "PALMER", hint: "MEDIA: La joven estrella del Chelsea apodada 'Cold' por su frialdad." },
+        { respuesta: "PULISIC", hint: "DIFÍCIL: El 'Capitán América' que ahora brilla en el AC Milan." },
+        { respuesta: "PAU CUBARSI", hint: "DIFÍCIL: El central adolescente que sorprendió al mundo con su salida de balón en el Barça." }
+    ]},
+    { letra: "Q", preguntas: [
+        { respuesta: "QUINI", hint: "FÁCIL: 'El Brujo', mítico goleador del Sporting de Gijón y del Barça." },
+        { respuesta: "QUERETARO", hint: "MEDIA: Club mexicano donde Ronaldinho pasó sus últimos años de profesional." },
+        { respuesta: "QUARESMA", hint: "MEDIA: Jugador portugués famoso por sus centros y goles de 'trivela'." },
+        { respuesta: "QUEIROZ", hint: "DIFÍCIL: Entrenador portugués que dirigió a los 'Galácticos' del Real Madrid." },
+        { respuesta: "QUATTRINI", hint: "DIFÍCIL: Apellido de un antiguo defensor italiano del Calcio." }
+    ]},
+    { letra: "R", preguntas: [
+        { respuesta: "RONALDO", hint: "FÁCIL: 'El Fenómeno' brasileño, ex de Barça, Madrid, Inter y Milán." },
+        { respuesta: "RODRI", hint: "FÁCIL: Centrocampista español del City, MVP de la Euro 2024 y Balón de Oro en potencia." },
+        { respuesta: "RAUL", hint: "MEDIA: El 'Eterno Capitán' del Real Madrid, máximo goleador antes de CR7." },
+        { respuesta: "RODRYGO", hint: "MEDIA: Brasileño del Madrid famoso por sus goles milagrosos en Champions." },
+        { respuesta: "RASHFORD", hint: "DIFÍCIL: El 10 del Manchester United y referente social en Inglaterra." }
+    ]},
+    { letra: "S", preguntas: [
+        { respuesta: "SIMEONE", hint: "FÁCIL: El 'Cholo', el entrenador que cambió la historia moderna del Atlético." },
+        { respuesta: "SALAH", hint: "FÁCIL: El 'Faraón' egipcio, leyenda máxima del Liverpool moderno." },
+        { respuesta: "SUAREZ", hint: "MEDIA: Luis, el pistolero uruguayo que ahora juega con Messi en Miami." },
+        { respuesta: "SANE", hint: "MEDIA: Extremo alemán del Bayern Múnich de gran velocidad." },
+        { respuesta: "SORLOTH", hint: "DIFÍCIL: El delantero noruego que peleó el Pichichi 2024 y fichó por el Atlético." }
+    ]},
+    { letra: "T", preguntas: [
+        { respuesta: "TER STEGEN", hint: "FÁCIL: El portero alemán y primer capitán del FC Barcelona." },
+        { respuesta: "TCHOUAMENI", hint: "MEDIA: Pivote francés del Real Madrid." },
+        { respuesta: "TOTTENHAM", hint: "MEDIA: Club inglés cuyo estadio es considerado el más moderno de Europa." },
+        { respuesta: "THEO HERNANDEZ", hint: "DIFÍCIL: Lateral izquierdo francés, uno de los mejores del mundo en el Milán." },
+        { respuesta: "THIAGO", hint: "DIFÍCIL: El mayor de los hermanos Alcántara, retirado en 2024." }
+    ]},
+    { letra: "U", preguntas: [
+        { respuesta: "UNAI SIMON", hint: "FÁCIL: Portero titular de España campeón de la Euro 2024." },
+        { respuesta: "UMTITI", hint: "MEDIA: Central francés campeón del mundo cuya rodilla truncó su carrera en el Barça." },
+        { respuesta: "UDINESE", hint: "MEDIA: Club italiano conocido por descubrir talentos jóvenes." },
+        { respuesta: "UNION BERLIN", hint: "DIFÍCIL: Club alemán humilde que llegó a jugar Champions en 2023." },
+        { respuesta: "UWE SEELER", hint: "DIFÍCIL: Leyenda histórica del fútbol alemán y del Hamburgo." }
+    ]},
+    { letra: "V", preguntas: [
+        { respuesta: "VINICIUS", hint: "FÁCIL: Estrella brasileña del Real Madrid, clave en las últimas Champions." },
+        { respuesta: "VALENCIA", hint: "FÁCIL: Club que juega en el histórico Estadio de Mestalla." },
+        { respuesta: "VILLARREAL", hint: "MEDIA: El 'Submarino Amarillo' que ganó la Europa League a hombros de Gerard Moreno." },
+        { respuesta: "VLAHOVIC", hint: "DIFÍCIL: El potente 9 serbio de la Juventus." },
+        { respuesta: "VALVERDE", hint: "DIFÍCIL: El 'Halcón' uruguayo, motor incansable del centro del campo blanco." }
+    ]},
+    { letra: "W", preguntas: [
+        { respuesta: "WIRTZ", hint: "FÁCIL: La joven estrella alemana del Leverkusen de Xabi Alonso." },
+        { respuesta: "WALKER", hint: "MEDIA: Kyle, el lateral más rápido de la Premier League." },
+        { respuesta: "WOLVERHAMPTON", hint: "MEDIA: Equipo inglés conocido como los 'Wolves'." },
+        { respuesta: "WATFORD", hint: "DIFÍCIL: Club inglés de la familia Pozzo que suele ser un equipo ascensor." },
+        { respuesta: "WEMBLEY", hint: "DIFÍCIL: El templo del fútbol inglés donde se jugó la final de Champions 2024." }
+    ]},
+    { letra: "X", preguntas: [
+        { respuesta: "XAVI", hint: "FÁCIL: El maestro del mediocampo español y ex entrenador del Barça." },
+        { respuesta: "XABI ALONSO", hint: "MEDIA: Entrenador revelación que hizo historia con el Bayer Leverkusen." },
+        { respuesta: "XHAKA", hint: "MEDIA: El líder suizo que fue el pulmón del Leverkusen campeón." },
+        { respuesta: "XAVI SIMONS", hint: "DIFÍCIL: Joven estrella neerlandesa formada en la Masía que brilla en el Leipzig." },
+        { respuesta: "XERCA", hint: "DIFÍCIL: Nombre coloquial o apellido de algún jugador histórico menor." }
+    ]},
+    { letra: "Y", preguntas: [
+        { respuesta: "YASHIN", hint: "FÁCIL: La 'Araña Negra', único portero con Balón de Oro." },
+        { respuesta: "YAMAL", hint: "FÁCIL: Apellido de Lamine, el chico récord del fútbol mundial." },
+        { respuesta: "YESTE", hint: "MEDIA: Mítico mediapunta zurdo del Athletic Club de los años 2000." },
+        { respuesta: "YAYA TOURE", hint: "DIFÍCIL: Portento físico marfileño que brilló en Barça y City." },
+        { respuesta: "YIDNEKACHEW", hint: "DIFÍCIL: Apellido del 'padre' del fútbol africano (Tessema)." }
+    ]},
+    { letra: "Z", preguntas: [
+        { respuesta: "ZIDANE", hint: "FÁCIL: Leyenda francesa, autor de la volea de la Novena." },
+        { respuesta: "ZUBIMENDI", hint: "MEDIA: El pivote de la Real Sociedad que rechazó al Liverpool." },
+        { respuesta: "ZAMORA", hint: "MEDIA: El trofeo que recibe el portero menos goleado en España." },
+        { respuesta: "ZLATAN", hint: "DIFÍCIL: El nombre de pila de Ibrahimovic, el gigante sueco." },
+        { respuesta: "ZOFF", hint: "DIFÍCIL: Dino, el portero más veterano en ganar un Mundial (40 años)." }
+    ]}
 ];
 
 const timeMachineEvents = [
