@@ -260,7 +260,7 @@ function showCategory(category) {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
             <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
-                <div class="card-bg bg-premier"></div>
+                <div class="card-bg bg-higherlower"></div>
                 <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
             <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
