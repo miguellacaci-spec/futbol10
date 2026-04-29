@@ -410,21 +410,9 @@ let roscoState = {
 // ==========================================
 // 2.5 SISTEMA DE INTENTOS DIARIOS
 // ==========================================
-function obtenerFechaEspana() {
-    return new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid' });
-}
-
-function puedeJugar(gameId) {
-    const hoy = obtenerFechaEspana();
-    const jugado = localStorage.getItem(`f10_${gameId}_${hoy}`);
-    return !jugado;
-}
-
-function registrarIntento(gameId) {
-    const hoy = obtenerFechaEspana();
-    localStorage.setItem(`f10_${gameId}_${hoy}`, "true");
-}
-
+function obtenerFechaEspana() { return ""; }
+function puedeJugar(gameId) { return true; }
+function registrarIntento(gameId) {}
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
