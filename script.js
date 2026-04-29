@@ -58,52 +58,52 @@ const roscoQuestions = [
     ]},
     { letra: "E", preguntas: [
         { respuesta: "ENDRICK", hint: "Nombre del jugador estrella del Lyon cedido por el Madrid." },
-        { respuesta: "ETO'O", hint: "Nombre del delantero camerunés que ganó el triplete con Barça e Inter consecutivamente." },
+        { respuesta: "ETO'O", hint: "Apellido del delantero camerunés que ganó el triplete con Barça e Inter consecutivamente." },
         { respuesta: "EMERY", hint: "Apellido del actual entrenador del Aston Villa." },
-        { respuesta: "EDERSON", hint: "DIFÍCIL: Portero del City conocido por su excelente juego de pies." },
-        { respuesta: "EINTRACHT", hint: "DIFÍCIL: Equipo de Frankfurt que invadió el Camp Nou en la Europa League 2022." }
+        { respuesta: "EDERSON", hint: "Nombre del portero del Fenerbahçe conocido por su excelente juego de pies." },
+        { respuesta: "EINTRACHT", hint: "Nombre del equipo de Frankfurt que invadió el Camp Nou en la Europa League 2021/2022." }
     ]},
     { letra: "F", preguntas: [
-        { respuesta: "FALCAO", hint: "FÁCIL: El 'Tigre' colombiano que triunfó en Oporto, Atlético y Rayo." },
-        { respuesta: "FEYENOORD", hint: "MEDIA: Histórico club de los Países Bajos con sede en Rotterdam." },
-        { respuesta: "FLICK", hint: "MEDIA: Entrenador alemán que asumió el banquillo del Barça en 2024 tras Xavi." },
-        { respuesta: "FORLAN", hint: "DIFÍCIL: Bota de oro uruguaya que brilló en Villarreal y Atlético de Madrid." },
-        { respuesta: "FODEN", hint: "DIFÍCIL: El 'Stockport Iniesta', canterano estrella del Manchester City." }
+        { respuesta: "FALCAO", hint: "Apellido del 'Tigre' colombiano." },
+        { respuesta: "FEYENOORD", hint: "Nombre del club de los Países Bajos en Rotterdam." },
+        { respuesta: "FLICK", hint: "Apellido del entrenador del Barça en 2024 tras Xavi." },
+        { respuesta: "FORLAN", hint: "Apellido de la bota de oro uruguaya que jugó en el Villarreal y Atlético de Madrid." },
+        { respuesta: "FODEN", hint: "Apellido del canterano estrella actual del Manchester City." }
     ]},
     { letra: "G", preguntas: [
-        { respuesta: "GAVI", hint: "FÁCIL: Joven centrocampista del Barça conocido por su garra y jugar con los cordones sueltos." },
-        { respuesta: "GRIEZMANN", hint: "FÁCIL: Máximo goleador histórico del Atlético de Madrid." },
-        { respuesta: "GIRONA", hint: "MEDIA: Club catalán que fue la gran revelación de LaLiga 2023/2024." },
-        { respuesta: "GYOKERES", hint: "DIFÍCIL: Delantero sueco sensación del Sporting de Portugal en las últimas temporadas." },
+        { respuesta: "GAVI", hint: "Canterano proveninente de La Masía conocido por su garra y cordones desatados." },
+        { respuesta: "GRIEZMANN", hint: "Apellido del máximo goleador histórico del Atlético de Madrid." },
+        { respuesta: "GIRONA", hint: "Nombre del equipo revelación de LaLiga 2023/2024." },
+        { respuesta: "GYOKERES", hint: "Apellido del delantero del Arsenal conocido por su celebración de la máscara." },
         { respuesta: "GUNDOGAN", hint: "DIFÍCIL: Centrocampista alemán que regresó al Man City tras un año en el Barça." }
     ]},
     { letra: "H", preguntas: [
-        { respuesta: "HAALAND", hint: "FÁCIL: El 'Androide' noruego, máximo goleador del Manchester City." },
+        { respuesta: "HAALAND", hint: "Apellido del 'Androide' noruego." },
         { respuesta: "HARRY KANE", hint: "FÁCIL: Capitán de Inglaterra que dejó el Tottenham para ir al Bayern Múnich." },
         { respuesta: "HULK", hint: "MEDIA: Potente delantero brasileño famoso por su disparo lejano." },
-        { respuesta: "HULL CITY", hint: "DIFÍCIL: Club inglés apodado los 'Tigers' que suele alternar entre Premier y Championship." },
+        { respuesta: "HULL CITY", hint: "Club inglés apodado los 'Tigers'." },
         { respuesta: "HUMMELS", hint: "DIFÍCIL: Central alemán que tras una vida en Dortmund fichó por la Roma en 2024." }
     ]},
     { letra: "I", preguntas: [
-        { respuesta: "INIESTA", hint: "FÁCIL: El autor del gol que dio a España su primer Mundial." },
-        { respuesta: "ISCO", hint: "MEDIA: Malagueño que recuperó su mejor nivel en el Real Betis tras salir del Sevilla." },
-        { respuesta: "INTER", hint: "MEDIA: Actual campeón de la Serie A y finalista de Champions en 2023." },
-        { respuesta: "IMMOBILE", hint: "DIFÍCIL: Delantero italiano, bota de oro en 2020, que se marchó al Besiktas en 2024." },
-        { respuesta: "IÑAKI WILLIAMS", hint: "DIFÍCIL: El mayor de los hermanos Williams, récord de partidos seguidos en LaLiga." }
+        { respuesta: "INIESTA", hint: "Apellido del autor del gol que dio a España su primer Mundial." },
+        { respuesta: "ISCO", hint: "Nombre del mago malagueño del Betis." },
+        { respuesta: "INTER", hint: "Nombre del club subcampeón de la Champions en la temporada 2024/2025." },
+        { respuesta: "IMMOBILE", hint: "Apellido del delantero italiano, bota de oro en 2020." },
+        { respuesta: "IÑAKI", hint: "Nombre del mayor de los hermanos Williams." }
     ]},
     { letra: "J", preguntas: [
-        { respuesta: "JOAQUIN", hint: "FÁCIL: El eterno 17 del Betis, retirado recientemente con el récord de partidos en liga." },
-        { respuesta: "JUVENTUS", hint: "MEDIA: La 'Vecchia Signora' del fútbol italiano." },
+        { respuesta: "JOAQUIN", hint: "Nombre del eterno 17 del Betis." },
+        { respuesta: "JUVENTUS", hint: "Nombre del club apodado 'Vecchia Signora'." },
         { respuesta: "JOAO FELIX", hint: "MEDIA: Talentoso portugués que ha pasado por Atleti, Chelsea y Barça." },
-        { respuesta: "JULIAN ALVAREZ", hint: "DIFÍCIL: La 'Araña' que dejó el City por el Atlético de Madrid en 2024." },
-        { respuesta: "JUDE", hint: "DIFÍCIL: Nombre de pila del mayor de los Bellingham." }
+        { respuesta: "JULIAN ALVAREZ", hint: "Nombre y apellido del jugador apodado 'La Araña'." },
+        { respuesta: "JOBE", hint: "Nombre del hermano menor de los Bellingham." }
     ]},
     { letra: "K", preguntas: [
-        { respuesta: "KROOS", hint: "FÁCIL: El 'Metrónomo' alemán que se retiró tras ganar la Champions y la Euro 2024." },
-        { respuesta: "KOPA", hint: "MEDIA: Nombre del trofeo que se otorga al mejor jugador joven del mundo." },
+        { respuesta: "KROOS", hint: "Apellido del alemán que se retiró tras ganar la Champions en la temporada 2023/2024." },
+        { respuesta: "KOPA", hint: "Nombre del trofeo que se otorga al mejor jugador joven del mundo." },
         { respuesta: "KUN AGUERO", hint: "MEDIA: Máximo goleador extranjero de la Premier League y leyenda del City." },
-        { respuesta: "KVARATSKHELIA", hint: "DIFÍCIL: Extremo georgiano estrella del Nápoles apodado 'Kvaradona'." },
-        { respuesta: "KIMMICH", hint: "DIFÍCIL: El polivalente líder del centro del campo del Bayern y la selección alemana." }
+        { respuesta: "KVARATSKHELIA", hint: "Apellido del extremo georgiano estrella del PSG." },
+        { respuesta: "KIMMICH", hint: "Apellido del líder del Bayern conocido por su mentalidad." }
     ]},
     { letra: "L", preguntas: [
         { respuesta: "LEWANDOWSKI", hint: "FÁCIL: El 9 polaco del FC Barcelona, ganador de dos premios The Best." },
@@ -113,18 +113,18 @@ const roscoQuestions = [
         { respuesta: "LUKAKU", hint: "DIFÍCIL: Delantero belga que ha pasado por casi todos los grandes de Italia e Inglaterra." }
     ]},
     { letra: "M", preguntas: [
-        { respuesta: "MESSI", hint: "FÁCIL: Ganador de 8 Balones de Oro y campeón del mundo en 2022." },
+        { respuesta: "MESSI", hint: "Apellido del máximo ganador del Ballon D'or." },
         { respuesta: "MBAPPE", hint: "FÁCIL: La estrella francesa que fichó por el Real Madrid en 2024." },
-        { respuesta: "MODRIC", hint: "MEDIA: El 'eterno' 10 croata del Real Madrid, Balón de Oro 2018." },
-        { respuesta: "MALLORCA", hint: "DIFÍCIL: Equipo balear que llegó a la final de la Copa del Rey en 2024." },
+        { respuesta: "MODRIC", hint: "Apellido del ganador del Balón de Oro en 2018." },
+        { respuesta: "MALLORCA", hint: "Nombre del equipo balear que llegó a la final de la Copa del Rey en 2024." },
         { respuesta: "MAIGNAN", hint: "DIFÍCIL: Portero titular de Francia y del AC Milan tras la era Lloris." }
     ]},
     { letra: "N", preguntas: [
         { respuesta: "NEYMAR", hint: "FÁCIL: El 10 de Brasil que formó la MSN en el Barça y ahora juega en Arabia." },
         { respuesta: "NICO WILLIAMS", hint: "FÁCIL: Extremo del Athletic Club y gran sensación de la Eurocopa 2024." },
         { respuesta: "NAPOLES", hint: "MEDIA: El club donde Maradona ganó dos 'Scudettos'." },
-        { respuesta: "NEUER", hint: "MEDIA: Portero alemán que revolucionó el puesto jugando como líbero." },
-        { respuesta: "NIZA", hint: "DIFÍCIL: Club de la Costa Azul francesa que suele pelear puestos europeos." }
+        { respuesta: "NEUER", hint: "Apellido del portero alemán que revolucionó el puesto jugando como líbero." },
+        { respuesta: "NIZA", hint: "Nombre del equipo de la Costa Azul francesa que suele pelear puestos europeos." }
     ]},
     { letra: "Ñ", preguntas: [
         { respuesta: "ESPAÑA", hint: "FÁCIL: CONTIENE LA Ñ: Selección campeona de la Eurocopa 2024." },
