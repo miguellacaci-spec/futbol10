@@ -1327,7 +1327,6 @@ function checkAforos(guess) {
 
 // --- ESCUDOS ZOOM (PREMIER) ---
 function initZoomGame() {
-    // 1. CORRECCIÓN: Ahora busca correctamente en englishTeamsDB
     zoomState.team = englishTeamsDB[Math.floor(Math.random() * englishTeamsDB.length)];
     zoomState.lives = 5;
     zoomState.currentScale = 4;
@@ -1337,9 +1336,8 @@ function initZoomGame() {
     document.getElementById('zoom-suggestions').innerHTML = "";
     
     const img = document.getElementById('zoom-image');
-    
-    // 2. MEJORA: Transforma los espacios en guiones bajos para buscar la foto
-    img.src = `teams/${zoomState.team.replace(/ /g, "_")}.png`; 
+    // Carga el .jpg exactamente con el nombre que sale en el array (con espacios)
+    img.src = `teams/${zoomState.team}.jpg`; 
     img.style.transform = `scale(${zoomState.currentScale})`;
     
     const randomX = Math.floor(Math.random() * 60) + 20; 
