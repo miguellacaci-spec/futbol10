@@ -573,14 +573,25 @@ function setupAutocomplete(inputId, suggestionId) {
         box.innerHTML = "";
         if (val.length < 2) return;
         
-        let sourceArray = players;
-        if (inputId === 'zoomInput') sourceArray = premierTeamsDB;
+        // Por defecto busca jugadores
+        let sourceArray = players; 
         
+        // Si estamos en el juego de Zoom (equipos), cambiamos la lista a englishTeamsDB
+        if (inputId === 'zoomInput') {
+            sourceArray = englishTeamsDB; 
+        }
+        
+        // Filtra las coincidencias y muestra un máximo de 4
         const matches = sourceArray.filter(p => p.includes(val)).slice(0, 4);
         matches.forEach(match => {
             const div = document.createElement('div');
             div.textContent = match;
-            div.onclick = () => { input.value = match; box.innerHTML = ""; };
+            div.onclick = () => { 
+                input.value = match; 
+                box.innerHTML = ""; 
+                // Opcional: hacer que al hacer clic se compruebe la respuesta automáticamente
+                // checkZoomGuess(); 
+            };
             box.appendChild(div);
         });
     });
