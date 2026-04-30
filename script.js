@@ -284,6 +284,17 @@ const elevenMatches = [
         ]
     },
     {
+        team: "MÁLAGA",
+        desc: "Borussia Dortmund VS Málaga (3-2) Vuelta de Cuartos de la Champions League 2012/2013.",
+        xi: [
+            [{ name: "BAPTISTA", hint: "Brasileño" }],
+            [{ name: "DUDA", hint: "Portugués" }, { name: "ISCO", hint: "Español" }, { name: "Joaquín", hint: "Español" }],
+            [{ name: "CAMACHO", hint: "Español" }, { name: "TOULALAN", hint: "Francés" }],
+            [{ name: "ANTUNES", hint: "Portugués" }, { name: "SERGIO SANCHEZ", hint: "Español" }, { name: "DEMICHELIS", hint: "Argentino" }, { name: "JESUS GAMEZ", hint: "Español" }],
+            [{ name: "CABALLERO", hint: "Argentino" }]
+        ]
+    },
+    {
         team: "AJAX",
         desc: "Real Madrid VS Ajax (1-4) Vuelta de Octavos de la Champions League 2018/2019.",
         xi: [
