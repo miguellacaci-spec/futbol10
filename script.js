@@ -456,9 +456,9 @@ function showCategory(category) {
                 <div class="card-info"><h3>Blur Guess</h3><p>Adivina el jugador</p></div>
             </div>
             <div class="menu-card aforos-game-card" onclick="showGame('aforos')">
-                <div class="card-bg bg-laliga"></div>
-                <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
-            </div>`;
+                <div class="card-bg bg-aforos"></div> <!-- YA CORREGIDO -->
+                <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
+            </div>`;
    } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
