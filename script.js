@@ -1327,7 +1327,8 @@ function checkAforos(guess) {
 
 // --- ESCUDOS ZOOM (PREMIER) ---
 function initZoomGame() {
-    zoomState.team = premierTeamsDB[Math.floor(Math.random() * premierTeamsDB.length)];
+    // 1. CORRECCIÓN: Ahora busca correctamente en englishTeamsDB
+    zoomState.team = englishTeamsDB[Math.floor(Math.random() * englishTeamsDB.length)];
     zoomState.lives = 5;
     zoomState.currentScale = 4;
     document.getElementById('zoom-lives').innerText = zoomState.lives;
@@ -1336,14 +1337,15 @@ function initZoomGame() {
     document.getElementById('zoom-suggestions').innerHTML = "";
     
     const img = document.getElementById('zoom-image');
-    img.src = `teams/${zoomState.team}.png`; 
+    
+    // 2. MEJORA: Transforma los espacios en guiones bajos para buscar la foto
+    img.src = `teams/${zoomState.team.replace(/ /g, "_")}.png`; 
     img.style.transform = `scale(${zoomState.currentScale})`;
     
     const randomX = Math.floor(Math.random() * 60) + 20; 
     const randomY = Math.floor(Math.random() * 60) + 20;
     img.style.transformOrigin = `${randomX}% ${randomY}%`;
 }
-
 function checkZoomGuess() {
     const val = document.getElementById('zoomInput').value.toUpperCase().trim();
     if (val === zoomState.team) {
