@@ -490,7 +490,7 @@ const top10DB = [
             { rank: 9, name: "ANTOINE GRIEZMANN", flag: "francia", stat: "120 M€", revealed: false },
             { rank: 10, name: "JACK GREALISH", flag: "inglaterra", stat: "117 M€", revealed: false },
         ]
-    },
+    }
     
 ];
 
