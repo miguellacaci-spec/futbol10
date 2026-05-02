@@ -441,8 +441,9 @@ const top10DB = [
         ]
     },
     {
+        id: 'salarios_premier',
         title: 'TOP 10 SALARIOS',
-        desc: 'Máximos salarios a la semana actuales de Premier',
+        desc: 'Máximos salarios a la semana actuales de la Premier League',
         items: [
             { rank: 1, name: "ERLING HAALAND", flag: "noruega", salario: "600.962€", revealed: false },
             { rank: 2, name: "MOHAMED SALAH", flag: "egipto", salario: "480.769€", revealed: false },
