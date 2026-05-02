@@ -473,7 +473,24 @@ const top10DB = [
             { rank: 9, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false },
             { rank: 10, name: "HELMUT RAHN", flag: "alemania", stat: "10 Goles", revealed: false }
         ]
-    }
+    },
+    {
+        id: 'fichajes_historicos',
+        title: 'TOP 10 FICHAJES',
+        desc: 'Los fichajes más caros de la historia del fútbol',
+        items: [
+            { rank: 1, name: "NEYMAR JUNIOR", flag: "brasil", stat: "222 M€", revealed: false },
+            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "180 M€", revealed: false },
+            { rank: 3, name: "OUSMANE DEMBELE", flag: "francia", stat: "135 M€", revealed: false },
+            { rank: 4, name: "PHILIPPE COUTINHO", flag: "brasil", stat: "135 M€", revealed: false },
+            { rank: 5, name: "MOISES CAICEDO", flag: "ecuador", stat: "133 M€", revealed: false }
+            { rank: 6, name: "JOAO FELIX", flag: "portugal", stat: "126 M€", revealed: false },
+            { rank: 7, name: "DECLAN RICE", flag: "inglaterra", stat: "122 M€", revealed: false },
+            { rank: 8, name: "ENZO FERNANDEZ", flag: "argentina", stat: "121 M€", revealed: false },
+            { rank: 9, name: "ANTOINE GRIEZMANN", flag: "francia", stat: "120 M€", revealed: false },
+            { rank: 10, name: "JACK GREALISH", flag: "inglaterra", stat: "117 M€", revealed: false },
+        ]
+    },
     
 ];
 
