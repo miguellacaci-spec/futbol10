@@ -38,8 +38,8 @@
 }
 
 /* Europeos -> Verde */
-.europeos-card, .eleven-game-card { border-color: #00ff87 !important; }
-#eleven-screen {
+.europeos-card, .eleven-game-card, .knowball-game-card { border-color: #00ff87 !important; }
+#eleven-screen, #knowball-screen {
     --primary: #00ff87;
     --primary-glow: rgba(0, 255, 135, 0.3);
     --secondary: #00cc66;
@@ -230,7 +230,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .coming-soon { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.8); pointer-events: none; padding: 2rem !important; display: block; }
 .coming-soon .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
 
-.card-bg, .bg-rosco, .bg-laliga, .bg-premier, .bg-europeos, .bg-leyendas, .bg-ahorcado, .bg-blur, .bg-timemachine, .bg-higherlower, .bg-top10, .bg-aforos {
+.card-bg, .bg-rosco, .bg-laliga, .bg-premier, .bg-europeos, .bg-leyendas, .bg-ahorcado, .bg-blur, .bg-timemachine, .bg-higherlower, .bg-top10, .bg-aforos, .bg-knowball {
     position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     background-size: cover; background-position: center;
@@ -253,6 +253,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .bg-timemachine { background-image: url('players/fondo-maquina.jpg'); } 
 .bg-top10 { background-image: url('players/fondo-top10.jpg'); }
 .bg-aforos { background-image: url('players/fondo-aforos.jpg'); }
+.bg-knowball { background-image: url('players/fondo-once.jpg'); } /* Misma img que europeos u otra que tú quieras */
 
 /* ==========================================
    5. NUEVO LOGO CIBERNÉTICO F10
@@ -472,3 +473,73 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     75% { transform: translateX(5px); }
 }
 .input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
+
+/* ==========================================
+   8. KNOWBALL (PIRÁMIDE DRAG & DROP)
+   ========================================== */
+.kb-header { text-align: center; width: 100%; max-width: 600px; }
+.kb-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; gap: 20px; margin-top: 10px;}
+
+.kb-pyramid { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+.kb-slot-container { display: flex; align-items: center; gap: 10px; }
+
+.kb-slot-num { 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    color: var(--primary); 
+    width: 25px; 
+    text-align: right; 
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.kb-slot { 
+    flex: 1; 
+    min-height: 50px; 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 2px dashed rgba(255, 255, 255, 0.2); 
+    border-radius: 12px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    transition: all 0.3s ease;
+}
+
+.kb-slot.drag-over { 
+    background: rgba(0, 255, 135, 0.1); 
+    border-color: var(--primary); 
+    transform: scale(1.02);
+}
+
+.kb-cards-area { width: 100%; text-align: center; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+
+.kb-cards { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 10px; 
+    min-height: 60px;
+}
+
+.kb-card { 
+    background: var(--card); 
+    border: 1px solid var(--primary); 
+    color: white; 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    cursor: grab; 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+    font-weight: bold; 
+    user-select: none; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.kb-card:hover { border-color: white; box-shadow: 0 0 15px var(--primary-glow); }
+.kb-card:active { cursor: grabbing; }
+.kb-card.dragging { opacity: 0.5; transform: scale(0.95); }
+
+.kb-slot .kb-card { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box; border: none; background: rgba(0, 255, 135, 0.15); box-shadow: none; font-size: clamp(0.8rem, 3vw, 1rem); }
