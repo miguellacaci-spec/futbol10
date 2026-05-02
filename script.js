@@ -490,6 +490,23 @@ const top10DB = [
             { rank: 9, name: "ANTOINE GRIEZMANN", flag: "francia", stat: "120 M€", revealed: false },
             { rank: 10, name: "JACK GREALISH", flag: "inglaterra", stat: "117 M€", revealed: false },
         ]
+    },
+    {
+        id: 'trayectoria_zlatan',
+        title: 'TRAYECTORIA ZLATAN',
+        desc: 'Clubes de Ibrahimovic en orden cronológico',
+        items: [
+            { rank: 1, name: "MALMO FF", flag: "suecia", stat: "1999-2001", revealed: false },
+            { rank: 2, name: "AJAX", flag: "paises_bajos", stat: "2001-2004", revealed: false },
+            { rank: 3, name: "JUVENTUS", flag: "italia", stat: "2004-2006", revealed: false },
+            { rank: 4, name: "INTER DE MILAN", flag: "italia", stat: "2006-2009", revealed: false },
+            { rank: 5, name: "FC BARCELONA", flag: "espana", stat: "2009-2010", revealed: false },
+            { rank: 6, name: "AC MILAN", flag: "italia", stat: "2010-2012", revealed: false },
+            { rank: 7, name: "PSG", flag: "francia", stat: "2012-2016", revealed: false },
+            { rank: 8, name: "MANCHESTER UNITED", flag: "inglaterra", stat: "2016-2018", revealed: false },
+            { rank: 9, name: "LA GALAXY", flag: "estados_unidos", stat: "2018-2019", revealed: false },
+            { rank: 10, name: "AC MILAN", flag: "italia", stat: "2020-2023", revealed: false }
+        ]
     }
     
 ];
