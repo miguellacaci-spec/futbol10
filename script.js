@@ -511,6 +511,19 @@ const top10DB = [
     
 ];
 
+const knowballDB = [
+    {
+        title: "Máximos Goleadores Champions",
+        desc: "Ordena de más a menos goles históricos",
+        items: ["CRISTIANO RONALDO", "LIONEL MESSI", "ROBERT LEWANDOWSKI", "KARIM BENZEMA", "RAUL GONZALEZ"] 
+    },
+    {
+        title: "Ganadores Balón de Oro",
+        desc: "Ordena de más a menos galardones",
+        items: ["LIONEL MESSI", "CRISTIANO RONALDO", "MICHEL PLATINI", "FRANZ BECKENBAUER", "LUKA MODRIC"] 
+    }
+];
+
 // ==========================================
 // 2. ESTADOS GLOBALES DE LOS JUEGOS
 // ==========================================
@@ -524,6 +537,7 @@ let hlState = { p1: null, p2: null, score: 0 };
 let aforosState = { p1: null, p2: null, score: 0 };
 let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
 let top10State = { currentList: null, guessedCount: 0 };
+let kbState = { currentTrivia: null, score: 0 };
 
 let roscoState = {
     mode: 'individual',
@@ -582,7 +596,7 @@ function showCategory(category) {
                 <div class="card-info"><h3>Blur Guess</h3><p>Adivina el jugador</p></div>
             </div>
             <div class="menu-card aforos-game-card" onclick="showGame('aforos')">
-                    <div class="card-bg" style="background-image: url('players/fondo-aforos.jpg'); filter: brightness(0.4) blur(2px);"></div>
+                    <div class="card-bg bg-aforos"></div>
                     <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
                 </div>`;
    } else if (category === 'leyendas') {
@@ -602,6 +616,10 @@ function showCategory(category) {
             <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
                 <div class="card-bg bg-europeos"></div>
                 <div class="card-info"><h3>XI Histórico</h3><p>Adivina con Futdle</p></div>
+            </div>
+            <div class="menu-card knowball-game-card" onclick="showGame('knowball')">
+                <div class="card-bg bg-knowball"></div>
+                <div class="card-info"><h3>Knowball</h3><p>Pirámide Top 5</p></div>
             </div>`;
     } else {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
@@ -630,6 +648,7 @@ function showGame(gameId) {
         if(gameId === 'aforos') initAforosGame();
         if(gameId === 'zoom') initZoomGame();
         if(gameId === 'top10') initTop10(); 
+        if(gameId === 'knowball') initKnowball();
     }
 }
 
@@ -675,8 +694,6 @@ function setupAutocomplete(inputId, suggestionId) {
             div.onclick = () => { 
                 input.value = match; 
                 box.innerHTML = ""; 
-                // Opcional: hacer que al hacer clic se compruebe la respuesta automáticamente
-                // checkZoomGuess(); 
             };
             box.appendChild(div);
         });
@@ -1311,6 +1328,104 @@ function submitWordleGuess() {
     }
 }
 
+// --- KNOWBALL (PIRÁMIDE DEL 1 AL 5) ---
+function initKnowball() {
+    kbState.currentTrivia = knowballDB[Math.floor(Math.random() * knowballDB.length)];
+    
+    document.getElementById('kb-title').innerText = kbState.currentTrivia.title;
+    document.getElementById('kb-desc').innerText = kbState.currentTrivia.desc;
+    
+    // Desordenar tarjetas para el inicio
+    let shuffledItems = [...kbState.currentTrivia.items].sort(() => Math.random() - 0.5);
+    
+    const cardsContainer = document.getElementById('kb-cards-container');
+    cardsContainer.innerHTML = "";
+    
+    // Vaciar slots de la pirámide
+    for(let i=1; i<=5; i++) {
+        document.getElementById(`kb-slot-${i}`).innerHTML = "";
+    }
+
+    // Crear tarjetas
+    shuffledItems.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'kb-card';
+        card.draggable = true;
+        card.id = `kb-card-${index}`;
+        card.innerText = item;
+        card.dataset.value = item;
+        
+        // Eventos Drag & Drop
+        card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', card.id);
+            setTimeout(() => card.classList.add('dragging'), 0);
+        });
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+        });
+        
+        cardsContainer.appendChild(card);
+    });
+
+    setupKnowballDropZones();
+}
+
+function setupKnowballDropZones() {
+    const dropZones = document.querySelectorAll('.kb-dropzone');
+    
+    dropZones.forEach(zone => {
+        // Prevenir el comportamiento por defecto (necesario para permitir drop)
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
+        });
+        
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
+        
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            
+            const cardId = e.dataTransfer.getData('text/plain');
+            const card = document.getElementById(cardId);
+            
+            if (card) {
+                // Si la zona de drop ya tiene una tarjeta, la devolvemos al contenedor original
+                if (zone.children.length > 0 && zone.id !== 'kb-cards-container') {
+                    document.getElementById('kb-cards-container').appendChild(zone.children[0]);
+                }
+                zone.appendChild(card);
+            }
+        });
+    });
+}
+
+function checkKnowball() {
+    let isCorrect = true;
+    const correctOrder = kbState.currentTrivia.items;
+    
+    for(let i=1; i<=5; i++) {
+        const slot = document.getElementById(`kb-slot-${i}`);
+        if(slot.children.length === 0) {
+            mostrarMensajePro("⚠️ ATENCIÓN", "Rellena todos los huecos de la pirámide antes de comprobar.");
+            return;
+        }
+        
+        const cardValue = slot.children[0].dataset.value;
+        if(cardValue !== correctOrder[i-1]) {
+            isCorrect = false;
+        }
+    }
+    
+    if(isCorrect) {
+        mostrarMensajePro("🏆 ¡KNOWBALL PERFECTO!", "Has ordenado la pirámide correctamente.", () => initKnowball());
+    } else {
+        mostrarMensajePro("❌ ¡CASI!", "El orden no es correcto. ¡Sigue intentándolo!");
+    }
+}
+
 // --- HIGHER OR LOWER (PREMIER) ---
 function initHigherLower() {
     hlState.score = 0;
@@ -1479,7 +1594,6 @@ function renderTop10List() {
         
         const nameDisplay = item.revealed ? item.name : '????????????';
         
-        // Ahora lee item.stat independientemente de la lista que sea
         div.innerHTML = `
             <div class="top10-rank">${item.rank}</div>
             <div class="top10-info">
@@ -1529,6 +1643,13 @@ function checkTop10Guess() {
             inputEl.classList.remove("input-error");
         }, 400);
     }
+}
+
+// Nueva función de rendirse
+function giveUpTop10() {
+    top10State.currentList.items.forEach(item => item.revealed = true);
+    renderTop10List();
+    setTimeout(() => mostrarMensajePro("🏳️ TE HAS RENDIDO", "Aquí tienes las respuestas que te faltaban. ¡A la próxima!", () => initTop10()), 500);
 }
 
 // ==========================================
