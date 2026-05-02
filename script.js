@@ -75,14 +75,14 @@ const roscoQuestions = [
         { respuesta: "GRIEZMANN", hint: "Apellido del máximo goleador histórico del Atlético de Madrid." },
         { respuesta: "GIRONA", hint: "Nombre del equipo revelación de LaLiga 2023/2024." },
         { respuesta: "GYOKERES", hint: "Apellido del delantero del Arsenal conocido por su celebración de la máscara." },
-        { respuesta: "GUNDOGAN", hint: "DIFÍCIL: Centrocampista alemán que regresó al Man City tras un año en el Barça." }
+        { respuesta: "GOL", hint: "Entrada del balón en la portería." }
     ]},
     { letra: "H", preguntas: [
         { respuesta: "HAALAND", hint: "Apellido del 'Androide' noruego." },
-        { respuesta: "HARRY KANE", hint: "FÁCIL: Capitán de Inglaterra que dejó el Tottenham para ir al Bayern Múnich." },
-        { respuesta: "HULK", hint: "MEDIA: Potente delantero brasileño famoso por su disparo lejano." },
+        { respuesta: "HARRY KANE", hint: "Nomnbre y apellido del jugador Bota de Oro 2023/2024." },
+        { respuesta: "HIMNO", hint: " Composición que representa a un equipo o país que se reproduce antes del partido." },
         { respuesta: "HULL CITY", hint: "Club inglés apodado los 'Tigers'." },
-        { respuesta: "HUMMELS", hint: "DIFÍCIL: Central alemán que tras una vida en Dortmund fichó por la Roma en 2024." }
+        { respuesta: "HUMMELS", hint: "Apellido del central alemán que jugó en el Bayern y Borussia y se retiró en la Roma." }
     ]},
     { letra: "I", preguntas: [
         { respuesta: "INIESTA", hint: "Apellido del autor del gol que dio a España su primer Mundial." },
@@ -94,44 +94,42 @@ const roscoQuestions = [
     { letra: "J", preguntas: [
         { respuesta: "JOAQUIN", hint: "Nombre del eterno 17 del Betis." },
         { respuesta: "JUVENTUS", hint: "Nombre del club apodado 'Vecchia Signora'." },
-        { respuesta: "JOAO FELIX", hint: "MEDIA: Talentoso portugués que ha pasado por Atleti, Chelsea y Barça." },
+        { respuesta: "JOAO FELIX", hint: "Nombre y apellido del Golden Boy 2019." },
         { respuesta: "JULIAN ALVAREZ", hint: "Nombre y apellido del jugador apodado 'La Araña'." },
         { respuesta: "JOBE", hint: "Nombre del hermano menor de los Bellingham." }
     ]},
     { letra: "K", preguntas: [
         { respuesta: "KROOS", hint: "Apellido del alemán que se retiró tras ganar la Champions en la temporada 2023/2024." },
         { respuesta: "KOPA", hint: "Nombre del trofeo que se otorga al mejor jugador joven del mundo." },
-        { respuesta: "KUN AGUERO", hint: "MEDIA: Máximo goleador extranjero de la Premier League y leyenda del City." },
-        { respuesta: "KVARATSKHELIA", hint: "Apellido del extremo georgiano estrella del PSG." },
+        { respuesta: "KUN AGUERO", hint: "Apodo y apellido del máximo goleador del Manchester City." },
+        { respuesta: "KVARATSKHELIA", hint: "Apellido del extremo georgiano del PSG." },
         { respuesta: "KIMMICH", hint: "Apellido del líder del Bayern conocido por su mentalidad." }
     ]},
     { letra: "L", preguntas: [
-        { respuesta: "LEWANDOWSKI", hint: "FÁCIL: El 9 polaco del FC Barcelona, ganador de dos premios The Best." },
-        { respuesta: "LAMINE YAMAL", hint: "FÁCIL: El jugador más joven en marcar y ganar una Eurocopa (2024)." },
-        { respuesta: "LIVERPOOL", hint: "MEDIA: Club inglés que canta el 'You'll Never Walk Alone'." },
-        { respuesta: "LAUTARO", hint: "DIFÍCIL: El 'Toro' argentino, capitán y goleador del Inter de Milán." },
-        { respuesta: "LUKAKU", hint: "DIFÍCIL: Delantero belga que ha pasado por casi todos los grandes de Italia e Inglaterra." }
+        { respuesta: "LEWANDOWSKI", hint: "Apellido del máximo goleador de la selección de Polonia." },
+        { respuesta: "LAMINE YAMAL", hint: "Nombre y apellido del jugador más joven en marcar en una Eurocopa." },
+        { respuesta: "LIVERPOOL", hint: "Nombre del club con himno 'You'll Never Walk Alone'." },
+        { respuesta: "LAUTARO", hint: "Nombre dell 'Toro' argentino, capitán del Inter de Milán." },
+        { respuesta: "LUKAKU", hint: "Apellido del delantero belga que ha pasado por muchos equipos italianos e ingleses." }
     ]},
     { letra: "M", preguntas: [
         { respuesta: "MESSI", hint: "Apellido del máximo ganador del Ballon D'or." },
-        { respuesta: "MBAPPE", hint: "FÁCIL: La estrella francesa que fichó por el Real Madrid en 2024." },
+        { respuesta: "MBAPPE", hint: "Apellido del fichaje estrella que fichó por el Real Madrid en 2024." },
         { respuesta: "MODRIC", hint: "Apellido del ganador del Balón de Oro en 2018." },
         { respuesta: "MALLORCA", hint: "Nombre del equipo balear que llegó a la final de la Copa del Rey en 2024." },
-        { respuesta: "MAIGNAN", hint: "DIFÍCIL: Portero titular de Francia y del AC Milan tras la era Lloris." }
+        { respuesta: "MAIGNAN", hint: "Apellido del portero titular del AC Milan y Francia." }
     ]},
     { letra: "N", preguntas: [
-        { respuesta: "NEYMAR", hint: "FÁCIL: El 10 de Brasil que formó la MSN en el Barça y ahora juega en Arabia." },
-        { respuesta: "NICO WILLIAMS", hint: "FÁCIL: Extremo del Athletic Club y gran sensación de la Eurocopa 2024." },
-        { respuesta: "NAPOLES", hint: "MEDIA: El club donde Maradona ganó dos 'Scudettos'." },
+        { respuesta: "NEYMAR", hint: "Nombre de la 'N' de la MSN." },
+        { respuesta: "NICO WILLIAMS", hint: "Nombre y apellido del jugador más caro del Athletic Club." },
+        { respuesta: "NAPOLES", hint: "Nombre en español del club donde Maradona ganó dos Scudettos." },
         { respuesta: "NEUER", hint: "Apellido del portero alemán que revolucionó el puesto jugando como líbero." },
         { respuesta: "NIZA", hint: "Nombre del equipo de la Costa Azul francesa que suele pelear puestos europeos." }
     ]},
     { letra: "Ñ", preguntas: [
-        { respuesta: "ESPAÑA", hint: "FÁCIL: CONTIENE LA Ñ: Selección campeona de la Eurocopa 2024." },
-        { respuesta: "CAICEDO", hint: "MEDIA: CONTIENE LA Ñ: Delantero ecuatoriano ex del Espanyol (Felipe)." },
-        { respuesta: "PEÑA", hint: "MEDIA: CONTIENE LA Ñ: Apellido del portero suplente habitual del Barça (Iñaki)." },
-        { respuesta: "RONALDIÑO", hint: "DIFÍCIL: CONTIENE LA Ñ: El astro brasileño que devolvió la sonrisa al Barça (escrito con eñe)." },
-        { respuesta: "REGINO", hint: "DIFÍCIL: CONTIENE LA Ñ: Nombre de un mítico canterano del Real Madrid." }
+        { respuesta: "ESPAÑA", hint: "Nombre de la selección campeona de la Eurocopa 2024." },
+        { respuesta: "IÑIGO", hint: "CONTIENE LA Ñ: Nombre del central ex-Barcelona que juega en el Al-Nassr." },
+        { respuesta: "PEÑA", hint: " CONTIENE LA Ñ: Apellido del portero titular del Elche." },
     ]},
     { letra: "O", preguntas: [
         { respuesta: "OBLAK", hint: "FÁCIL: El guardián esloveno de la portería del Atlético de Madrid." },
@@ -211,11 +209,11 @@ const roscoQuestions = [
         { respuesta: "YIDNEKACHEW", hint: "DIFÍCIL: Apellido del 'padre' del fútbol africano (Tessema)." }
     ]},
     { letra: "Z", preguntas: [
-        { respuesta: "ZIDANE", hint: "FÁCIL: Leyenda francesa, autor de la volea de la Novena." },
-        { respuesta: "ZUBIMENDI", hint: "MEDIA: El pivote de la Real Sociedad que rechazó al Liverpool." },
-        { respuesta: "ZAMORA", hint: "MEDIA: El trofeo que recibe el portero menos goleado en España." },
-        { respuesta: "ZLATAN", hint: "DIFÍCIL: El nombre de pila de Ibrahimovic, el gigante sueco." },
-        { respuesta: "ZOFF", hint: "DIFÍCIL: Dino, el portero más veterano en ganar un Mundial (40 años)." }
+        { respuesta: "ZIDANE", hint: "Apellido del autor de la volea de la Novena del Real Madrid." },
+        { respuesta: "ZUBIMENDI", hint: "Apellido del pivote español del Arsenal." },
+        { respuesta: "ZAMORA", hint: "Nombre del trofeo que recibe el portero menos goleado en España." },
+        { respuesta: "ZLATAN", hint: "Nombre de pila de Ibrahimovic." },
+        { respuesta: "ZOFF", hint: "Apellido del portero más veterano en ganar un Mundial (40 años)." }
     ]}
 ];
 
