@@ -511,14 +511,59 @@ const top10DB = [
 
 const knowballDB = [
     {
-        title: "Máximos Goleadores Champions",
+        title: "Máximos Goleadores LaLiga",
         desc: "Ordena de más a menos goles históricos",
-        items: ["CRISTIANO RONALDO", "LIONEL MESSI", "ROBERT LEWANDOWSKI", "KARIM BENZEMA", "RAUL GONZALEZ"] 
+        items: ["TELMO ZARRA", "HUGO SANCHEZ", "DI ESTEFANO", "GRIEZMANN", "DAVID VILLA"] 
     },
     {
         title: "Ganadores Balón de Oro",
         desc: "Ordena de más a menos galardones",
         items: ["LIONEL MESSI", "CRISTIANO RONALDO", "MICHEL PLATINI", "FRANZ BECKENBAUER", "LUKA MODRIC"] 
+    },
+    {
+        title: "Selecciones con más Mundiales",
+        desc: "Ordena de más a menos Copas del Mundo ganadas",
+        items: ["BRASIL", "ALEMANIA", "ARGENTINA", "FRANCIA", "ESPAÑA"] 
+    },
+    {
+        title: "Equipos con más Champions",
+        desc: "Ordena de más a menos títulos de Champions League",
+        items: ["REAL MADRID", "AC MILAN", "BAYERN MUNICH", "FC BARCELONA", "JUVENTUS"] 
+    },
+    {
+        title: "Goleadores de los Mundiales",
+        desc: "Ordena de más a menos goles en Copas del Mundo",
+        items: ["MIROSLAV KLOSE", "RONALDO NAZARIO", "GERD MULLER", "JUST FONTAINE", "PELE"] 
+    },
+    {
+        title: "Entrenadores con más Champions",
+        desc: "Ordena de más a menos títulos como entrenador",
+        items: ["CARLO ANCELOTTI", "PEP GUARDIOLA", "JOSE MOURINHO", "JURGEN KLOPP", "DIEGO SIMEONE"] 
+    },
+    {
+        title: "Selecciones con más Eurocopas",
+        desc: "Ordena de más a menos títulos europeos",
+        items: ["ESPAÑA", "ALEMANIA", "ITALIA", "PORTUGAL", "INGLATERRA"] 
+    },
+    {
+        title: "Goleadores de España",
+        desc: "Ordena de más a menos goles con la Selección Española",
+        items: ["DAVID VILLA", "RAUL GONZALEZ", "FERNANDO TORRES", "ALVARO MORATA", "DAVID SILVA"] 
+    },
+    {
+        title: "Equipos con más Ligas Inglesas",
+        desc: "Ordena de más a menos títulos históricos (First Div. / Premier)",
+        items: ["MANCHESTER UNITED", "LIVERPOOL", "ARSENAL", "MANCHESTER CITY", "CHELSEA"] 
+    },
+    {
+        title: "Goleadores Premier League",
+        desc: "Ordena de más a menos goles históricos en la Premier",
+        items: ["ALAN SHEARER", "HARRY KANE", "WAYNE ROONEY", "SERGIO AGUERO", "THIERRY HENRY"] 
+    },
+    {
+        title: "Más partidos en LaLiga",
+        desc: "Ordena de más a menos partidos jugados en Primera",
+        items: ["JOAQUIN", "RAUL GARCIA", "RAUL GONZALEZ", "LIONEL MESSI", "SERGIO RAMOS"] 
     }
 ];
 
