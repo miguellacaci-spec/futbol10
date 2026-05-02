@@ -192,6 +192,52 @@
             </div>
         </div>
         
+        <!-- JUEGO: KNOWBALL (PIRÁMIDE) -->
+        <div id="knowball-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <div class="score-board">NIVEL: <span id="kb-level">1</span></div>
+            </nav>
+            <div class="kb-header">
+                <h2 id="kb-title" class="logo" style="font-size: 1.5rem; margin-bottom: 5px;">TÍTULO</h2>
+                <p id="kb-desc" style="color: var(--primary); font-family: 'Orbitron'; margin-bottom: 20px;">Descripción</p>
+            </div>
+            
+            <div class="kb-layout">
+                <div class="kb-pyramid">
+                    <div class="kb-slot-container" style="width: 60%;">
+                        <div class="kb-slot-num">1</div>
+                        <div class="kb-slot kb-dropzone" id="kb-slot-1"></div>
+                    </div>
+                    <div class="kb-slot-container" style="width: 70%;">
+                        <div class="kb-slot-num">2</div>
+                        <div class="kb-slot kb-dropzone" id="kb-slot-2"></div>
+                    </div>
+                    <div class="kb-slot-container" style="width: 80%;">
+                        <div class="kb-slot-num">3</div>
+                        <div class="kb-slot kb-dropzone" id="kb-slot-3"></div>
+                    </div>
+                    <div class="kb-slot-container" style="width: 90%;">
+                        <div class="kb-slot-num">4</div>
+                        <div class="kb-slot kb-dropzone" id="kb-slot-4"></div>
+                    </div>
+                    <div class="kb-slot-container" style="width: 100%;">
+                        <div class="kb-slot-num">5</div>
+                        <div class="kb-slot kb-dropzone" id="kb-slot-5"></div>
+                    </div>
+                </div>
+
+                <div class="kb-cards-area">
+                    <p style="color: var(--text-dim); font-family: 'Orbitron'; font-size: 0.8rem; margin-bottom: 10px;">Arrastra las tarjetas a la pirámide</p>
+                    <div class="kb-cards kb-dropzone" id="kb-cards-container">
+                        <!-- Las tarjetas se generan aquí con JS -->
+                    </div>
+                </div>
+
+                <button class="secondary-btn" style="margin-top: 20px; width: 100%; max-width: 300px;" onclick="checkKnowball()">COMPROBAR</button>
+            </div>
+        </div>
+
         <!-- JUEGO: EL ROSCO -->
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
@@ -302,6 +348,8 @@
                     <div class="input-group">
                         <input type="text" id="top10Input" placeholder="Adivina un jugador..." autocomplete="off">
                         <button id="btnTop10Check" class="secondary-btn">ENVIAR</button>
+                        <!-- BOTÓN DE RENDIRSE AÑADIDO -->
+                        <button id="btnTop10GiveUp" class="back-btn" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="giveUpTop10()">RENDIRSE</button>
                     </div>
                     <div id="top10-suggestions" class="suggestions-box"></div>
                 </div>
