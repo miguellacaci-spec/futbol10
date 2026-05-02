@@ -422,7 +422,40 @@ const top10DB = [
             { rank: 9, name: "ERLING HAALAND", flag: "noruega", goals: "57 Goles", revealed: false },
             { rank: 10, name: "THOMAS MULLER", flag: "alemania", goals: "57 Goles", revealed: false }
         ]
+    },
+    {
+        title: 'TOP 10 SALARIOS',
+        desc: 'Máximos salarios a la semana actuales de LaLiga',
+        items: [
+            { rank: 1, name: "KILYAN MBAPPE", flag: "francia", goals: "600.962€", revealed: false },
+            { rank: 2, name: "VINICIUS JUNIOR", flag: "brasil", goals: "480.769€", revealed: false },
+            { rank: 3, name: "DAVID ALABA", flag: "austria", goals: "432.692€", revealed: false },
+            { rank: 4, name: "ROBERT LEWANDOWSKI", flag: "polonia", goals: "400.577€", revealed: false },
+            { rank: 5, name: "JUDE BELLINGHAM", flag: "inglaterra", goals: "400.577€", revealed: false },
+            { rank: 6, name: "JAN OBLAK", flag: "eslovenia", goals: "400.577€", revealed: false },
+            { rank: 7, name: "FRENKIE DE JONG", flag: "paises_bajos", goals: "365.385€", revealed: false },
+            { rank: 8, name: "FEDERICO VALVERDE", flag: "uruguay", goals: "320.577€", revealed: false },
+            { rank: 9, name: "LAMINE YAMAL", flag: "espana", goals: "320.577€", revealed: false },
+            { rank: 10, name: "RAPHINHA", flag: "brasil", goals: "320.577€", revealed: false }
+        ]
+    },
+    {
+        title: 'TOP 10 SALARIOS',
+        desc: 'Máximos salarios a la semana actuales de Premier',
+        items: [
+            { rank: 1, name: "ERLING HAALAND", flag: "noruega", goals: "600.962€", revealed: false },
+            { rank: 2, name: "MOHAMED SALAH", flag: "egipto", goals: "480.769€", revealed: false },
+            { rank: 3, name: "VIRJIL VAN DIJK", flag: "paises_bajos", goals: "432.692€", revealed: false },
+            { rank: 4, name: "CASEMIRO", flag: "brasil", goals: "400.577€", revealed: false },
+            { rank: 5, name: "BERNARDO SILVA", flag: "portugal", goals: "400.577€", revealed: false },
+            { rank: 6, name: "BRUNO FERNANDES", flag: "portugal", goals: "400.577€", revealed: false },
+            { rank: 7, name: "OMAR MARMOUSH", flag: "egipto", goals: "365.385€", revealed: false },
+            { rank: 8, name: "KAI HAVERTZ", flag: "alemania", goals: "320.577€", revealed: false },
+            { rank: 9, name: "ALEXANDER ISAK", flag: "suecia", goals: "320.577€", revealed: false },
+            { rank: 10, name: "GABRIEL JESUS", flag: "brasil", goals: "320.577€", revealed: false }
+        ]
     }
+    
 ];
 
 // ==========================================
