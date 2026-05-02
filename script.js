@@ -445,16 +445,16 @@ const top10DB = [
         title: 'TOP 10 SALARIOS',
         desc: 'Máximos salarios a la semana actuales de la Premier League',
         items: [
-            { rank: 1, name: "ERLING HAALAND", flag: "noruega", stat: "600.962€", revealed: false },
-            { rank: 2, name: "MOHAMED SALAH", flag: "egipto", stat: "480.769€", revealed: false },
-            { rank: 3, name: "VIRJIL VAN DIJK", flag: "paises_bajos", stat: "432.692€", revealed: false },
-            { rank: 4, name: "CASEMIRO", flag: "brasil", stat: "400.577€", revealed: false },
-            { rank: 5, name: "BERNARDO SILVA", flag: "portugal", stat: "400.577€", revealed: false },
-            { rank: 6, name: "BRUNO FERNANDES", flag: "portugal", stat: "400.577€", revealed: false },
-            { rank: 7, name: "OMAR MARMOUSH", flag: "egipto", stat: "365.385€", revealed: false },
-            { rank: 8, name: "KAI HAVERTZ", flag: "alemania", stat: "320.577€", revealed: false },
-            { rank: 9, name: "ALEXANDER ISAK", flag: "suecia", stat: "320.577€", revealed: false },
-            { rank: 10, name: "GABRIEL JESUS", flag: "brasil", stat: "320.577€", revealed: false }
+            { rank: 1, name: "ERLING HAALAND", flag: "noruega", stat: "525.000€", revealed: false },
+            { rank: 2, name: "MOHAMED SALAH", flag: "egipto", stat: "400.000", revealed: false },
+            { rank: 3, name: "VIRJIL VAN DIJK", flag: "paises_bajos", stat: "350.000€", revealed: false },
+            { rank: 4, name: "CASEMIRO", flag: "brasil", stat: "350.000€", revealed: false },
+            { rank: 5, name: "BERNARDO SILVA", flag: "portugal", stat: "300.000€", revealed: false },
+            { rank: 6, name: "BRUNO FERNANDES", flag: "portugal", stat: "300.000€", revealed: false },
+            { rank: 7, name: "OMAR MARMOUSH", flag: "egipto", stat: "295.000€", revealed: false },
+            { rank: 8, name: "KAI HAVERTZ", flag: "alemania", stat: "280.000€", revealed: false },
+            { rank: 9, name: "ALEXANDER ISAK", flag: "suecia", stat: "280.000€", revealed: false },
+            { rank: 10, name: "GABRIEL JESUS", flag: "brasil", stat: "265.000€", revealed: false }
         ]
     }
 ];
