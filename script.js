@@ -1427,14 +1427,14 @@ function renderTop10List() {
         
         const nameDisplay = item.revealed ? item.name : '????????????';
         
-        // Ahora construimos la imagen de forma dinámica y segura
+        // Ahora lee item.stat independientemente de la lista que sea
         div.innerHTML = `
             <div class="top10-rank">${item.rank}</div>
             <div class="top10-info">
                 <span class="top10-name">${nameDisplay}</span>
                 <span class="top10-hint">
                     <img src="banderas/foto-${item.flag}.jpg" alt="${item.flag}" class="flag-icon"> 
-                    ${item.goals}
+                    ${item.stat}
                 </span>
             </div>
         `;
