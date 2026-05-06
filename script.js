@@ -591,22 +591,51 @@ let roscoState = {
 };
 
 // ==========================================
-// 2.5 SISTEMA DE RÉCORDS (AHORCADO)
+// 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
 
-// Obtiene y actualiza el récord de racha
-function getAhorcadoMaxStreak() {
-    return parseInt(localStorage.getItem('f10_hangman_max_streak') || '0');
+function getCoins() { return parseInt(localStorage.getItem('f10_coins') || '0'); }
+function addCoins(amount) {
+    let current = getCoins() + amount;
+    localStorage.setItem('f10_coins', current);
+    const menuCoins = document.getElementById('menu-coins');
+    if (menuCoins) menuCoins.innerText = current;
 }
 
-function updateAhorcadoMaxStreak(currentStreak) {
-    let max = getAhorcadoMaxStreak();
-    if (currentStreak > max) {
-        localStorage.setItem('f10_hangman_max_streak', currentStreak);
-        return currentStreak;
+function getRecord(gameId) { return parseInt(localStorage.getItem(`f10_${gameId}_max`) || '0'); }
+function updateRecord(gameId, score) {
+    let max = getRecord(gameId);
+    if (score > max) {
+        localStorage.setItem(`f10_${gameId}_max`, score);
+        return score;
     }
     return max;
 }
+
+function showProfile() {
+    document.getElementById('profile-coins').innerText = getCoins();
+    const statsHTML = `
+        <div class="profile-stat-item"><span>Ahorcado</span> <span class="stat-value">🏆 ${getRecord('hangman')}</span></div>
+        <div class="profile-stat-item"><span>Blur Guess</span> <span class="stat-value">🏆 ${getRecord('blur')}</span></div>
+        <div class="profile-stat-item"><span>Máquina del Tiempo</span> <span class="stat-value">🏆 ${getRecord('tm')}</span></div>
+        <div class="profile-stat-item"><span>Higher/Lower</span> <span class="stat-value">🏆 ${getRecord('hl')}</span></div>
+        <div class="profile-stat-item"><span>Guerra Aforos</span> <span class="stat-value">🏆 ${getRecord('aforos')}</span></div>
+        <div class="profile-stat-item"><span>Zoom Escudos</span> <span class="stat-value">🏆 ${getRecord('zoom')}</span></div>
+    `;
+    document.getElementById('profile-stats').innerHTML = statsHTML;
+    document.getElementById('profile-modal').classList.remove('hidden');
+}
+
+function closeProfile() {
+    document.getElementById('profile-modal').classList.add('hidden');
+}
+
+// Inicializar monedas en el menú al cargar
+document.addEventListener("DOMContentLoaded", () => {
+    const menuCoins = document.getElementById('menu-coins');
+    if(menuCoins) menuCoins.innerText = getCoins();
+});
+
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
@@ -777,13 +806,28 @@ function initHangman() {
     
     document.getElementById('lives').innerText = 6;
     document.getElementById('streak').innerText = gameState.streak;
-    document.getElementById('max-streak').innerText = getAhorcadoMaxStreak(); // Mostrar récord
+    document.getElementById('max-streak').innerText = getRecord('hangman');
     document.getElementById('wordInput').value = "";
     document.getElementById('hangman-suggestions').innerHTML = "";
     
     renderKeyboard();
     updateDisplay();
     drawCanvas(0);
+}
+
+function buyHangmanHint() {
+    if(getCoins() < 50) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 50 FutCoins para comprar una pista. ¡Acertando jugadores ganas monedas!");
+        return;
+    }
+    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const unrevealed = nWord.split('').filter(c => c !== ' ' && !gameState.guessed.includes(c));
+    
+    if(unrevealed.length === 0) return;
+    
+    addCoins(-50); // Cobrar 50 monedas
+    const randomChar = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+    handleInput(randomChar); // Simular que el usuario pulsó la letra
 }
 
 function renderKeyboard() {
@@ -817,8 +861,7 @@ function handleInput(char) {
         drawCanvas(gameState.mistakes);
         
         if (gameState.mistakes >= 6) {
-            // PIERDE POR LETRAS
-            updateAhorcadoMaxStreak(gameState.streak);
+            updateRecord('hangman', gameState.streak);
             gameState.streak = 0; 
             mostrarMensajePro("🧤 ¡TARJETA ROJA!", "La respuesta era: " + gameState.word + ".", () => initHangman());
         }
@@ -840,11 +883,11 @@ function updateDisplay() {
     document.getElementById('wordDisplay').innerHTML = displayHTML;
     
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
-        // GANA POR LETRAS
         gameState.streak++;
-        let nuevoRecord = updateAhorcadoMaxStreak(gameState.streak);
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nLlevas una racha de " + gameState.streak + ".", () => initHangman());
+        addCoins(10); // PREMIO: 10 monedas por ganar
+        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nHas ganado +10 FutCoins 🪙", () => initHangman());
     }
 }
 
@@ -854,14 +897,13 @@ function solveFullWord() {
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
     if (nVal === nWord && nVal !== "") {
-        // GANA POR PALABRA DIRECTA
         gameState.streak++;
-        let nuevoRecord = updateAhorcadoMaxStreak(gameState.streak);
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\nLlevas una racha de " + gameState.streak + ".", () => initHangman());
+        addCoins(25); // SUPER PREMIO: 25 monedas por arriesgar
+        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\nAl arriesgar ganas +25 FutCoins 🪙", () => initHangman());
     } else {
-        // PIERDE POR ARRIESGAR PALABRA
-        updateAhorcadoMaxStreak(gameState.streak);
+        updateRecord('hangman', gameState.streak);
         gameState.streak = 0;
         mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
     }
@@ -895,6 +937,7 @@ function initBlurGame() {
     blurState.lives = 5;
     document.getElementById('blur-lives').innerText = blurState.lives;
     document.getElementById('blur-streak').innerText = blurState.streak;
+    document.getElementById('blur-max').innerText = getRecord('blur'); 
     document.getElementById('blurInput').value = "";
     document.getElementById('blur-suggestions').innerHTML = "";
     const img = document.getElementById('playerImg');
@@ -910,12 +953,16 @@ function checkBlurGuess() {
     
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
+        let nuevoRecord = updateRecord('blur', blurState.streak); 
+        document.getElementById('blur-max').innerText = nuevoRecord; 
+        addCoins(5); 
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player, () => initBlurGame()), 300);
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player + "\n¡Has ganado +5 FutCoins 🪙!", () => initBlurGame()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
         if (blurState.lives <= 0) {
+            updateRecord('blur', blurState.streak); 
             blurState.streak = 0;
             document.getElementById('playerImg').style.filter = "blur(0px)";
             setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
@@ -936,6 +983,7 @@ function initTimeMachine() {
 
     document.getElementById('tm-lives').innerText = timeMachineState.lives;
     document.getElementById('tm-streak').innerText = timeMachineState.streak;
+    document.getElementById('tm-max').innerText = getRecord('tm'); 
     document.getElementById('tm-event-text').innerText = timeMachineState.event;
     document.getElementById('tm-image').src = `events/${randomEvent.foto}.jpg`;
     document.getElementById('tmInput').value = "";
@@ -951,10 +999,14 @@ function checkTimeMachineGuess() {
 
     if (guess === timeMachineState.year) {
         timeMachineState.streak++;
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.`, () => initTimeMachine());
+        let nuevoRecord = updateRecord('tm', timeMachineState.streak); 
+        document.getElementById('tm-max').innerText = nuevoRecord; 
+        addCoins(5); 
+        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.\n¡Has ganado +5 FutCoins 🪙!`, () => initTimeMachine());
     } else {
         timeMachineState.lives--;
         if (timeMachineState.lives <= 0) {
+            updateRecord('tm', timeMachineState.streak); 
             timeMachineState.streak = 0;
             mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => initTimeMachine());
         } else {
@@ -1498,6 +1550,7 @@ function checkKnowball() {
 function initHigherLower() {
     hlState.score = 0;
     document.getElementById('hl-score').innerText = hlState.score;
+    document.getElementById('hl-max').innerText = getRecord('hl'); 
     hlState.p1 = premierPlayers[Math.floor(Math.random() * premierPlayers.length)];
     pickNewPlayer2();
     renderHL();
@@ -1535,10 +1588,14 @@ function checkHigherLower(guess) {
         if (isCorrect) {
             hlState.score++;
             document.getElementById('hl-score').innerText = hlState.score;
+            let nuevoRecord = updateRecord('hl', hlState.score); 
+            document.getElementById('hl-max').innerText = nuevoRecord; 
+            addCoins(2); 
             hlState.p1 = hlState.p2;
             pickNewPlayer2();
             renderHL();
         } else {
+            updateRecord('hl', hlState.score); 
             mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
         }
     }, 1500);
@@ -1548,6 +1605,7 @@ function checkHigherLower(guess) {
 function initAforosGame() {
     aforosState.score = 0;
     document.getElementById('aforos-score').innerText = aforosState.score;
+    document.getElementById('aforos-max').innerText = getRecord('aforos'); 
     aforosState.p1 = estadiosLaLiga[Math.floor(Math.random() * estadiosLaLiga.length)];
     pickNewEstadio2();
     renderAforos();
@@ -1585,10 +1643,14 @@ function checkAforos(guess) {
         if (isCorrect) {
             aforosState.score++;
             document.getElementById('aforos-score').innerText = aforosState.score;
+            let nuevoRecord = updateRecord('aforos', aforosState.score); 
+            document.getElementById('aforos-max').innerText = nuevoRecord; 
+            addCoins(2); 
             aforosState.p1 = aforosState.p2;
             pickNewEstadio2();
             renderAforos();
         } else {
+            updateRecord('aforos', aforosState.score); 
             mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => initAforosGame());
         }
     }, 1500);
@@ -1601,6 +1663,7 @@ function initZoomGame() {
     zoomState.currentScale = 4;
     document.getElementById('zoom-lives').innerText = zoomState.lives;
     document.getElementById('zoom-streak').innerText = zoomState.streak;
+    document.getElementById('zoom-max').innerText = getRecord('zoom'); 
     document.getElementById('zoomInput').value = "";
     document.getElementById('zoom-suggestions').innerHTML = "";
     
@@ -1617,13 +1680,17 @@ function checkZoomGuess() {
     const val = document.getElementById('zoomInput').value.toUpperCase().trim();
     if (val === zoomState.team) {
         zoomState.streak++;
+        let nuevoRecord = updateRecord('zoom', zoomState.streak); 
+        document.getElementById('zoom-max').innerText = nuevoRecord; 
+        addCoins(5); 
         document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team, () => initZoomGame()), 800);
+        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team + "\n¡Has ganado +5 FutCoins 🪙!", () => initZoomGame()), 800);
     } else {
         zoomState.lives--;
         document.getElementById('zoom-lives').innerText = zoomState.lives;
         
         if (zoomState.lives <= 0) {
+            updateRecord('zoom', zoomState.streak); 
             zoomState.streak = 0;
             document.getElementById('zoom-image').style.transform = "scale(1)";
             setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()), 800);
