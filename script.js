@@ -900,8 +900,7 @@ function solveFullWord() {
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-        addCoins(25); // SUPER PREMIO: 25 monedas por arriesgar
-        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\nAl arriesgar ganas +25 FutCoins 🪙", () => initHangman());
+        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\n, () => initHangman());
     } else {
         updateRecord('hangman', gameState.streak);
         gameState.streak = 0;
@@ -955,9 +954,9 @@ function checkBlurGuess() {
         blurState.streak++;
         let nuevoRecord = updateRecord('blur', blurState.streak); 
         document.getElementById('blur-max').innerText = nuevoRecord; 
-        addCoins(5); 
+        addCoins(2); 
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player + "\n¡Has ganado +5 FutCoins 🪙!", () => initBlurGame()), 300);
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player + "\n¡Has ganado +2 FutCoins 🪙!", () => initBlurGame()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
@@ -1001,8 +1000,8 @@ function checkTimeMachineGuess() {
         timeMachineState.streak++;
         let nuevoRecord = updateRecord('tm', timeMachineState.streak); 
         document.getElementById('tm-max').innerText = nuevoRecord; 
-        addCoins(5); 
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.\n¡Has ganado +5 FutCoins 🪙!`, () => initTimeMachine());
+        addCoins(2); 
+        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.\n¡Has ganado +2 FutCoins 🪙!`, () => initTimeMachine());
     } else {
         timeMachineState.lives--;
         if (timeMachineState.lives <= 0) {
@@ -1682,9 +1681,9 @@ function checkZoomGuess() {
         zoomState.streak++;
         let nuevoRecord = updateRecord('zoom', zoomState.streak); 
         document.getElementById('zoom-max').innerText = nuevoRecord; 
-        addCoins(5); 
+        addCoins(2); 
         document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team + "\n¡Has ganado +5 FutCoins 🪙!", () => initZoomGame()), 800);
+        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team + "\n¡Has ganado +2 FutCoins 🪙!", () => initZoomGame()), 800);
     } else {
         zoomState.lives--;
         document.getElementById('zoom-lives').innerText = zoomState.lives;
