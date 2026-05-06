@@ -886,8 +886,8 @@ function updateDisplay() {
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-        addCoins(10); // PREMIO: 10 monedas por ganar
-        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nHas ganado +10 FutCoins 🪙", () => initHangman());
+        addCoins(2); // PREMIO: 10 monedas por ganar
+        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nHas ganado +2 FutCoins 🪙", () => initHangman());
     }
 }
 
