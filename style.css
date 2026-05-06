@@ -253,7 +253,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .bg-timemachine { background-image: url('players/fondo-maquina.jpg'); } 
 .bg-top10 { background-image: url('players/fondo-top10.jpg'); }
 .bg-aforos { background-image: url('players/fondo-aforos.jpg'); }
-.bg-knowball { background-image: url('players/fondo-once.jpg'); } /* Misma img que europeos u otra que tú quieras */
+.bg-knowball { background-image: url('players/fondo-once.jpg'); }
 
 /* ==========================================
    5. NUEVO LOGO CIBERNÉTICO F10
@@ -543,3 +543,12 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .kb-card.dragging { opacity: 0.5; transform: scale(0.95); }
 
 .kb-slot .kb-card { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box; border: none; background: rgba(0, 255, 135, 0.15); box-shadow: none; font-size: clamp(0.8rem, 3vw, 1rem); }
+
+/* ==========================================
+   9. SISTEMA DE PERFIL Y MONEDAS
+   ========================================== */
+.user-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; width: 100%; max-width: 400px; z-index: 10; position: relative; }
+.coin-badge { background: rgba(255, 215, 0, 0.15); border: 1px solid #ffd700; color: #ffd700; padding: 8px 20px; border-radius: 12px; font-family: 'Orbitron', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+.stats-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; text-align: left; }
+.profile-stat-item { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); font-family: 'Orbitron', sans-serif; font-size: 0.9rem;}
+.stat-value { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
