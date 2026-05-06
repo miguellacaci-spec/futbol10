@@ -689,12 +689,6 @@ function showCategory(category) {
 }
 
 function showGame(gameId) {
-    // Si intenta entrar al ahorcado y está bloqueado, mostramos alerta y cortamos la función
-    if (gameId === 'hangman' && ahorcadoBloqueado()) {
-        mostrarMensajePro("⏳ JUEGO BLOQUEADO", "Ya has fallado hoy y fuiste eliminado.\nPodrás volver a jugar a partir de las 00:00 (Hora Española).");
-        return; 
-    }
-
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
     if(target) {
@@ -824,10 +818,9 @@ function handleInput(char) {
         
         if (gameState.mistakes >= 6) {
             // PIERDE POR LETRAS
-            bloquearAhorcado();
             updateAhorcadoMaxStreak(gameState.streak);
             gameState.streak = 0; 
-            mostrarMensajePro("🧤 ¡ELIMINADO!", "La respuesta era: " + gameState.word + ".\nSe acabó tu oportunidad por hoy. Vuelve mañana a partir de las 00:00h.", () => backToCategory());
+            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "La respuesta era: " + gameState.word + ".", () => initHangman());
         }
     } else {
         updateDisplay();
@@ -868,10 +861,9 @@ function solveFullWord() {
         mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\nLlevas una racha de " + gameState.streak + ".", () => initHangman());
     } else {
         // PIERDE POR ARRIESGAR PALABRA
-        bloquearAhorcado();
         updateAhorcadoMaxStreak(gameState.streak);
         gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡ELIMINADO!", "Te la jugaste y fallaste... Era: " + gameState.word + ".\nSe acabó tu oportunidad por hoy. Vuelve mañana.", () => backToCategory());
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
     }
 }
 
