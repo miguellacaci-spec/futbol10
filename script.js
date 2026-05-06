@@ -900,7 +900,7 @@ function solveFullWord() {
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\n, () => initHangman());
+        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word, () => initHangman());
     } else {
         updateRecord('hangman', gameState.streak);
         gameState.streak = 0;
