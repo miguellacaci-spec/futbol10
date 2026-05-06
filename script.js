@@ -591,11 +591,44 @@ let roscoState = {
 };
 
 // ==========================================
-// 2.5 SISTEMA DE INTENTOS DIARIOS
+// 2.5 SISTEMA DE INTENTOS DIARIOS Y RÉCORDS
 // ==========================================
-function obtenerFechaEspana() { return ""; }
-function puedeJugar(gameId) { return true; }
-function registrarIntento(gameId) {}
+
+// Obtiene la fecha actual formateada según la hora peninsular de España
+function obtenerFechaEspana() {
+    return new Intl.DateTimeFormat('es-ES', {
+        timeZone: 'Europe/Madrid',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(new Date());
+}
+
+// Verifica si el jugador está bloqueado en el Ahorcado
+function ahorcadoBloqueado() {
+    const lockDate = localStorage.getItem('f10_hangman_lock_date');
+    const hoy = obtenerFechaEspana();
+    return lockDate === hoy; // Si la fecha guardada es la de hoy, está bloqueado
+}
+
+// Bloquea al jugador hasta el día siguiente
+function bloquearAhorcado() {
+    localStorage.setItem('f10_hangman_lock_date', obtenerFechaEspana());
+}
+
+// Obtiene y actualiza el récord de racha
+function getAhorcadoMaxStreak() {
+    return parseInt(localStorage.getItem('f10_hangman_max_streak') || '0');
+}
+
+function updateAhorcadoMaxStreak(currentStreak) {
+    let max = getAhorcadoMaxStreak();
+    if (currentStreak > max) {
+        localStorage.setItem('f10_hangman_max_streak', currentStreak);
+        return currentStreak;
+    }
+    return max;
+}
 
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
@@ -679,6 +712,12 @@ function showCategory(category) {
 }
 
 function showGame(gameId) {
+    // Si intenta entrar al ahorcado y está bloqueado, mostramos alerta y cortamos la función
+    if (gameId === 'hangman' && ahorcadoBloqueado()) {
+        mostrarMensajePro("⏳ JUEGO BLOQUEADO", "Ya has fallado hoy y fuiste eliminado.\nPodrás volver a jugar a partir de las 00:00 (Hora Española).");
+        return; 
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(`${gameId}-screen`);
     if(target) {
@@ -764,10 +803,13 @@ function initHangman() {
     gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
     gameState.guessed = [];
     gameState.mistakes = 0;
+    
     document.getElementById('lives').innerText = 6;
     document.getElementById('streak').innerText = gameState.streak;
+    document.getElementById('max-streak').innerText = getAhorcadoMaxStreak(); // Mostrar récord
     document.getElementById('wordInput').value = "";
     document.getElementById('hangman-suggestions').innerHTML = "";
+    
     renderKeyboard();
     updateDisplay();
     drawCanvas(0);
@@ -802,9 +844,13 @@ function handleInput(char) {
         gameState.mistakes++;
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
         drawCanvas(gameState.mistakes);
+        
         if (gameState.mistakes >= 6) {
-            gameState.streak = 0;
-            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+            // PIERDE POR LETRAS
+            bloquearAhorcado();
+            updateAhorcadoMaxStreak(gameState.streak);
+            gameState.streak = 0; 
+            mostrarMensajePro("🧤 ¡ELIMINADO!", "La respuesta era: " + gameState.word + ".\nSe acabó tu oportunidad por hoy. Vuelve mañana a partir de las 00:00h.", () => backToCategory());
         }
     } else {
         updateDisplay();
@@ -824,8 +870,11 @@ function updateDisplay() {
     document.getElementById('wordDisplay').innerHTML = displayHTML;
     
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+        // GANA POR LETRAS
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        let nuevoRecord = updateAhorcadoMaxStreak(gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nLlevas una racha de " + gameState.streak + ".", () => initHangman());
     }
 }
 
@@ -833,12 +882,19 @@ function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
     const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
     if (nVal === nWord && nVal !== "") {
+        // GANA POR PALABRA DIRECTA
         gameState.streak++;
-        mostrarMensajePro("🔥 ¡LOKUURA!", "Era: " + gameState.word, () => initHangman());
+        let nuevoRecord = updateAhorcadoMaxStreak(gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word + "!\nLlevas una racha de " + gameState.streak + ".", () => initHangman());
     } else {
+        // PIERDE POR ARRIESGAR PALABRA
+        bloquearAhorcado();
+        updateAhorcadoMaxStreak(gameState.streak);
         gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Era: " + gameState.word, () => initHangman());
+        mostrarMensajePro("🧤 ¡ELIMINADO!", "Te la jugaste y fallaste... Era: " + gameState.word + ".\nSe acabó tu oportunidad por hoy. Vuelve mañana.", () => backToCategory());
     }
 }
 
