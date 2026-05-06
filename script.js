@@ -591,30 +591,8 @@ let roscoState = {
 };
 
 // ==========================================
-// 2.5 SISTEMA DE INTENTOS DIARIOS Y RÉCORDS
+// 2.5 SISTEMA DE RÉCORDS (AHORCADO)
 // ==========================================
-
-// Obtiene la fecha actual formateada según la hora peninsular de España
-function obtenerFechaEspana() {
-    return new Intl.DateTimeFormat('es-ES', {
-        timeZone: 'Europe/Madrid',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    }).format(new Date());
-}
-
-// Verifica si el jugador está bloqueado en el Ahorcado
-function ahorcadoBloqueado() {
-    const lockDate = localStorage.getItem('f10_hangman_lock_date');
-    const hoy = obtenerFechaEspana();
-    return lockDate === hoy; // Si la fecha guardada es la de hoy, está bloqueado
-}
-
-// Bloquea al jugador hasta el día siguiente
-function bloquearAhorcado() {
-    localStorage.setItem('f10_hangman_lock_date', obtenerFechaEspana());
-}
 
 // Obtiene y actualiza el récord de racha
 function getAhorcadoMaxStreak() {
@@ -629,7 +607,6 @@ function updateAhorcadoMaxStreak(currentStreak) {
     }
     return max;
 }
-
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
