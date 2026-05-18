@@ -1961,9 +1961,10 @@ function renderAlbum() {
         const card = document.createElement('div');
         card.className = `f10-card ${isUnlocked ? '' : 'locked'}`;
         
+        // Ahora siempre muestra la variable "p" (el nombre del jugador) en lugar de "???"
         card.innerHTML = `
             <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${isUnlocked ? p : '???'}</div>
+            <div class="card-name">${p}</div>
         `;
         grid.appendChild(card);
     });
