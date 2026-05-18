@@ -871,41 +871,62 @@ function handleInput(char) {
 }
 
 function updateDisplay() {
-    const words = gameState.word.split(" ");
-    const displayHTML = words.map(word => {
-        const letters = word.split('').map(char => {
-            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            return gameState.guessed.includes(normChar) ? char : "_";
-        }).join(" ");
-        return `<span style="white-space: nowrap;">${letters}</span>`;
-    }).join(" &nbsp;&nbsp; "); 
-    
-    document.getElementById('wordDisplay').innerHTML = displayHTML;
-    
-    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-        addCoins(2); // PREMIO: 10 monedas por ganar
-        mostrarMensajePro("🔥 ¡LOKUURA!", "¡Adivinaste: " + gameState.word + "!\nHas ganado +2 FutCoins 🪙", () => initHangman());
-    }
+    const words = gameState.word.split(" ");
+    const displayHTML = words.map(word => {
+        const letters = word.split('').map(char => {
+            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return gameState.guessed.includes(normChar) ? char : "_";
+        }).join(" ");
+        return `<span style="white-space: nowrap;">${letters}</span>`;
+    }).join(" &nbsp;&nbsp; "); 
+    
+    document.getElementById('wordDisplay').innerHTML = displayHTML;
+    
+    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+        gameState.streak++;
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let livesLeft = 6 - gameState.mistakes;
+        let wonCoins = 0;
+        if (livesLeft === 6) wonCoins = 10;
+        else if (livesLeft === 5) wonCoins = 7;
+        else if (livesLeft === 4) wonCoins = 5;
+        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
+        else if (livesLeft === 1) wonCoins = 2;
+
+        addCoins(wonCoins);
+        mostrarMensajePro("🔥 ¡LOKUURA!", `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+    }
 }
 
 function solveFullWord() {
-    const val = document.getElementById('wordInput').value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
-    if (nVal === nWord && nVal !== "") {
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-        mostrarMensajePro("🔥 ¡BRUTAL!", "¡Exacto, era " + gameState.word, () => initHangman());
-    } else {
-        updateRecord('hangman', gameState.streak);
-        gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
-    }
+    const val = document.getElementById('wordInput').value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nWord && nVal !== "") {
+        gameState.streak++;
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let livesLeft = 6 - gameState.mistakes;
+        let wonCoins = 0;
+        if (livesLeft === 6) wonCoins = 10;
+        else if (livesLeft === 5) wonCoins = 7;
+        else if (livesLeft === 4) wonCoins = 5;
+        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
+        else if (livesLeft === 1) wonCoins = 2;
+
+        addCoins(wonCoins);
+        mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+    } else {
+        updateRecord('hangman', gameState.streak);
+        gameState.streak = 0;
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
+    }
 }
 
 function drawCanvas(step) {
@@ -945,32 +966,41 @@ function initBlurGame() {
 }
 
 function checkBlurGuess() {
-    const input = document.getElementById('blurInput');
-    const val = input.value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
-    if (nVal === nPlayer && nVal !== "") {
-        blurState.streak++;
-        let nuevoRecord = updateRecord('blur', blurState.streak); 
-        document.getElementById('blur-max').innerText = nuevoRecord; 
-        addCoins(2); 
-        document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", "Es " + blurState.player + "\n¡Has ganado +2 FutCoins 🪙!", () => initBlurGame()), 300);
-    } else {
-        blurState.lives--;
-        blurState.blur -= 6;
-        if (blurState.lives <= 0) {
-            updateRecord('blur', blurState.streak); 
-            blurState.streak = 0;
-            document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
-        } else {
-            document.getElementById('blur-lives').innerText = blurState.lives;
-            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
-            input.value = "";
-        }
-    }
+    const input = document.getElementById('blurInput');
+    const val = input.value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nPlayer && nVal !== "") {
+        blurState.streak++;
+        let nuevoRecord = updateRecord('blur', blurState.streak); 
+        document.getElementById('blur-max').innerText = nuevoRecord; 
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let wonCoins = 0;
+        if (blurState.lives === 5) wonCoins = 10;
+        else if (blurState.lives === 4) wonCoins = 7;
+        else if (blurState.lives === 3) wonCoins = 5;
+        else if (blurState.lives === 2) wonCoins = 3;
+        else if (blurState.lives === 1) wonCoins = 2;
+
+        addCoins(wonCoins); 
+        document.getElementById('playerImg').style.filter = "blur(0px)";
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`, () => initBlurGame()), 300);
+    } else {
+        blurState.lives--;
+        blurState.blur -= 6;
+        if (blurState.lives <= 0) {
+            updateRecord('blur', blurState.streak); 
+            blurState.streak = 0;
+            document.getElementById('playerImg').style.filter = "blur(0px)";
+            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
+        } else {
+            document.getElementById('blur-lives').innerText = blurState.lives;
+            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
+            input.value = "";
+        }
+    }
 }
 
 // --- TIME MACHINE ---
