@@ -27,6 +27,16 @@
             </div>
             
             <div class="menu-grid">
+                
+                <!-- NUEVO: TARJETA ÁLBUM F10 -->
+                <div class="menu-card sobres-card" onclick="showGame('album')">
+                    <div class="card-bg bg-sobres"></div>
+                    <div class="card-info">
+                        <h3 style="color: #00ffff; text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);">Álbum F10</h3>
+                        <p>Sobres y Colección</p>
+                    </div>
+                </div>
+
                 <div class="menu-card rosco-game-card" onclick="showRoscoMenu()">
                     <div class="card-bg bg-rosco"></div>
                     <div class="card-info">
@@ -112,6 +122,49 @@
         </div>
 
         <!-- ================= MINIJUEGOS ================= -->
+
+        <!-- NUEVO JUEGO: ÁLBUM Y SOBRES -->
+        <div id="album-screen" class="screen hidden">
+            <nav class="game-nav">
+                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <div class="score-board">🪙 <span id="album-coins">0</span></div>
+            </nav>
+
+            <h2 class="logo" style="font-size: 1.8rem; margin-bottom: 2vh;">ÁLBUM <span>F10</span></h2>
+
+            <div class="album-tabs">
+                <button class="album-tab active" id="tab-btn-pack" onclick="switchAlbumTab('pack')">SOBRES</button>
+                <button class="album-tab" id="tab-btn-collection" onclick="switchAlbumTab('collection')">ÁLBUM</button>
+                <button class="album-tab" id="tab-btn-market" onclick="switchAlbumTab('market')">MERCADO</button>
+            </div>
+
+            <!-- TAB: ABRIR SOBRES -->
+            <div id="tab-pack" class="album-tab-content">
+                <div class="pack-container" id="pack-container" onclick="openPack()">
+                    <div class="pack-visual">
+                        <div class="pack-logo">F10</div>
+                        <div class="pack-title">SOBRE ORO</div>
+                        <div class="pack-price">100 🪙</div>
+                    </div>
+                </div>
+                <div id="pack-reveal" class="pack-reveal-area hidden">
+                    <div class="reveal-cards" id="reveal-cards-container"></div>
+                    <button class="secondary-btn" style="margin-top: 30px;" onclick="closePackReveal()">GUARDAR EN EL ÁLBUM</button>
+                </div>
+            </div>
+
+            <!-- TAB: MI ÁLBUM -->
+            <div id="tab-collection" class="album-tab-content hidden">
+                <div class="album-progress">Colección: <span id="album-progress-text">0</span> completada</div>
+                <div class="album-grid" id="album-grid"></div>
+            </div>
+
+            <!-- TAB: MERCADO (REPETIDOS) -->
+            <div id="tab-market" class="album-tab-content hidden">
+                <p style="text-align:center; color:var(--text-dim); font-family: 'Orbitron'; margin-bottom: 20px;">Vende tus cartas repetidas por 25🪙 cada una.</p>
+                <div class="album-grid" id="market-grid"></div>
+            </div>
+        </div>
 
         <!-- JUEGO: AHORCADO -->
         <div id="hangman-screen" class="screen hidden">
