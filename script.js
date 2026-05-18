@@ -1829,3 +1829,208 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'top10Input') checkTop10Guess();
     }
 });
+
+// ==========================================
+// 10. LÓGICA DEL ÁLBUM Y SOBRES F10
+// ==========================================
+
+let isOpeningPack = false;
+
+// Helpers para guardar y cargar datos del álbum
+function getAlbumData() {
+    return JSON.parse(localStorage.getItem('f10_album') || '{"unlocked":[], "duplicates":{}}');
+}
+function saveAlbumData(data) {
+    localStorage.setItem('f10_album', JSON.stringify(data));
+}
+
+function initAlbum() {
+    document.getElementById('album-coins').innerText = getCoins();
+    switchAlbumTab('pack'); // Por defecto al entrar vamos a "Sobres"
+}
+
+function switchAlbumTab(tab) {
+    // Ocultar todos los contenidos
+    document.querySelectorAll('.album-tab-content').forEach(el => el.classList.add('hidden'));
+    
+    // Quitar activo de todos los botones
+    document.querySelectorAll('.album-tab').forEach(el => el.classList.remove('active'));
+    
+    // Mostrar contenido seleccionado
+    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    document.getElementById(`tab-btn-${tab}`).classList.add('active');
+
+    // Refrescar vistas si es necesario
+    if(tab === 'collection') renderAlbum();
+    if(tab === 'market') renderDuplicates();
+    
+    // Si volvemos a sobres, asegurarnos de que la interfaz está reseteada
+    if(tab === 'pack' && !isOpeningPack) {
+        document.getElementById('pack-reveal').classList.add('hidden');
+        document.getElementById('pack-container').classList.remove('hidden');
+    }
+}
+
+function openPack() {
+    if(isOpeningPack) return;
+    
+    const COSTO_SOBRE = 100;
+    if(getCoins() < COSTO_SOBRE) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 100 FutCoins para abrir un sobre. Juega a los minijuegos para ganar más.");
+        return;
+    }
+    
+    // Descontar monedas
+    addCoins(-COSTO_SOBRE);
+    document.getElementById('album-coins').innerText = getCoins();
+    
+    isOpeningPack = true;
+    const packVisual = document.querySelector('.pack-visual');
+    packVisual.classList.add('pack-opening-anim');
+
+    // Esperar a que acabe la animación (600ms) y un poco de suspense
+    setTimeout(() => {
+        packVisual.classList.remove('pack-opening-anim');
+        revealPackCards();
+    }, 800);
+}
+
+function revealPackCards() {
+    const data = getAlbumData();
+    
+    // Elegir 2 jugadores aleatorios de LaLiga (o del pool global que tienes)
+    const p1 = players[Math.floor(Math.random() * players.length)];
+    let p2 = players[Math.floor(Math.random() * players.length)];
+    // Evitar que salgan dos iguales en el mismo sobre
+    while (p1 === p2) {
+        p2 = players[Math.floor(Math.random() * players.length)];
+    }
+
+    [p1, p2].forEach(p => {
+        if(data.unlocked.includes(p)) {
+            data.duplicates[p] = (data.duplicates[p] || 0) + 1; // Añadir a repetidos
+        } else {
+            data.unlocked.push(p); // Nuevo jugador desbloqueado
+        }
+    });
+    
+    saveAlbumData(data);
+
+    // Renderizar cartas con fallback (placeholder) si no encuentra la imagen
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const revealContainer = document.getElementById('reveal-cards-container');
+    
+    revealContainer.innerHTML = `
+        <div class="f10-card">
+            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p1}</div>
+        </div>
+        <div class="f10-card">
+            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p2}</div>
+        </div>
+    `;
+    
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+    isOpeningPack = false;
+}
+
+function closePackReveal() {
+    document.getElementById('pack-reveal').classList.add('hidden');
+    document.getElementById('pack-container').classList.remove('hidden');
+}
+
+function renderAlbum() {
+    const data = getAlbumData();
+    const grid = document.getElementById('album-grid');
+    grid.innerHTML = "";
+    
+    // Porcentaje y progreso
+    const percentage = ((data.unlocked.length / players.length) * 100).toFixed(1);
+    document.getElementById('album-progress-text').innerText = `${percentage}%`;
+
+    // Fallback genérico para fotos ausentes
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+
+    // Mostrar todos ordenados alfabéticamente para facilitar la búsqueda
+    const sortedPlayers = [...players].sort();
+
+    sortedPlayers.forEach(p => {
+        const isUnlocked = data.unlocked.includes(p);
+        const card = document.createElement('div');
+        card.className = `f10-card ${isUnlocked ? '' : 'locked'}`;
+        
+        card.innerHTML = `
+            <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${isUnlocked ? p : '???'}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function renderDuplicates() {
+    const data = getAlbumData();
+    const grid = document.getElementById('market-grid');
+    grid.innerHTML = "";
+
+    const duplicates = Object.entries(data.duplicates).filter(([_, count]) => count > 0);
+    
+    if(duplicates.length === 0) {
+        grid.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:white; padding: 20px;'>No tienes cartas repetidas actualmente.</p>";
+        return;
+    }
+
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+
+    duplicates.forEach(([p, count]) => {
+        const item = document.createElement('div');
+        item.className = 'market-item';
+        item.innerHTML = `
+            <div class="f10-card">
+                <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
+                <div class="card-name">${p}</div>
+            </div>
+            <div style="color:var(--primary); font-family:'Orbitron'; font-weight:bold; margin-top:5px;">x${count} Repetida(s)</div>
+            <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (25🪙)</button>
+        `;
+        grid.appendChild(item);
+    });
+}
+
+function sellDuplicate(playerName) {
+    const data = getAlbumData();
+    
+    if(data.duplicates[playerName] > 0) {
+        data.duplicates[playerName]--;
+        
+        // Si ya no quedan repetidas, borrar la clave
+        if(data.duplicates[playerName] === 0) {
+            delete data.duplicates[playerName];
+        }
+        
+        saveAlbumData(data);
+        addCoins(25); // Ganancia por carta repetida
+        
+        document.getElementById('album-coins').innerText = getCoins();
+        renderDuplicates(); // Refrescar vista
+        
+        // Pequeño feedback visual (opcional)
+        mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por 25🪙.`);
+    }
+}
+
+// -------------------------------------------------------------
+// *ACTUALIZACIÓN*: Añadir el router showGame para el álbum
+// Busca la función original showGame(gameId) y modifícala o añade esto:
+// -------------------------------------------------------------
+const originalShowGame = showGame;
+showGame = function(gameId) {
+    // Ejecutar lógica original para otros juegos
+    originalShowGame(gameId);
+    
+    // Añadir lógica extra para el álbum
+    if(gameId === 'album') {
+        initAlbum();
+    }
+}
