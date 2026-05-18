@@ -552,3 +552,135 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 .stats-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; text-align: left; }
 .profile-stat-item { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); font-family: 'Orbitron', sans-serif; font-size: 0.9rem;}
 .stat-value { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
+
+/* ==========================================
+   10. ÁLBUM Y SOBRES F10
+   ========================================== */
+.sobres-card { border-color: #00ffff !important; }
+.bg-sobres { background-image: url('players/fondo-laliga.jpg'); filter: brightness(0.3) blur(2px) hue-rotate(180deg); }
+
+#album-screen {
+    --primary: #00ffff;
+    --primary-glow: rgba(0, 255, 255, 0.3);
+    --secondary: #008888;
+}
+
+.album-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px;
+    border-radius: 15px;
+}
+.album-tab {
+    flex: 1;
+    background: transparent;
+    border: 2px solid transparent;
+    color: white;
+    padding: 12px 5px;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.album-tab.active {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary);
+}
+.album-tab-content { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; }
+
+/* SOBRE VISUAL */
+.pack-container { cursor: pointer; transition: 0.2s; animation: floatPack 3s ease-in-out infinite; perspective: 1000px; }
+.pack-container:hover { transform: scale(1.05) translateY(-10px); }
+.pack-visual {
+    width: 220px;
+    height: 320px;
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    border-radius: 15px;
+    border: 4px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 15px 35px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.5);
+    position: relative;
+    overflow: hidden;
+}
+.pack-visual::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg);
+    animation: shinePack 3s infinite;
+}
+.pack-logo { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: #111; font-weight: bold; text-shadow: 2px 2px 0px rgba(255,255,255,0.5); margin-bottom: 10px;}
+.pack-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #111; font-weight: bold; background: rgba(255,255,255,0.8); padding: 5px 15px; border-radius: 5px;}
+.pack-price { margin-top: 20px; font-weight: bold; color: #111; font-size: 1.2rem; background: #fff; padding: 5px 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+
+@keyframes floatPack { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes shinePack { 0% { left: -100%; } 20%, 100% { left: 100%; } }
+
+.pack-opening-anim { animation: shakePack 0.6s cubic-bezier(.36,.07,.19,.97) both; filter: brightness(1.5); }
+@keyframes shakePack {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    10%, 90% { transform: translate3d(-2px, 0, 0) scale(1.05); }
+    20%, 80% { transform: translate3d(4px, 0, 0) scale(1.05); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0) scale(1.1); }
+    40%, 60% { transform: translate3d(8px, 0, 0) scale(1.1); }
+    100% { transform: translate3d(0, 0, 0) scale(1.2) rotateY(90deg); opacity: 0; }
+}
+
+/* CARTAS FUT */
+.reveal-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; animation: modalPop 0.5s ease-out; margin-top: 20px;}
+.f10-card {
+    width: clamp(120px, 30vw, 150px);
+    aspect-ratio: 2.5 / 3.5;
+    background: #1a1c23;
+    border-radius: 12px;
+    border: 3px solid #ffd700;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+    transition: 0.3s;
+}
+.f10-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6); }
+.f10-card img { width: 100%; height: 75%; object-fit: cover; object-position: top; background: #111;}
+.f10-card .card-name {
+    background: linear-gradient(180deg, #ffd700, #b8860b);
+    color: #000; text-align: center; font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.6rem, 2vw, 0.8rem); padding: 5px 2px; font-weight: bold; flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-top: 2px solid rgba(255,255,255,0.5);
+    word-wrap: break-word; line-height: 1.1;
+}
+
+/* ÁLBUM GRID */
+.album-progress { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; background: rgba(0, 255, 255, 0.1); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--primary); }
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    width: 100%;
+    padding: 10px;
+    justify-items: center;
+}
+.f10-card.locked {
+    border-color: #333;
+    box-shadow: none;
+    filter: grayscale(1) brightness(0.4);
+}
+.f10-card.locked .card-name { background: #333; color: #888; border-top-color: #222;}
+.f10-card.locked:hover { transform: none; box-shadow: none; }
+
+/* MERCADO */
+.market-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 150px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);}
+.sell-btn { background: #ff4d4d; color: white; border: none; padding: 8px 10px; border-radius: 8px; font-family: 'Orbitron', sans-serif; cursor: pointer; width: 100%; font-weight: bold; font-size: 0.8rem; transition: 0.2s;}
+.sell-btn:hover { background: #ff1a1a; transform: scale(1.05); box-shadow: 0 0 15px rgba(255,77,77,0.5); }
