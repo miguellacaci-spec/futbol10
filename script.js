@@ -1946,49 +1946,49 @@ function openPack(event, type) {
 }
 
 function revealPackCards(type) {
-    const data = getAlbumData();
-    const pool = packsDB[type].players;
-    
-    const p1 = pool[Math.floor(Math.random() * pool.length)];
-    let p2 = pool[Math.floor(Math.random() * pool.length)];
-    
-    // Evitar que salgan dos repetidos en el mismo sobre
-    while (p1 === p2) {
-        p2 = pool[Math.floor(Math.random() * pool.length)];
-    }
+    const data = getAlbumData();
+    const pool = packsDB[type].players;
+    
+    const p1 = pool[Math.floor(Math.random() * pool.length)];
+    let p2 = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Evitar que salgan dos repetidos en el mismo sobre
+    while (p1 === p2) {
+        p2 = pool[Math.floor(Math.random() * pool.length)];
+    }
 
-    [p1, p2].forEach(p => {
-        if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
-        } else {
-            data.unlocked.push(p);
-        }
-    });
-    
-    saveAlbumData(data);
+    [p1, p2].forEach(p => {
+        if(data.unlocked.includes(p)) {
+            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
+        } else {
+            data.unlocked.push(p);
+        }
+    });
+    
+    saveAlbumData(data);
 
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const revealContainer = document.getElementById('reveal-cards-container');
+    
+    revealContainer.innerHTML = `
+        <div class="f10-card">
+            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p1}</div>
+        </div>
+        <div class="f10-card">
+            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p2}</div>
+        </div>
+    `;
+    
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+    isOpeningPack = false;
 }
 
 function closePackReveal() {
-    document.getElementById('pack-reveal').classList.add('hidden');
-    document.getElementById('pack-container').classList.remove('hidden');
+    document.getElementById('pack-reveal').classList.add('hidden');
+    document.getElementById('pack-container').classList.remove('hidden');
 }
 
 function renderAlbum() {
