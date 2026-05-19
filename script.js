@@ -1985,28 +1985,6 @@ function revealPackCards(type) {
     document.getElementById('pack-reveal').classList.remove('hidden');
     isOpeningPack = false;
 }
-    
-    saveAlbumData(data);
-
-    // Renderizar cartas con fallback (placeholder) si no encuentra la imagen
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
-}
 
 function closePackReveal() {
     document.getElementById('pack-reveal').classList.add('hidden');
