@@ -1866,6 +1866,30 @@ document.addEventListener('keydown', (e) => {
 
 let isOpeningPack = false;
 
+// BASE DE DATOS DE SOBRES POR CATEGORÍA
+const packsDB = {
+    bronce: {
+        cost: 25,
+        players: ["ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER", "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS","TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI","IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA"]
+    },
+    plata: {
+        cost: 50,
+        players: ["RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES","SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR","VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY","SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ"]
+    },
+    oro: {
+        cost: 100,
+        players: ["UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA","DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA","REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON","JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ"]
+    },
+    diamante: {
+        cost: 200,
+        players: ["BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO","DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO","RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI","ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL"]
+    },
+    platino: {
+        cost: 400,
+        players: ["COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA","OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH","JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI","DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE"]
+    }
+};
+
 // Helpers para guardar y cargar datos del álbum
 function getAlbumData() {
     return JSON.parse(localStorage.getItem('f10_album') || '{"unlocked":[], "duplicates":{}}');
@@ -1876,73 +1900,91 @@ function saveAlbumData(data) {
 
 function initAlbum() {
     document.getElementById('album-coins').innerText = getCoins();
-    switchAlbumTab('pack'); // Por defecto al entrar vamos a "Sobres"
+    switchAlbumTab('pack');
 }
 
 function switchAlbumTab(tab) {
-    // Ocultar todos los contenidos
     document.querySelectorAll('.album-tab-content').forEach(el => el.classList.add('hidden'));
-    
-    // Quitar activo de todos los botones
     document.querySelectorAll('.album-tab').forEach(el => el.classList.remove('active'));
     
-    // Mostrar contenido seleccionado
     document.getElementById(`tab-${tab}`).classList.remove('hidden');
     document.getElementById(`tab-btn-${tab}`).classList.add('active');
 
-    // Refrescar vistas si es necesario
     if(tab === 'collection') renderAlbum();
     if(tab === 'market') renderDuplicates();
     
-    // Si volvemos a sobres, asegurarnos de que la interfaz está reseteada
     if(tab === 'pack' && !isOpeningPack) {
         document.getElementById('pack-reveal').classList.add('hidden');
         document.getElementById('pack-container').classList.remove('hidden');
     }
 }
 
-function openPack() {
+function openPack(event, type) {
     if(isOpeningPack) return;
     
-    const COSTO_SOBRE = 100;
-    if(getCoins() < COSTO_SOBRE) {
-        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 100 FutCoins para abrir un sobre. Juega a los minijuegos para ganar más.");
+    const packInfo = packsDB[type];
+    
+    if(getCoins() < packInfo.cost) {
+        mostrarMensajePro("⚠️ SIN FONDOS", `Necesitas ${packInfo.cost} FutCoins para abrir este sobre.`);
         return;
     }
     
     // Descontar monedas
-    addCoins(-COSTO_SOBRE);
+    addCoins(-packInfo.cost);
     document.getElementById('album-coins').innerText = getCoins();
     
     isOpeningPack = true;
-    const packVisual = document.querySelector('.pack-visual');
-    packVisual.classList.add('pack-opening-anim');
+    
+    // Aplicar animación solo al sobre seleccionado
+    const packVisual = event.currentTarget.querySelector('.pack-visual');
+    if(packVisual) packVisual.classList.add('pack-opening-anim');
 
-    // Esperar a que acabe la animación (600ms) y un poco de suspense
     setTimeout(() => {
-        packVisual.classList.remove('pack-opening-anim');
-        revealPackCards();
+        if(packVisual) packVisual.classList.remove('pack-opening-anim');
+        revealPackCards(type);
     }, 800);
 }
 
-function revealPackCards() {
+function revealPackCards(type) {
     const data = getAlbumData();
+    const pool = packsDB[type].players;
     
-    // Elegir 2 jugadores aleatorios de LaLiga (o del pool global que tienes)
-    const p1 = players[Math.floor(Math.random() * players.length)];
-    let p2 = players[Math.floor(Math.random() * players.length)];
-    // Evitar que salgan dos iguales en el mismo sobre
+    const p1 = pool[Math.floor(Math.random() * pool.length)];
+    let p2 = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Evitar que salgan dos repetidos en el mismo sobre
     while (p1 === p2) {
-        p2 = players[Math.floor(Math.random() * players.length)];
+        p2 = pool[Math.floor(Math.random() * pool.length)];
     }
 
     [p1, p2].forEach(p => {
         if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1; // Añadir a repetidos
+            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
         } else {
-            data.unlocked.push(p); // Nuevo jugador desbloqueado
+            data.unlocked.push(p);
         }
     });
+    
+    saveAlbumData(data);
+
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const revealContainer = document.getElementById('reveal-cards-container');
+    
+    revealContainer.innerHTML = `
+        <div class="f10-card">
+            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p1}</div>
+        </div>
+        <div class="f10-card">
+            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p2}</div>
+        </div>
+    `;
+    
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+    isOpeningPack = false;
+}
     
     saveAlbumData(data);
 
