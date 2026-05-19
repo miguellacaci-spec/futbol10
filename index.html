@@ -140,12 +140,53 @@
 
             <!-- TAB: ABRIR SOBRES -->
             <div id="tab-pack" class="album-tab-content">
-                <div class="pack-container" id="pack-container" onclick="openPack()">
-                    <div class="pack-visual">
-                        <div class="pack-logo">F10</div>
-                        <div class="pack-title">SOBRE ORO</div>
-                        <div class="pack-price">100 🪙</div>
+                <div id="pack-container" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; padding: 10px;">
+                    
+                    <!-- SOBRE BRONCE -->
+                    <div class="pack-container" onclick="openPack(event, 'bronce')">
+                        <div class="pack-visual" style="background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);">
+                            <div class="pack-logo">F10</div>
+                            <div class="pack-title">BRONCE</div>
+                            <div class="pack-price">25 🪙</div>
+                        </div>
                     </div>
+
+                    <!-- SOBRE PLATA -->
+                    <div class="pack-container" onclick="openPack(event, 'plata')">
+                        <div class="pack-visual" style="background: linear-gradient(135deg, #e6e8fa 0%, #a9a9a9 100%);">
+                            <div class="pack-logo">F10</div>
+                            <div class="pack-title">PLATA</div>
+                            <div class="pack-price">50 🪙</div>
+                        </div>
+                    </div>
+
+                    <!-- SOBRE ORO -->
+                    <div class="pack-container" onclick="openPack(event, 'oro')">
+                        <div class="pack-visual" style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);">
+                            <div class="pack-logo">F10</div>
+                            <div class="pack-title">ORO</div>
+                            <div class="pack-price">100 🪙</div>
+                        </div>
+                    </div>
+
+                    <!-- SOBRE DIAMANTE -->
+                    <div class="pack-container" onclick="openPack(event, 'diamante')">
+                        <div class="pack-visual" style="background: linear-gradient(135deg, #00ffff 0%, #0088cc 100%);">
+                            <div class="pack-logo">F10</div>
+                            <div class="pack-title">DIAMANTE</div>
+                            <div class="pack-price">200 🪙</div>
+                        </div>
+                    </div>
+
+                    <!-- SOBRE PLATINO -->
+                    <div class="pack-container" onclick="openPack(event, 'platino')">
+                        <div class="pack-visual" style="background: linear-gradient(135deg, #e5e4e2 0%, #696969 100%);">
+                            <div class="pack-logo">F10</div>
+                            <div class="pack-title" style="font-size: 1.1rem;">PLATINO</div>
+                            <div class="pack-price">400 🪙</div>
+                        </div>
+                    </div>
+
                 </div>
                 <div id="pack-reveal" class="pack-reveal-area hidden">
                     <div class="reveal-cards" id="reveal-cards-container"></div>
