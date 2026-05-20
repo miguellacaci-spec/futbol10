@@ -919,9 +919,7 @@ function updateDisplay() {
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
-    }
-}
-        
+
         // SISTEMA DE RECOMPENSAS POR VIDAS
         let livesLeft = 6 - gameState.mistakes;
         let wonCoins = 0;
