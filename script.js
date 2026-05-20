@@ -1,4 +1,16 @@
 // ==========================================
+// 0. FUNCIONES GLOBALES DE AYUDA (NUEVO)
+// ==========================================
+// Sustituye al .normalize() que rompía la letra Ñ
+const removeAccents = (str) => {
+    return str.replace(/[ÁÀÄÂ]/gi, 'A')
+              .replace(/[ÉÈËÊ]/gi, 'E')
+              .replace(/[ÍÌÏÎ]/gi, 'I')
+              .replace(/[ÓÒÖÔ]/gi, 'O')
+              .replace(/[ÚÙÜÛ]/gi, 'U');
+};
+
+// ==========================================
 // 1. BASES DE DATOS & CONSTANTES GLOBALES
 // ==========================================
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
@@ -594,7 +606,7 @@ let roscoState = {
 // 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
 
-function getCoins() { return parseInt(localStorage.getItem('f10_coins') || '0'); }
+function getCoins() { return parseInt(localStorage.getItem('f10_coins') || '0') || 0; }
 function addCoins(amount) {
     let current = getCoins() + amount;
     localStorage.setItem('f10_coins', current);
@@ -602,7 +614,7 @@ function addCoins(amount) {
     if (menuCoins) menuCoins.innerText = current;
 }
 
-function getRecord(gameId) { return parseInt(localStorage.getItem(`f10_${gameId}_max`) || '0'); }
+function getRecord(gameId) { return parseInt(localStorage.getItem(`f10_${gameId}_max`) || '0') || 0; }
 function updateRecord(gameId, score) {
     let max = getRecord(gameId);
     if (score > max) {
@@ -844,7 +856,7 @@ function buyHangmanHint() {
         mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 50 FutCoins para comprar una pista. ¡Acertando jugadores ganas monedas!");
         return;
     }
-    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nWord = removeAccents(gameState.word);
     const unrevealed = nWord.split('').filter(c => c !== ' ' && !gameState.guessed.includes(c));
     
     if(unrevealed.length === 0) return;
@@ -872,15 +884,13 @@ function renderKeyboard() {
     });
 }
 
-// En handleInput, asegúrate de que al escribir la Ñ se trate como la propia Ñ
 function handleInput(char) {
     if (gameState.guessed.includes(char)) return;
     gameState.guessed.push(char);
     const keyElement = document.getElementById(`key-${char}`);
     if (keyElement) keyElement.classList.add('used');
 
-    // Cambiamos la lógica: normalizamos pero permitimos la Ñ explícitamente
-    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nWord = removeAccents(gameState.word);
     
     if (!nWord.includes(char)) {
         gameState.mistakes++;
@@ -899,14 +909,13 @@ function handleInput(char) {
     saveHangmanProgress(); // Guardamos progreso tras cada letra
 }
 
-// En updateDisplay, vamos a tratar el guion como un carácter válido para que no se oculte
 function updateDisplay() {
     const words = gameState.word.split(" ");
     const displayHTML = words.map(word => {
         const letters = word.split('').map(char => {
             // El guion se muestra siempre (no es una letra oculta)
             if (char === '-') return "-";
-            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const normChar = removeAccents(char);
             return gameState.guessed.includes(normChar) ? char : "_";
         }).join(" ");
         return `<span style="white-space: nowrap;">${letters}</span>`;
@@ -936,8 +945,8 @@ function updateDisplay() {
 
 function solveFullWord() {
     const val = document.getElementById('wordInput').value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nVal = removeAccents(val);
+    const nWord = removeAccents(gameState.word);
     
     if (nVal === nWord && nVal !== "") {
         gameState.streak++;
@@ -1001,8 +1010,8 @@ function initBlurGame() {
 function checkBlurGuess() {
     const input = document.getElementById('blurInput');
     const val = input.value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nVal = removeAccents(val);
+    const nPlayer = removeAccents(blurState.player);
     
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
@@ -1205,8 +1214,9 @@ function checkRosco() {
     const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
     const state = roscoState[pKey];
     const q = state.questions[state.currentIndex];
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nAns = q.respuesta.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    const nVal = removeAccents(val);
+    const nAns = removeAccents(q.respuesta);
 
     if(nVal === nAns) {
         state.results[q.letra] = 'correct';
@@ -1339,7 +1349,8 @@ function checkElevenWin() {
 
 function openFutdleForPlayer(playerObj) {
     wordleState.targetPlayer = playerObj.name;
-    wordleState.answer = playerObj.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    // Utilizamos removeAccents para que FUTDLE funcione correctamente al comparar
+    wordleState.answer = removeAccents(playerObj.name).toUpperCase();
     wordleState.wordLength = wordleState.answer.length;
     wordleState.guesses = [];
     wordleState.currentGuess = "";
@@ -1810,12 +1821,12 @@ function checkTop10Guess() {
     const val = inputEl.value.toUpperCase().trim();
     if(!val) return;
     
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nVal = removeAccents(val);
     let found = false;
     
     top10State.currentList.items.forEach(item => {
         if (!item.revealed) {
-            const nAns = item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const nAns = removeAccents(item.name);
             const words = nAns.split(' ');
             
             if (nVal === nAns || words.includes(nVal) || nVal === words[words.length - 1]) {
@@ -2111,10 +2122,10 @@ function buySpecificPlayer() {
     if (!val) return;
 
     // Normalizar la búsqueda por si ponen tildes
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nVal = removeAccents(val);
     
     // Buscar si el jugador existe en la base de datos (array players)
-    const playerFound = players.find(p => p.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === nVal);
+    const playerFound = players.find(p => removeAccents(p) === nVal);
 
     if (!playerFound) {
         mostrarMensajePro("❌ JUGADOR NO ENCONTRADO", "Asegúrate de escribir el nombre exactamente como aparece en el juego.");
