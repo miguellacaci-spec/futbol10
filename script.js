@@ -851,19 +851,23 @@ function renderKeyboard() {
     });
 }
 
+// En handleInput, asegúrate de que al escribir la Ñ se trate como la propia Ñ
 function handleInput(char) {
     if (gameState.guessed.includes(char)) return;
     gameState.guessed.push(char);
     const keyElement = document.getElementById(`key-${char}`);
     if (keyElement) keyElement.classList.add('used');
 
+    // Cambiamos la lógica: normalizamos pero permitimos la Ñ explícitamente
     const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
     if (!nWord.includes(char)) {
         gameState.mistakes++;
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
         drawCanvas(gameState.mistakes);
         
         if (gameState.mistakes >= 6) {
+            localStorage.removeItem('f10_hangman_save'); // Limpiar guardado al perder
             updateRecord('hangman', gameState.streak);
             gameState.streak = 0; 
             mostrarMensajePro("🧤 ¡TARJETA ROJA!", "La respuesta era: " + gameState.word + ".", () => initHangman());
@@ -871,12 +875,16 @@ function handleInput(char) {
     } else {
         updateDisplay();
     }
+    saveHangmanProgress(); // Guardamos progreso tras cada letra
 }
 
+// En updateDisplay, vamos a tratar el guion como un carácter válido para que no se oculte
 function updateDisplay() {
     const words = gameState.word.split(" ");
     const displayHTML = words.map(word => {
         const letters = word.split('').map(char => {
+            // El guion se muestra siempre (no es una letra oculta)
+            if (char === '-') return "-";
             const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             return gameState.guessed.includes(normChar) ? char : "_";
         }).join(" ");
@@ -886,9 +894,12 @@ function updateDisplay() {
     document.getElementById('wordDisplay').innerHTML = displayHTML;
     
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+        localStorage.removeItem('f10_hangman_save'); // Limpiar al ganar
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
+    }
+}
         
         // SISTEMA DE RECOMPENSAS POR VIDAS
         let livesLeft = 6 - gameState.mistakes;
