@@ -803,7 +803,6 @@ function obtenerDosRoscos() {
 
 // --- AHORCADO ---
 function initHangman() {
-function initHangman() {
     // Intentar cargar progreso si existe
     if (loadHangmanProgress()) {
         document.getElementById('lives').innerText = 6 - gameState.mistakes;
