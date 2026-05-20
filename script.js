@@ -1003,7 +1003,7 @@ function initBlurGame() {
     document.getElementById('blurInput').value = "";
     document.getElementById('blur-suggestions').innerHTML = "";
     const img = document.getElementById('playerImg');
-    img.src = `players/${blurState.player}.jpg`;
+    img.src = `players/${blurState.player.replace(/ /g, '_')}.jpg`;
     img.style.filter = `blur(${blurState.blur}px)`;
 }
 
@@ -1641,10 +1641,10 @@ function renderHL() {
 
     document.getElementById('hl-name-1').innerText = hlState.p1.name;
     document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
-    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name}.jpg`;
+    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name.replace(/ /g, "_")}.jpg`;
 
     document.getElementById('hl-name-2').innerText = hlState.p2.name;
-    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name}.jpg`;
+    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name.replace(/ /g, "_")}.jpg`;
 }
 
 function checkHigherLower(guess) {
@@ -1936,6 +1936,25 @@ const packsDB = {
     }
 };
 
+const tierValues = { bronce: 10, plata: 20, oro: 40, diamante: 80, platino: 160 };
+
+const tierStyles = {
+    bronce: "border: 3px solid #cd7f32; box-shadow: 0 0 10px #cd7f32;",
+    plata: "border: 3px solid #c0c0c0; box-shadow: 0 0 10px #c0c0c0;",
+    oro: "border: 3px solid #ffd700; box-shadow: 0 0 15px #ffd700;",
+    diamante: "border: 3px solid #00bfff; box-shadow: 0 0 20px #00bfff;",
+    platino: "border: 3px solid #e5e4e2; box-shadow: 0 0 20px #e5e4e2; background: linear-gradient(45deg, #111, #333);"
+};
+
+function getPlayerTier(playerName) {
+    for (const tier in packsDB) {
+        if (packsDB[tier].players.includes(playerName)) {
+            return tier;
+        }
+    }
+    return 'bronce';
+}
+
 // Helpers para guardar y cargar datos del álbum
 function getAlbumData() {
     return JSON.parse(localStorage.getItem('f10_album') || '{"unlocked":[], "duplicates":{}}');
@@ -2015,14 +2034,15 @@ function revealPackCards(type) {
 
     const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
     const revealContainer = document.getElementById('reveal-cards-container');
+    const pStyle = tierStyles[type] || "";
     
     revealContainer.innerHTML = `
-        <div class="f10-card">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+        <div class="f10-card" style="${pStyle}">
+            <img src="players/${p1.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
             <div class="card-name">${p1}</div>
         </div>
-        <div class="f10-card">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+        <div class="f10-card" style="${pStyle}">
+            <img src="players/${p2.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
             <div class="card-name">${p2}</div>
         </div>
     `;
@@ -2046,20 +2066,20 @@ function renderAlbum() {
     const percentage = ((data.unlocked.length / players.length) * 100).toFixed(1);
     document.getElementById('album-progress-text').innerText = `${percentage}%`;
 
-    // Fallback genérico para fotos ausentes
     const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-
-    // Mostrar todos ordenados alfabéticamente para facilitar la búsqueda
     const sortedPlayers = [...players].sort();
 
     sortedPlayers.forEach(p => {
         const isUnlocked = data.unlocked.includes(p);
+        const tier = getPlayerTier(p);
+        const pStyle = isUnlocked ? tierStyles[tier] : "";
+        
         const card = document.createElement('div');
         card.className = `f10-card ${isUnlocked ? '' : 'locked'}`;
+        card.style.cssText = pStyle;
         
-        // Ahora siempre muestra la variable "p" (el nombre del jugador) en lugar de "???"
         card.innerHTML = `
-            <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
+            <img src="players/${p.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
             <div class="card-name">${p}</div>
         `;
         grid.appendChild(card);
@@ -2078,18 +2098,37 @@ function renderDuplicates() {
         return;
     }
 
+    // Calcular el valor total de todas las repetidas
+    let totalAllValue = 0;
+    duplicates.forEach(([p, count]) => {
+        const tier = getPlayerTier(p);
+        totalAllValue += tierValues[tier] * count;
+    });
+
+    // Botón de VENTA MASIVA
+    const sellAllDiv = document.createElement('div');
+    sellAllDiv.style.gridColumn = "1 / -1";
+    sellAllDiv.style.textAlign = "center";
+    sellAllDiv.style.marginBottom = "20px";
+    sellAllDiv.innerHTML = `<button class="sell-btn" style="background-color: #e63946; padding: 12px 24px; font-size: 1.1em; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; color: white;" onclick="sellAllDuplicates()">VENDER TODAS (+${totalAllValue}🪙)</button>`;
+    grid.appendChild(sellAllDiv);
+
     const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
 
     duplicates.forEach(([p, count]) => {
+        const tier = getPlayerTier(p);
+        const value = tierValues[tier];
+        const pStyle = tierStyles[tier];
+
         const item = document.createElement('div');
         item.className = 'market-item';
         item.innerHTML = `
-            <div class="f10-card">
-                <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="f10-card" style="${pStyle}">
+                <img src="players/${p.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
                 <div class="card-name">${p}</div>
             </div>
             <div style="color:var(--primary); font-family:'Orbitron'; font-weight:bold; margin-top:5px;">x${count} Repetida(s)</div>
-            <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (25🪙)</button>
+            <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (${value}🪙)</button>
         `;
         grid.appendChild(item);
     });
@@ -2101,30 +2140,54 @@ function sellDuplicate(playerName) {
     if(data.duplicates[playerName] > 0) {
         data.duplicates[playerName]--;
         
-        // Si ya no quedan repetidas, borrar la clave
         if(data.duplicates[playerName] === 0) {
             delete data.duplicates[playerName];
         }
         
         saveAlbumData(data);
-        addCoins(25); // Ganancia por carta repetida
         
+        const tier = getPlayerTier(playerName);
+        const value = tierValues[tier];
+        
+        addCoins(value); 
         document.getElementById('album-coins').innerText = getCoins();
-        renderDuplicates(); // Refrescar vista
+        renderDuplicates(); 
         
-        // Pequeño feedback visual (opcional)
-        mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por 25🪙.`);
+        mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por ${value}🪙.`);
     }
+}
+
+// Nueva función de VENTA MASIVA
+function sellAllDuplicates() {
+    const data = getAlbumData();
+    let totalValue = 0;
+    let countSold = 0;
+
+    for (const [p, count] of Object.entries(data.duplicates)) {
+        if (count > 0) {
+            const tier = getPlayerTier(p);
+            totalValue += tierValues[tier] * count;
+            countSold += count;
+        }
+    }
+
+    if (countSold === 0) return;
+
+    data.duplicates = {};
+    saveAlbumData(data);
+    addCoins(totalValue);
+
+    document.getElementById('album-coins').innerText = getCoins();
+    renderDuplicates();
+
+    mostrarMensajePro("💸 VENTA MASIVA", `Has vendido ${countSold} cartas repetidas por un total de ${totalValue}🪙.`);
 }
 
 function buySpecificPlayer() {
     const val = document.getElementById('marketBuyInput').value.toUpperCase().trim();
     if (!val) return;
 
-    // Normalizar la búsqueda por si ponen tildes
     const nVal = removeAccents(val);
-    
-    // Buscar si el jugador existe en la base de datos (array players)
     const playerFound = players.find(p => removeAccents(p) === nVal);
 
     if (!playerFound) {
@@ -2134,24 +2197,20 @@ function buySpecificPlayer() {
 
     const data = getAlbumData();
 
-    // Comprobar si ya lo tiene en el álbum
     if (data.unlocked.includes(playerFound)) {
         mostrarMensajePro("⚠️ YA LO TIENES", `El jugador ${playerFound} ya está en tu álbum. No tires el dinero.`);
         return;
     }
 
-    // Comprobar si tiene el dinero suficiente
     if (getCoins() < 750) {
         mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 750 FutCoins para fichar a la carta. ¡Toca jugar más minijuegos!");
         return;
     }
 
-    // Cobrar y añadir al álbum
     addCoins(-750);
     data.unlocked.push(playerFound);
     saveAlbumData(data);
 
-    // Limpiar input y actualizar UI
     document.getElementById('marketBuyInput').value = "";
     document.getElementById('album-coins').innerText = getCoins();
     
