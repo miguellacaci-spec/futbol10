@@ -638,6 +638,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 
 /* CARTAS FUT */
 .reveal-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; animation: modalPop 0.5s ease-out; margin-top: 20px;}
+/* CARTAS FUT MEJORADAS */
 .f10-card {
     width: clamp(120px, 30vw, 150px);
     aspect-ratio: 2.5 / 3.5;
@@ -652,16 +653,33 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     transition: 0.3s;
 }
 .f10-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6); }
-.f10-card img { width: 100%; height: 75%; object-fit: cover; object-position: top; background: #111;}
-.f10-card .card-name {
-    background: linear-gradient(180deg, #ffd700, #b8860b);
-    color: #000; text-align: center; font-family: 'Orbitron', sans-serif;
-    font-size: clamp(0.6rem, 2vw, 0.8rem); padding: 5px 2px; font-weight: bold; flex: 1;
-    display: flex; align-items: center; justify-content: center;
-    border-top: 2px solid rgba(255,255,255,0.5);
-    word-wrap: break-word; line-height: 1.1;
+
+.f10-card img { 
+    width: 100%; 
+    flex: 1; /* Ocupa el espacio dinámicamente sin dejar márgenes */
+    min-height: 0; 
+    object-fit: cover; 
+    object-position: top; 
+    background: #1a1c23;
+    border-bottom: 2px solid rgba(255,255,255,0.6); /* Borde que separa foto y nombre */
 }
 
+.f10-card .card-name {
+    background: linear-gradient(180deg, #ffd700, #b8860b);
+    color: #000; 
+    text-align: center; 
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.6rem, 2vw, 0.8rem); 
+    padding: 8px 4px; /* Padding fijo para evitar recortes */
+    font-weight: bold; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    word-wrap: break-word; 
+    line-height: 1.1;
+    min-height: 35px; /* Altura mínima consistente */
+    border-top: none; 
+}
 /* ÁLBUM GRID */
 .album-progress { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; background: rgba(0, 255, 255, 0.1); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--primary); }
 .album-grid {
