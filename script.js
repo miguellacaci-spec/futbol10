@@ -1,2243 +1,698 @@
-// ==========================================
-// 0. FUNCIONES GLOBALES DE AYUDA (NUEVO)
-// ==========================================
-// Sustituye al .normalize() que rompía la letra Ñ
-const removeAccents = (str) => {
-    return str.replace(/[ÁÀÄÂ]/gi, 'A')
-              .replace(/[ÉÈËÊ]/gi, 'E')
-              .replace(/[ÍÌÏÎ]/gi, 'I')
-              .replace(/[ÓÒÖÔ]/gi, 'O')
-              .replace(/[ÚÙÜÛ]/gi, 'U');
-};
-
-// ==========================================
-// 1. BASES DE DATOS & CONSTANTES GLOBALES
-// ==========================================
-const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
-
-const players = [
-    "COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA",
-    "OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH",
-    "JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI",
-    "DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE",
-    "ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL",
-    "RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI", 
-    "REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON",
-    "UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA",
-    "JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ", 
-    "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI",
-    "VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY",  
-    "DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA",
-    "BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO",
-    "SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR",
-    "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS",
-    "RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES",
-    "IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA",
-    "DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO", 
-    "SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ",
-    "ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER"
-];
-
-const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
-const roscoQuestions = [
-    { letra: "A", preguntas: [
-        { respuesta: "ANCELOTTI", hint: "Apellido del único entrenador en ganar las 5 grandes ligas." },
-        { respuesta: "ANSU FATI", hint: "Nombre y apellido del jugador que heredó el 10 de Messi en el Barça." },
-        { respuesta: "ARDA GULER", hint: "Nombre y apellido del jugador más caro actual de Turquía." },
-        { respuesta: "ALISSON", hint: "Nombre del portero ganador del trofeo Yashin en 2019." },
-        { respuesta: "ASTON VILLA", hint: "Nombre del equipo que juega en el Villa Park." }
-    ]},
-    { letra: "B", preguntas: [
-        { respuesta: "BELLINGHAM", hint: "Apellido del jugador que ganó el trofeo Kopa en 2023." },
-        { respuesta: "BENZEMA", hint: "Apellido del ganador del Balón de Oro 2022." },
-        { respuesta: "BETIS", hint: "Equipo español subcampeón de la Conference League en la temporada 2024/2025." },
-        { respuesta: "BONMATI", hint: "Apellido de la jugadora con más Ballon d'Or de la historia." },
-        { respuesta: "BAYER LEVERKUSEN", hint: "Ganador de la Bundesliga alemana en la temporada 2023/2024." }
-    ]},
-    { letra: "C", preguntas: [
-        { respuesta: "CARVAJAL", hint: "Apellido del 'Pitbull' de Leganés." },
-        { respuesta: "COURTOIS", hint: "Apellido del MVP de la final de Champions 2021/2022." },
-        { respuesta: "CRISTIANO", hint: "Nombre del máximo goleador de la historia." },
-        { respuesta: "CONTE", hint: "Apellido del actual entrenador del Nápoles." },
-        { respuesta: "CHELSEA", hint: "Ganador de la Copa Mundial de Clubes en la temporada 2025/2026." }
-    ]},
-    { letra: "D", preguntas: [
-        { respuesta: "DANI OLMO", hint: "Nombre y apellido del fichaje del Barcelona en 2024 proveniente del Leipzig." },
-        { respuesta: "DE BRUYNE", hint: "Apellido del mediocentro belga del Napoles." },
-        { respuesta: "DI MARIA", hint: "Apellido del 'Fideo'." },
-        { respuesta: "DORTMUND", hint: "Club alemán famoso por su 'Muro Amarillo'." },
-        { respuesta: "DYBALA", hint: "Apellido de 'La Joya' que jugó con Messi y Cristiano." }
-    ]},
-    { letra: "E", preguntas: [
-        { respuesta: "ENDRICK", hint: "Nombre del jugador estrella del Lyon cedido por el Madrid." },
-        { respuesta: "ETO'O", hint: "Apellido del delantero camerunés que ganó el triplete con Barça e Inter consecutivamente." },
-        { respuesta: "EMERY", hint: "Apellido del actual entrenador del Aston Villa." },
-        { respuesta: "EDERSON", hint: "Nombre del portero del Fenerbahçe conocido por su excelente juego de pies." },
-        { respuesta: "EINTRACHT", hint: "Nombre del equipo de Frankfurt que invadió el Camp Nou en la Europa League 2021/2022." }
-    ]},
-    { letra: "F", preguntas: [
-        { respuesta: "FALCAO", hint: "Apellido del 'Tigre' colombiano." },
-        { respuesta: "FEYENOORD", hint: "Nombre del club de los Países Bajos en Rotterdam." },
-        { respuesta: "FLICK", hint: "Apellido del entrenador del Barça en 2024 tras Xavi." },
-        { respuesta: "FORLAN", hint: "Apellido de la bota de oro uruguaya que jugó en el Villarreal y Atlético de Madrid." },
-        { respuesta: "FODEN", hint: "Apellido del canterano estrella actual del Manchester City." }
-    ]},
-    { letra: "G", preguntas: [
-        { respuesta: "GAVI", hint: "Canterano proveninente de La Masía conocido por su garra y cordones desatados." },
-        { respuesta: "GRIEZMANN", hint: "Apellido del máximo goleador histórico del Atlético de Madrid." },
-        { respuesta: "GIRONA", hint: "Nombre del equipo revelación de LaLiga 2023/2024." },
-        { respuesta: "GYOKERES", hint: "Apellido del delantero del Arsenal conocido por su celebración de la máscara." },
-        { respuesta: "GOL", hint: "Entrada del balón en la portería." }
-    ]},
-    { letra: "H", preguntas: [
-        { respuesta: "HAALAND", hint: "Apellido del 'Androide' noruego." },
-        { respuesta: "HARRY KANE", hint: "Nomnbre y apellido del jugador Bota de Oro 2023/2024." },
-        { respuesta: "HIMNO", hint: " Composición que representa a un equipo o país que se reproduce antes del partido." },
-        { respuesta: "HULL CITY", hint: "Club inglés apodado los 'Tigers'." },
-        { respuesta: "HUMMELS", hint: "Apellido del central alemán que jugó en el Bayern y Borussia y se retiró en la Roma." }
-    ]},
-    { letra: "I", preguntas: [
-        { respuesta: "INIESTA", hint: "Apellido del autor del gol que dio a España su primer Mundial." },
-        { respuesta: "ISCO", hint: "Nombre del mago malagueño del Betis." },
-        { respuesta: "INTER", hint: "Nombre del club subcampeón de la Champions en la temporada 2024/2025." },
-        { respuesta: "IMMOBILE", hint: "Apellido del delantero italiano, bota de oro en 2020." },
-        { respuesta: "IÑAKI", hint: "Nombre del mayor de los hermanos Williams." }
-    ]},
-    { letra: "J", preguntas: [
-        { respuesta: "JOAQUIN", hint: "Nombre del eterno 17 del Betis." },
-        { respuesta: "JUVENTUS", hint: "Nombre del club apodado 'Vecchia Signora'." },
-        { respuesta: "JOAO FELIX", hint: "Nombre y apellido del Golden Boy 2019." },
-        { respuesta: "JULIAN ALVAREZ", hint: "Nombre y apellido del jugador apodado 'La Araña'." },
-        { respuesta: "JOBE", hint: "Nombre del hermano menor de los Bellingham." }
-    ]},
-    { letra: "K", preguntas: [
-        { respuesta: "KROOS", hint: "Apellido del alemán que se retiró tras ganar la Champions en la temporada 2023/2024." },
-        { respuesta: "KOPA", hint: "Nombre del trofeo que se otorga al mejor jugador joven del mundo." },
-        { respuesta: "KUN AGUERO", hint: "Apodo y apellido del máximo goleador del Manchester City." },
-        { respuesta: "KVARATSKHELIA", hint: "Apellido del extremo georgiano del PSG." },
-        { respuesta: "KIMMICH", hint: "Apellido del líder del Bayern conocido por su mentalidad." }
-    ]},
-    { letra: "L", preguntas: [
-        { respuesta: "LEWANDOWSKI", hint: "Apellido del máximo goleador de la selección de Polonia." },
-        { respuesta: "LAMINE YAMAL", hint: "Nombre y apellido del jugador más joven en marcar en una Eurocopa." },
-        { respuesta: "LIVERPOOL", hint: "Nombre del club con himno 'You'll Never Walk Alone'." },
-        { respuesta: "LAUTARO", hint: "Nombre dell 'Toro' argentino, capitán del Inter de Milán." },
-        { respuesta: "LUKAKU", hint: "Apellido del delantero belga que ha pasado por muchos equipos italianos e ingleses." }
-    ]},
-    { letra: "M", preguntas: [
-        { respuesta: "MESSI", hint: "Apellido del máximo ganador del Ballon D'or." },
-        { respuesta: "MBAPPE", hint: "Apellido del fichaje estrella que fichó por el Real Madrid en 2024." },
-        { respuesta: "MODRIC", hint: "Apellido del ganador del Balón de Oro en 2018." },
-        { respuesta: "MALLORCA", hint: "Nombre del equipo balear que llegó a la final de la Copa del Rey en 2024." },
-        { respuesta: "MAIGNAN", hint: "Apellido del portero titular del AC Milan y Francia." }
-    ]},
-    { letra: "N", preguntas: [
-        { respuesta: "NEYMAR", hint: "Nombre de la 'N' de la MSN." },
-        { respuesta: "NICO WILLIAMS", hint: "Nombre y apellido del jugador más caro del Athletic Club." },
-        { respuesta: "NAPOLES", hint: "Nombre en español del club donde Maradona ganó dos Scudettos." },
-        { respuesta: "NEUER", hint: "Apellido del portero alemán que revolucionó el puesto jugando como líbero." },
-        { respuesta: "NIZA", hint: "Nombre del equipo de la Costa Azul francesa que suele pelear puestos europeos." }
-    ]},
-    { letra: "Ñ", preguntas: [
-        { respuesta: "ESPAÑA", hint: "Nombre de la selección campeona de la Eurocopa 2024." },
-        { respuesta: "IÑIGO", hint: "CONTIENE LA Ñ: Nombre del central ex-Barcelona que juega en el Al-Nassr." },
-        { respuesta: "PEÑA", hint: " CONTIENE LA Ñ: Apellido del portero titular del Elche." },
-    ]},
-    { letra: "O", preguntas: [
-        { respuesta: "OBLAK", hint: "FÁCIL: El guardián esloveno de la portería del Atlético de Madrid." },
-        { respuesta: "ODEGAARD", hint: "MEDIA: Noruego que no triunfó en el Madrid pero es capitán del Arsenal." },
-        { respuesta: "OSASUNA", hint: "MEDIA: Equipo de Pamplona que juega en el Estadio El Sadar." },
-        { respuesta: "OLMO", hint: "DIFÍCIL: Apellido del jugador que salvó bajo palos un gol en la final de la Euro 2024." },
-        { respuesta: "OPENDA", hint: "DIFÍCIL: Delantero belga, máximo goleador del RB Leipzig actualmente." }
-    ]},
-    { letra: "P", preguntas: [
-        { respuesta: "PEDRI", hint: "FÁCIL: El joven talento canario, brújula del FC Barcelona." },
-        { respuesta: "PELE", hint: "FÁCIL: 'O Rei', el único jugador en ganar 3 Mundiales." },
-        { respuesta: "PALMER", hint: "MEDIA: La joven estrella del Chelsea apodada 'Cold' por su frialdad." },
-        { respuesta: "PULISIC", hint: "DIFÍCIL: El 'Capitán América' que ahora brilla en el AC Milan." },
-        { respuesta: "PAU CUBARSI", hint: "DIFÍCIL: El central adolescente que sorprendió al mundo con su salida de balón en el Barça." }
-    ]},
-    { letra: "Q", preguntas: [
-        { respuesta: "QUINI", hint: "FÁCIL: 'El Brujo', mítico goleador del Sporting de Gijón y del Barça." },
-        { respuesta: "QUERETARO", hint: "MEDIA: Club mexicano donde Ronaldinho pasó sus últimos años de profesional." },
-        { respuesta: "QUARESMA", hint: "MEDIA: Jugador portugués famoso por sus centros y goles de 'trivela'." },
-        { respuesta: "QUEIROZ", hint: "DIFÍCIL: Entrenador portugués que dirigió a los 'Galácticos' del Real Madrid." },
-        { respuesta: "QUATTRINI", hint: "DIFÍCIL: Apellido de un antiguo defensor italiano del Calcio." }
-    ]},
-    { letra: "R", preguntas: [
-        { respuesta: "RONALDO", hint: "FÁCIL: 'El Fenómeno' brasileño, ex de Barça, Madrid, Inter y Milán." },
-        { respuesta: "RODRI", hint: "FÁCIL: Centrocampista español del City, MVP de la Euro 2024 y Balón de Oro en potencia." },
-        { respuesta: "RAUL", hint: "MEDIA: El 'Eterno Capitán' del Real Madrid, máximo goleador antes de CR7." },
-        { respuesta: "RODRYGO", hint: "MEDIA: Brasileño del Madrid famoso por sus goles milagrosos en Champions." },
-        { respuesta: "RASHFORD", hint: "DIFÍCIL: El 10 del Manchester United y referente social en Inglaterra." }
-    ]},
-    { letra: "S", preguntas: [
-        { respuesta: "SIMEONE", hint: "FÁCIL: El 'Cholo', el entrenador que cambió la historia moderna del Atlético." },
-        { respuesta: "SALAH", hint: "FÁCIL: El 'Faraón' egipcio, leyenda máxima del Liverpool moderno." },
-        { respuesta: "SUAREZ", hint: "MEDIA: Luis, el pistolero uruguayo que ahora juega con Messi en Miami." },
-        { respuesta: "SANE", hint: "MEDIA: Extremo alemán del Bayern Múnich de gran velocidad." },
-        { respuesta: "SORLOTH", hint: "DIFÍCIL: El delantero noruego que peleó el Pichichi 2024 y fichó por el Atlético." }
-    ]},
-    { letra: "T", preguntas: [
-        { respuesta: "TER STEGEN", hint: "FÁCIL: El portero alemán y primer capitán del FC Barcelona." },
-        { respuesta: "TCHOUAMENI", hint: "MEDIA: Pivote francés del Real Madrid." },
-        { respuesta: "TOTTENHAM", hint: "MEDIA: Club inglés cuyo estadio es considerado el más moderno de Europa." },
-        { respuesta: "THEO HERNANDEZ", hint: "DIFÍCIL: Lateral izquierdo francés, uno de los mejores del mundo en el Milán." },
-        { respuesta: "THIAGO", hint: "DIFÍCIL: El mayor de los hermanos Alcántara, retirado en 2024." }
-    ]},
-    { letra: "U", preguntas: [
-        { respuesta: "UNAI SIMON", hint: "FÁCIL: Portero titular de España campeón de la Euro 2024." },
-        { respuesta: "UMTITI", hint: "MEDIA: Central francés campeón del mundo cuya rodilla truncó su carrera en el Barça." },
-        { respuesta: "UDINESE", hint: "MEDIA: Club italiano conocido por descubrir talentos jóvenes." },
-        { respuesta: "UNION BERLIN", hint: "DIFÍCIL: Club alemán humilde que llegó a jugar Champions en 2023." },
-        { respuesta: "UWE SEELER", hint: "DIFÍCIL: Leyenda histórica del fútbol alemán y del Hamburgo." }
-    ]},
-    { letra: "V", preguntas: [
-        { respuesta: "VINICIUS", hint: "FÁCIL: Estrella brasileña del Real Madrid, clave en las últimas Champions." },
-        { respuesta: "VALENCIA", hint: "FÁCIL: Club que juega en el histórico Estadio de Mestalla." },
-        { respuesta: "VILLARREAL", hint: "MEDIA: El 'Submarino Amarillo' que ganó la Europa League a hombros de Gerard Moreno." },
-        { respuesta: "VLAHOVIC", hint: "DIFÍCIL: El potente 9 serbio de la Juventus." },
-        { respuesta: "VALVERDE", hint: "DIFÍCIL: El 'Halcón' uruguayo, motor incansable del centro del campo blanco." }
-    ]},
-    { letra: "W", preguntas: [
-        { respuesta: "WIRTZ", hint: "FÁCIL: La joven estrella alemana del Leverkusen de Xabi Alonso." },
-        { respuesta: "WALKER", hint: "MEDIA: Kyle, el lateral más rápido de la Premier League." },
-        { respuesta: "WOLVERHAMPTON", hint: "MEDIA: Equipo inglés conocido como los 'Wolves'." },
-        { respuesta: "WATFORD", hint: "DIFÍCIL: Club inglés de la familia Pozzo que suele ser un equipo ascensor." },
-        { respuesta: "WEMBLEY", hint: "DIFÍCIL: El templo del fútbol inglés donde se jugó la final de Champions 2024." }
-    ]},
-    { letra: "X", preguntas: [
-        { respuesta: "XAVI", hint: "FÁCIL: El maestro del mediocampo español y ex entrenador del Barça." },
-        { respuesta: "XABI ALONSO", hint: "MEDIA: Entrenador revelación que hizo historia con el Bayer Leverkusen." },
-        { respuesta: "XHAKA", hint: "MEDIA: El líder suizo que fue el pulmón del Leverkusen campeón." },
-        { respuesta: "XAVI SIMONS", hint: "DIFÍCIL: Joven estrella neerlandesa formada en la Masía que brilla en el Leipzig." },
-        { respuesta: "XERCA", hint: "DIFÍCIL: Nombre coloquial o apellido de algún jugador histórico menor." }
-    ]},
-    { letra: "Y", preguntas: [
-        { respuesta: "YASHIN", hint: "FÁCIL: La 'Araña Negra', único portero con Balón de Oro." },
-        { respuesta: "YAMAL", hint: "FÁCIL: Apellido de Lamine, el chico récord del fútbol mundial." },
-        { respuesta: "YESTE", hint: "MEDIA: Mítico mediapunta zurdo del Athletic Club de los años 2000." },
-        { respuesta: "YAYA TOURE", hint: "DIFÍCIL: Portento físico marfileño que brilló en Barça y City." },
-        { respuesta: "YIDNEKACHEW", hint: "DIFÍCIL: Apellido del 'padre' del fútbol africano (Tessema)." }
-    ]},
-    { letra: "Z", preguntas: [
-        { respuesta: "ZIDANE", hint: "Apellido del autor de la volea de la Novena del Real Madrid." },
-        { respuesta: "ZUBIMENDI", hint: "Apellido del pivote español del Arsenal." },
-        { respuesta: "ZAMORA", hint: "Nombre del trofeo que recibe el portero menos goleado en España." },
-        { respuesta: "ZLATAN", hint: "Nombre de pila de Ibrahimovic." },
-        { respuesta: "ZOFF", hint: "Apellido del portero más veterano en ganar un Mundial (40 años)." }
-    ]}
-];
-
-const timeMachineEvents = [
-    { foto: "maradona1986", event: "La 'Mano de Dios' de Maradona a Inglaterra", year: 1986 },
-    { foto: "iniesta2010", event: "El gol de Iniesta en la final de Sudáfrica", year: 2010 },
-    { foto: "maracanazo1950", event: "El 'Maracanazo' de Uruguay ante Brasil", year: 1950 },
-    { foto: "zidane2006", event: "El cabezazo de Zidane a Materazzi", year: 2006 },
-    { foto: "mineirazo2014", event: "El histórico 1-7 de Alemania a Brasil (Mineirazo)", year: 2014 },
-    { foto: "pele1970", event: "Pelé ganando su tercer y último Mundial", year: 1970 },
-    { foto: "casillas2010", event: "La parada de Iker Casillas a Robben en la final", year: 2010 },
-    { foto: "panenka1976", event: "El penalti original a lo Panenka en la final de la Eurocopa", year: 1976 },
-    { foto: "vanpersie2014", event: "El cabezazo en plancha de Robin van Persie a España", year: 2014 },
-    { foto: "kempes1978", event: "El primer Mundial ganado por la Argentina de Mario Kempes", year: 1978 },
-    { foto: "zidane2002", event: "El gol de volea de Zidane en la final de Glasgow", year: 2002 },
-    { foto: "estambul2005", event: "El 'Milagro de Estambul' (Liverpool remontando al AC Milan)", year: 2005 },
-    { foto: "ramos2014", event: "El gol de Sergio Ramos en el minuto 93:48 (La Décima)", year: 2014 },
-    { foto: "remontada2017", event: "La remontada histórica 6-1 del Barça al PSG", year: 2017 },
-    { foto: "cristiano2018", event: "La chilena de Cristiano Ronaldo a la Juventus", year: 2018 },
-    { foto: "iniesta2009", event: "El 'Iniestazo' en Stamford Bridge contra el Chelsea", year: 2009 },
-    { foto: "bale2018", event: "La espectacular chilena de Gareth Bale en la final de Kiev", year: 2018 },
-    { foto: "bayern1999", event: "La remontada en 3 minutos del Manchester United al Bayern en el Camp Nou", year: 1999 },
-    { foto: "redondo2000", event: "El taconazo histórico de Redondo en Old Trafford", year: 2000 },
-    { foto: "messi2004", event: "El debut oficial de Lionel Messi en Champions League", year: 2004 },
-    { foto: "messi2017", event: "Messi enseñando su camiseta al Bernabéu tras marcar en el 92'", year: 2017 },
-    { foto: "suarez2014", event: "El mordisco de Luis Suárez a Chiellini en el Mundial", year: 2014 },
-    { foto: "cantona1995", event: "La patada de kung-fu de Éric Cantona a un aficionado", year: 1995 },
-    { foto: "ronaldinho2005", event: "Ronaldinho saliendo aplaudido del Santiago Bernabéu", year: 2005 },
-    { foto: "siuuu2013", event: "La famosa celebración del 'Siuuu' de Cristiano Ronaldo por primera vez", year: 2013 },
-    { foto: "gerrard2014", event: "El resbalón fatal de Steven Gerrard ante el Chelsea", year: 2014 },
-    { foto: "suarez2010", event: "La mano salvadora de Luis Suárez contra Ghana en cuartos del Mundial", year: 2010 },
-    { foto: "casillasbeso2010", event: "El beso de Iker Casillas a Sara Carbonero en directo", year: 2010 },
-    { foto: "cristiano2004", event: "El doloroso llanto de Cristiano tras perder la final de la Eurocopa", year: 2004 },
-    { foto: "totti2017", event: "La retirada oficial y homenaje entre lágrimas de Francesco Totti", year: 2017 },
-    { foto: "messi2012", event: "Los increíbles 91 goles de Messi en un solo año natural", year: 2012 },
-    { foto: "pep2009", event: "El sextete histórico del FC Barcelona de Pep Guardiola", year: 2009 },
-    { foto: "lewa2015", event: "Los 5 goles de Lewandowski en apenas 9 minutos", year: 2015 },
-    { foto: "aguero2012", event: "El 'Agüerooooo' en el minuto 93:20 para ganar la Premier League", year: 2012 },
-    { foto: "invencibles2004", event: "La temporada de 'Los Invencibles' del Arsenal de Wenger", year: 2004 },
-    { foto: "cristiano2009", event: "La presentación galáctica de Cristiano Ronaldo en el Bernabéu", year: 2009 },
-    { foto: "robertocarlos1997", event: "El golazo de falta con efecto imposible de Roberto Carlos a Francia", year: 1997 },
-    { foto: "higuita1995", event: "El histórico escorpión de René Higuita en Wembley", year: 1995 },
-    { foto: "maradona1984", event: "La llegada del 'Pelusa' Diego Armando Maradona al Napoli", year: 1984 },
-    { foto: "united1999", event: "El histórico triplete del Manchester United de Sir Alex Ferguson", year: 1999 },
-    { foto: "rooney2011", event: "La espectacular chilena de Rooney en el derbi de Manchester", year: 2011 },
-    { foto: "rivaldo2001", event: "La chilena de Rivaldo desde fuera del área al Valencia en el último minuto", year: 2001 },
-    { foto: "guti2010", event: "El taconazo de Guti a Benzema 'inventando el fútbol' en Riazor", year: 2010 },
-    { foto: "zlatan2012", event: "La monumental chilena de Ibrahimovic a Inglaterra desde 30 metros", year: 2012 },
-    { foto: "vanbasten1988", event: "El inolvidable gol de volea de Van Basten en la final de la Eurocopa", year: 1988 },
-    { foto: "banks1970", event: "La parada imposible de Gordon Banks al cabezazo de Pelé", year: 1970 },
-    { foto: "centenariazo2002", event: "El sorprendente 'Centenariazo' del Deportivo ante el Real Madrid", year: 2002 },
-    { foto: "grecia2004", event: "La victoria histórica y sorpresiva de Grecia en la Eurocopa", year: 2004 },
-    { foto: "cruyff1982", event: "El penalti indirecto original de Johan Cruyff con el Ajax", year: 1982 },
-    { foto: "lamine2023", event: "El debut oficial del jovencísimo Lamine Yamal con la Selección Española", year: 2023 }
-];
-
-const elevenMatches = [
-    {
-        team: "REAL MADRID",
-        desc: "Bayern VS Real Madrid (4-3) Vuelta de Cuartos de la Champions League 2025/2026.",
-        xi: [
-            [{ name: "VINICIUS", hint: "Brasileño" }, { name: "MBAPPE", hint: "Francés" }],
-            [{ name: "ARDA GULER", hint: "Turco" }, { name: "VALVERDE", hint: "Uruguayo" }, { name: "BELLINGHAM", hint: "Inglés" }, { name: "BRAHIM DIAZ", hint: "Marroquí" }],
-            [{ name: "MENDY", hint: "Francés" }, { name: "RUDIGER", hint: "Alemán" }, { name: "MILITAO", hint: "Brasileño" }, { name: "ALEXANDER-ARNOLD", hint: "Inglés" }],
-            [{ name: "LUNIN", hint: "Ucraniano" }]
-        ]
-    },
-    {
-        team: "MÁLAGA",
-        desc: "Borussia Dortmund VS Málaga (3-2) Vuelta de Cuartos de la Champions League 2012/2013.",
-        xi: [
-            [{ name: "BAPTISTA", hint: "Brasileño" }],
-            [{ name: "DUDA", hint: "Portugués" }, { name: "ISCO", hint: "Español" }, { name: "Joaquín", hint: "Español" }],
-            [{ name: "CAMACHO", hint: "Español" }, { name: "TOULALAN", hint: "Francés" }],
-            [{ name: "ANTUNES", hint: "Portugués" }, { name: "SERGIO SANCHEZ", hint: "Español" }, { name: "DEMICHELIS", hint: "Argentino" }, { name: "JESUS GAMEZ", hint: "Español" }],
-            [{ name: "CABALLERO", hint: "Argentino" }]
-        ]
-    },
-    {
-        team: "AJAX",
-        desc: "Real Madrid VS Ajax (1-4) Vuelta de Octavos de la Champions League 2018/2019.",
-        xi: [
-            [{ name: "NERES", hint: "Brasileño" }, { name: "TADIC", hint: "Serbio" }, { name: "ZIYECH", hint: "Marroquí" }],
-            [{ name: "DE JONG", hint: "Neerlandés" }, { name: "SCHONE", hint: "Danés" }, { name: "VAN DE BEEK", hint: "Neerlandés" }],
-            [{ name: "TAGLIAFICO", hint: "Argentino" }, { name: "BLIND", hint: "Neerlandés" }, { name: "DE LIGT", hint: "Neerlandés" }, { name: "MAZRAOUI", hint: "Marroquí" }],
-            [{ name: "ONANA", hint: "Camerunés" }]
-        ]
-    },
-    {
-        team:"ATLÉTICO DE MADRID",
-        desc: "Olympique de Marsella VS Atlético de Madrid (0-3) Final de la Europa League 2017/2018.",
-        xi: [
-            [{ name: "DIEGO COSTA", hint: "Español" }, { name: "GRIEZMANN", hint: "Francés" }],
-            [{ name: "KOKE", hint: "Español" }, { name: "SAUL ÑIGUEZ", hint: "Español" }, { name: "GABI", hint: "Español" }, { name: "CORREA", hint: "Argentino" }],
-            [{ name: "LUCAS HERNANDEZ", hint: "Francés" }, { name: "GODIN", hint: "Uruguayo" }, { name: "GIMENEZ", hint: "Uruguayo" }, { name: "VRSALJKO", hint: "Croata" }],
-            [{ name: "OBLAK", hint: "Esloveno" }]
-        ]
-    },
-    {
-        team:"REAL MADRID",
-        desc: "Athletic de Bilbao VS Real Madrid (2-3) Jornada 4 de LaLiga League 1998/1999.",
-        xi: [
-            [{ name: "RAUL", hint: "Español" }, { name: "MIJATOVIC", hint: "Montenegrino" }],
-            [{ name: "SAVIO", hint: "Brasileño" }, { name: "REDONDO", hint: "Argentino" }, { name: "SEEDORF", hint: "Holandés" }, { name: "KAREMBEU", hint: "Francés" }],
-            [{ name: "ROBERTO CARLOS", hint: "Brasileño" }, { name: "IVAN CAMPO", hint: "Español" }, { name: "HIERRO", hint: "Español" }, { name: "PANUCCI", hint: "Italiano" }],
-            [{ name: "ILLGNER", hint: "Alemán" }]
-        ]
-    },
-    {
-        team:"BARCELONA",
-        desc: "Barcelona VS Sporting Portugal (2-0) Jornada 6 de la fase de grupos de la Champions 2017/2018.",
-        xi: [
-            [{ name: "ALCACER", hint: "Español" }, { name: "SUAREZ", hint: "Uruguayo" }, { name: "ALEIX VIDAL", hint: "Español" }],
-            [{ name: "DENIS SUAREZ", hint: "Español" }, { name: "ANDRE GOMES", hint: "Portugués" }, { name: "RAKITIC", hint: "Croata" }],
-            [{ name: "DIGNE", hint: "Francés" }, { name: "VERMAELEN", hint: "Belga" }, { name: "PIQUE", hint: "Español" }, { name: "SEMEDO", hint: "Portugués" }],
-            [{ name: "CILLESSEN", hint: "Neerlandés" }]
-        ]
-    }
-];
-
-const premierPlayers = [
-    { name: "DONNARUMMA", value: 45 }, { name: "GVARDIOL", value: 70 }, { name: "MARC GUEHI", value: 65 },
-    { name: "RUBEN DIAS", value: 60 }, { name: "KHUSANOV", value: 35 }, { name: "STONES", value: 15 },
-    { name: "AKE", value: 15 }, { name: "O'REILLY", value: 50 }, { name: "AIT-NOURI", value: 40 },
-    { name: "MATHEUS NUNES", value: 45 }, { name: "RICO LEWIS", value: 32 }, { name: "RODRI", value: 65 },
-    { name: "NICO GONZALEZ", value: 45 }, { name: "REIJNDERS", value: 60 }, { name: "KOVACIC", value: 15 },
-    { name: "FODEN", value: 80 }, { name: "CHERKI", value: 65 }, { name: "BERNARDO SILVA", value: 27 },
-    { name: "DOKU", value: 65 }, { name: "SAVINHO", value: 40 }, { name: "SEMENYO", value: 75 },
-    { name: "HAALAND", value: 200 }, { name: "MARMOUSH", value: 60 },
-    { name: "DAVID RAYA", value: 35 }, { name: "KEPA ARRIZABALAGA", value: 7 },
-    { name: "SALIBA", value: 90 }, { name: "GABRIEL", value: 75 }, { name: "HINCAPIE", value: 50 },
-    { name: "MOSQUERA", value: 35 }, { name: "CALAFIORI", value: 50 }, { name: "LEWIS-SKELLY", value: 35 },
-    { name: "TIMBER", value: 70 }, { name: "BEN WHITE", value: 30 }, { name: "ZUBIMENDI", value: 80 },
-    { name: "NORGAARD", value: 7 }, { name: "DECLAN RICE", value: 120 }, { name: "MIKEL MERINO", value: 30 },
-    { name: "ODEGAARD", value: 65 }, { name: "EZE", value: 60 }, { name: "MARTINELLI", value: 45 },
-    { name: "TROSSARD", value: 20 }, { name: "SAKA", value: 120 }, { name: "MADUEKE", value: 50 },
-    { name: "DOWMAN", value: 20 }, { name: "GYOKERES", value: 65 }, { name: "HAVERTZ", value: 50 },
-    { name: "GABRIEL JESUS", value: 20 }, { name: "ROBERT SANCHEZ", value: 22 }, { name: "JORGENSEN", value: 15 },
-    { name: "COLWILL", value: 50 }, { name: "CHALOBAH", value: 40 },
-    { name: "FOFANA", value: 28 }, { name: "BADIASHILE", value: 18 }, { name: "CUCURELLA", value: 50 }, { name: "HATO", value: 35 },
-    { name: "REECE JAMES", value: 60 }, { name: "MALO GUSTO", value: 35 },
-    { name: "ACHEAMPONG", value: 25 }, { name: "CAICEDO", value: 110 }, { name: "ROMEO LAVIA", value: 25 },
-    { name: "ESSUGO", value: 17 }, { name: "ENZO FERNANDEZ", value: 90 }, { name: "ANDREY SANTOS", value: 45 },
-    { name: "COLE PALMER", value: 110 }, { name: "GARNACHO", value: 40 }, { name: "GITTENS", value: 35 },
-    { name: "MUDRYK", value: 30 }, { name: "ESTEVAO", value: 80 }, { name: "PEDRO NETO", value: 60 },
-    { name: "JOAO PEDRO", value: 75 }, { name: "DELAP", value: 32 }, { name: "MARC GUIU", value: 12 },
-    { name: "MAMARDASHVILI", value: 28 }, { name: "ALISSON", value: 17 }, { name: "KONATE", value: 50 },
-    { name: "VAN DIJK", value: 18 }, { name: "JOE GOMEZ", value: 15 }, { name: "KERKEZ", value: 40 }, { name: "ROBERTSON", value: 10 },
-    { name: "FRIMPONG", value: 35 }, { name: "BRADLEY", value: 30 }, { name: "GRAVENBERCH", value: 90 },
-    { name: "ENDO", value: 5 }, { name: "BAJCETIC", value: 5 }, { name: "MAC ALLISTER", value: 80 },
-    { name: "CURTIS JONES", value: 35 }, { name: "NYONI", value: 6 }, { name: "WIRTZ", value: 110 },
-    { name: "SZOBOSZLAI", value: 100 }, { name: "GAKPO", value: 65 }, { name: "NGUMOHA", value: 20 },
-    { name: "SALAH", value: 30 }, { name: "CHIESA", value: 15 }, { name: "ISAK", value: 100 },
-    { name: "EKITIKE", value: 90 }, { name: "VICARIO", value: 23 }, { name: "VAN DE VEN", value: 65 }, { name: "CRISTIAN ROMERO", value: 50 },
-    { name: "RADU DRAGUSIN", value: 20 }, { name: "DANSO", value: 20 }, { name: "BEN DAVIES", value: 5 },
-    { name: "UDOGIE", value: 35 }, { name: "PEDRO PORRO", value: 40 }, { name: "BENTANCUR", value: 22 }, { name: "PALHINHA", value: 18 },
-    { name: "BISSOUMA", value: 12 }, { name: "BERGVALL", value: 40 }, { name: "GRAY", value: 35 },
-    { name: "GALLAGHER", value: 35 }, { name: "SARR", value: 32 }, { name: "XAVI SIMONS", value: 50 },
-    { name: "KULUSEVSKI", value: 35 }, { name: "MADDISON", value: 25 }, { name: "KUDUS", value: 55 }, { name: "SOLANKE", value: 35 }, 
-    { name: "RICHARLISON", value: 28 }, { name: "MATHYS TEL", value: 25 }, { name: "KOLO MUANI", value: 22 }
-];
-
-const estadiosLaLiga = [
-    { name: "BERNABEU", value: 83186 }, { name: "CAMP NOU", value: 99354 },
-    { name: "METROPOLITANO", value: 70692 }, { name: "LA CERAMICA", value: 22000 },
-    { name: "BENITO VILLAMARIN", value: 60721 }, { name: "COLISEUM", value: 16500 },
-    { name: "BALAIDOS", value: 24870 }, { name: "ANOETA", value: 40000 },
-    { name: "EL SADAR", value: 23576 }, { name: "SAN MAMES", value: 53289 },
-    { name: "VALLECAS", value: 14708 }, { name: "MESTALLA", value: 49430 },
-    { name: "RCDE STADIUM", value: 40445 }, { name: "MARTINEZ VALERO", value: 33732 },
-    { name: "MONTILIVI", value: 14624 }, { name: "MENDIZORROZA", value: 19840 },
-    { name: "SON MOIX", value: 26020 }, { name: "RAMON SANCHEZ-PIZJUAN", value: 43864 },
-    { name: "CIUTAT DE VALENCIA", value: 23354 }, { name: "CARLOS TARTIERE", value: 30500 }
-];
-
-const englishTeamsDB = [
-    "ARSENAL", "MANCHESTER CITY", "MANCHESTER UNITED", "LIVERPOOL", 
-    "ASTON VILLA", "BRIGHTON", "BOURNEMOUTH", "CHELSEA", 
-    "BRENTFORD", "FULHAM", "EVERTON", "SUNDERLAND", 
-    "CRYSTAL PALACE", "NEWCASTLE", "LEEDS UNITED", "NOTTINGHAM", 
-    "WEST HAM", "TOTTENHAM", "BURNLEY", "WOLVERHAMPTON",
-    "COVENTRY CITY", "IPSWICH TOWN", "MILLWALL", "MIDDLESBROUGH", 
-    "SOUTHAMPTON", "WREXHAM", "HULL CITY", "DERBY COUNTY", 
-    "NORWICH CITY", "BIRMINGHAM CITY", "SWANSEA CITY", "PRESTON NORTH END", 
-    "BRISTOL CITY", "QUEENS PARK RANGERS", "SHEFFIELD UNITED", "WATFORD", 
-    "STOKE CITY", "PORTSMOUTH", "CHARLTON ATHLETIC", "BLACKBURN ROVERS", 
-    "WEST BROMWICH ALBION", "OXFORD UNITED", "LEICESTER CITY", "SHEFFIELD WEDNESDAY"
-];
-
-const top10DB = [
-    {
-        id: 'goleadores_champions',
-        title: 'TOP 10 GOLEADORES',
-        desc: 'Máximos anotadores históricos de la Champions League',
-        items: [
-            { rank: 1, name: "CRISTIANO RONALDO", flag: "portugal", stat: "141 Goles", revealed: false },
-            { rank: 2, name: "LIONEL MESSI", flag: "argentina", stat: "129 Goles", revealed: false },
-            { rank: 3, name: "ROBERT LEWANDOWSKI", flag: "polonia", stat: "109 Goles", revealed: false },
-            { rank: 4, name: "KARIM BENZEMA", flag: "francia", stat: "90 Goles", revealed: false },
-            { rank: 5, name: "RAUL GONZALEZ", flag: "espana", stat: "71 Goles", revealed: false },
-            { rank: 6, name: "KYLIAN MBAPPE", flag: "francia", stat: "70 Goles", revealed: false },
-            { rank: 7, name: "RUUD VAN NISTELROOY", flag: "paises_bajos", stat: "60 Goles", revealed: false },
-            { rank: 8, name: "ANDRIY SHEVCHENKO", flag: "ucrania", stat: "59 Goles", revealed: false },
-            { rank: 9, name: "ERLING HAALAND", flag: "noruega", stat: "57 Goles", revealed: false },
-            { rank: 10, name: "THOMAS MULLER", flag: "alemania", stat: "57 Goles", revealed: false }
-        ]
-    },
-    {
-        id: 'salarios_laliga',
-        title: 'TOP 10 SALARIOS',
-        desc: 'Máximos salarios a la semana actuales de LaLiga',
-        items: [
-            { rank: 1, name: "KYLIAN MBAPPE", flag: "francia", stat: "600.962€", revealed: false },
-            { rank: 2, name: "VINICIUS JUNIOR", flag: "brasil", stat: "480.769€", revealed: false },
-            { rank: 3, name: "DAVID ALABA", flag: "austria", stat: "432.692€", revealed: false },
-            { rank: 4, name: "ROBERT LEWANDOWSKI", flag: "polonia", stat: "400.577€", revealed: false },
-            { rank: 5, name: "JUDE BELLINGHAM", flag: "inglaterra", stat: "400.577€", revealed: false },
-            { rank: 6, name: "JAN OBLAK", flag: "eslovenia", stat: "400.577€", revealed: false },
-            { rank: 7, name: "FRENKIE DE JONG", flag: "paises_bajos", stat: "365.385€", revealed: false },
-            { rank: 8, name: "FEDERICO VALVERDE", flag: "uruguay", stat: "320.577€", revealed: false },
-            { rank: 9, name: "LAMINE YAMAL", flag: "espana", stat: "320.577€", revealed: false },
-            { rank: 10, name: "RAPHINHA", flag: "brasil", stat: "320.577€", revealed: false }
-        ]
-    },
-    {
-        id: 'salarios_premier',
-        title: 'TOP 10 SALARIOS',
-        desc: 'Máximos salarios a la semana actuales de la Premier League',
-        items: [
-            { rank: 1, name: "ERLING HAALAND", flag: "noruega", stat: "525.000€", revealed: false },
-            { rank: 2, name: "MOHAMED SALAH", flag: "egipto", stat: "400.000", revealed: false },
-            { rank: 3, name: "VIRJIL VAN DIJK", flag: "paises_bajos", stat: "350.000€", revealed: false },
-            { rank: 4, name: "CASEMIRO", flag: "brasil", stat: "350.000€", revealed: false },
-            { rank: 5, name: "BERNARDO SILVA", flag: "portugal", stat: "300.000€", revealed: false },
-            { rank: 6, name: "BRUNO FERNANDES", flag: "portugal", stat: "300.000€", revealed: false },
-            { rank: 7, name: "OMAR MARMOUSH", flag: "egipto", stat: "295.000€", revealed: false },
-            { rank: 8, name: "KAI HAVERTZ", flag: "alemania", stat: "280.000€", revealed: false },
-            { rank: 9, name: "ALEXANDER ISAK", flag: "suecia", stat: "280.000€", revealed: false },
-            { rank: 10, name: "GABRIEL JESUS", flag: "brasil", stat: "265.000€", revealed: false }
-        ]
-    },
-    {
-        id: 'goleadores_mundiales',
-        title: 'TOP 10 MUNDIALES',
-        desc: 'Máximos goleadores históricos de la Copa del Mundo',
-        items: [
-            { rank: 1, name: "MIROSLAV KLOSE", flag: "alemania", stat: "16 Goles", revealed: false },
-            { rank: 2, name: "RONALDO NAZARIO", flag: "brasil", stat: "15 Goles", revealed: false },
-            { rank: 3, name: "GERD MULLER", flag: "alemania", stat: "14 Goles", revealed: false },
-            { rank: 4, name: "JUST FONTAINE", flag: "francia", stat: "13 Goles", revealed: false },
-            { rank: 5, name: "LIONEL MESSI", flag: "argentina", stat: "13 Goles", revealed: false },
-            { rank: 6, name: "PELE", flag: "brasil", stat: "12 Goles", revealed: false },
-            { rank: 7, name: "KYLIAN MBAPPE", flag: "francia", stat: "12 Goles", revealed: false },
-            { rank: 8, name: "SANDOR KOCSIS", flag: "hungria", stat: "11 Goles", revealed: false },
-            { rank: 9, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false },
-            { rank: 10, name: "HELMUT RAHN", flag: "alemania", stat: "10 Goles", revealed: false }
-        ]
-    },
-    {
-        id: 'fichajes_historicos',
-        title: 'TOP 10 FICHAJES',
-        desc: 'Los fichajes más caros de la historia del fútbol',
-        items: [
-            { rank: 1, name: "NEYMAR JUNIOR", flag: "brasil", stat: "222 M€", revealed: false },
-            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "180 M€", revealed: false },
-            { rank: 3, name: "OUSMANE DEMBELE", flag: "francia", stat: "135 M€", revealed: false },
-            { rank: 4, name: "PHILIPPE COUTINHO", flag: "brasil", stat: "135 M€", revealed: false },
-            { rank: 5, name: "MOISES CAICEDO", flag: "ecuador", stat: "133 M€", revealed: false },
-            { rank: 6, name: "JOAO FELIX", flag: "portugal", stat: "126 M€", revealed: false },
-            { rank: 7, name: "DECLAN RICE", flag: "inglaterra", stat: "122 M€", revealed: false },
-            { rank: 8, name: "ENZO FERNANDEZ", flag: "argentina", stat: "121 M€", revealed: false },
-            { rank: 9, name: "ANTOINE GRIEZMANN", flag: "francia", stat: "120 M€", revealed: false },
-            { rank: 10, name: "JACK GREALISH", flag: "inglaterra", stat: "117 M€", revealed: false },
-        ]
-    },
-    {
-        id: 'trayectoria_zlatan',
-        title: 'TRAYECTORIA ZLATAN',
-        desc: 'Clubes de Ibrahimovic en orden cronológico',
-        items: [
-            { rank: 1, name: "MALMO FF", flag: "suecia", stat: "1999-2001", revealed: false },
-            { rank: 2, name: "AJAX", flag: "paises_bajos", stat: "2001-2004", revealed: false },
-            { rank: 3, name: "JUVENTUS", flag: "italia", stat: "2004-2006", revealed: false },
-            { rank: 4, name: "INTER DE MILAN", flag: "italia", stat: "2006-2009", revealed: false },
-            { rank: 5, name: "FC BARCELONA", flag: "espana", stat: "2009-2010", revealed: false },
-            { rank: 6, name: "AC MILAN", flag: "italia", stat: "2010-2012", revealed: false },
-            { rank: 7, name: "PSG", flag: "francia", stat: "2012-2016", revealed: false },
-            { rank: 8, name: "MANCHESTER UNITED", flag: "inglaterra", stat: "2016-2018", revealed: false },
-            { rank: 9, name: "LA GALAXY", flag: "estados_unidos", stat: "2018-2019", revealed: false },
-            { rank: 10, name: "AC MILAN", flag: "italia", stat: "2020-2023", revealed: false }
-        ]
-    }
-    
-];
-
-const knowballDB = [
-    {
-        title: "Máximos Goleadores LaLiga",
-        desc: "Ordena de más a menos goles históricos",
-        items: ["TELMO ZARRA", "HUGO SANCHEZ", "DI ESTEFANO", "GRIEZMANN", "DAVID VILLA"] 
-    },
-    {
-        title: "Ganadores Balón de Oro",
-        desc: "Ordena de más a menos galardones",
-        items: ["LIONEL MESSI", "CRISTIANO RONALDO", "MICHEL PLATINI", "FRANZ BECKENBAUER", "LUKA MODRIC"] 
-    },
-    {
-        title: "Selecciones con más Mundiales",
-        desc: "Ordena de más a menos Copas del Mundo ganadas",
-        items: ["BRASIL", "ALEMANIA", "ARGENTINA", "FRANCIA", "ESPAÑA"] 
-    },
-    {
-        title: "Equipos con más Champions",
-        desc: "Ordena de más a menos títulos de Champions League",
-        items: ["REAL MADRID", "AC MILAN", "BAYERN MUNICH", "FC BARCELONA", "JUVENTUS"] 
-    },
-    {
-        title: "Goleadores de los Mundiales",
-        desc: "Ordena de más a menos goles en Copas del Mundo",
-        items: ["MIROSLAV KLOSE", "RONALDO NAZARIO", "GERD MULLER", "JUST FONTAINE", "PELE"] 
-    },
-    {
-        title: "Entrenadores con más Champions",
-        desc: "Ordena de más a menos títulos como entrenador",
-        items: ["CARLO ANCELOTTI", "PEP GUARDIOLA", "JOSE MOURINHO", "JURGEN KLOPP", "DIEGO SIMEONE"] 
-    },
-    {
-        title: "Selecciones con más Eurocopas",
-        desc: "Ordena de más a menos títulos europeos",
-        items: ["ESPAÑA", "ALEMANIA", "ITALIA", "PORTUGAL", "INGLATERRA"] 
-    },
-    {
-        title: "Goleadores de España",
-        desc: "Ordena de más a menos goles con la Selección Española",
-        items: ["DAVID VILLA", "RAUL GONZALEZ", "FERNANDO TORRES", "ALVARO MORATA", "DAVID SILVA"] 
-    },
-    {
-        title: "Equipos con más Ligas Inglesas",
-        desc: "Ordena de más a menos títulos históricos (First Div. / Premier)",
-        items: ["MANCHESTER UNITED", "LIVERPOOL", "ARSENAL", "MANCHESTER CITY", "CHELSEA"] 
-    },
-    {
-        title: "Goleadores Premier League",
-        desc: "Ordena de más a menos goles históricos en la Premier",
-        items: ["ALAN SHEARER", "HARRY KANE", "WAYNE ROONEY", "SERGIO AGUERO", "THIERRY HENRY"] 
-    },
-    {
-        title: "Más partidos en LaLiga",
-        desc: "Ordena de más a menos partidos jugados en Primera",
-        items: ["JOAQUIN", "RAUL GARCIA", "RAUL GONZALEZ", "LIONEL MESSI", "SERGIO RAMOS"] 
-    }
-];
-
-// ==========================================
-// 2. ESTADOS GLOBALES DE LOS JUEGOS
-// ==========================================
-let currentCategory = "";
-let gameState = { word: "", guessed: [], mistakes: 0, streak: 0 };
-let blurState = { player: "", blur: 30, lives: 5, streak: 0 };
-let timeMachineState = { event: "", year: 0, lives: 5, streak: 0 };
-let elevenState = { match: null, guessed: [], timer: null, timeLeft: 180, totalPlayers: 11 };
-let wordleState = { targetPlayer: "", answer: "", guesses: [], currentGuess: "", maxGuesses: 6, wordLength: 5 };
-let hlState = { p1: null, p2: null, score: 0 };
-let aforosState = { p1: null, p2: null, score: 0 };
-let zoomState = { team: "", streak: 0, lives: 5, currentScale: 4 };
-let top10State = { currentList: null, guessedCount: 0 };
-let kbState = { currentTrivia: null, score: 0 };
-
-let roscoState = {
-    mode: 'individual',
-    currentPlayer: 1, 
-    timerInterval: null,
-    p1: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false },
-    p2: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false }
-};
-
-// ==========================================
-// 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
-// ==========================================
-
-function getCoins() { return parseInt(localStorage.getItem('f10_coins') || '0') || 0; }
-function addCoins(amount) {
-    let current = getCoins() + amount;
-    localStorage.setItem('f10_coins', current);
-    const menuCoins = document.getElementById('menu-coins');
-    if (menuCoins) menuCoins.innerText = current;
-}
-
-function getRecord(gameId) { return parseInt(localStorage.getItem(`f10_${gameId}_max`) || '0') || 0; }
-function updateRecord(gameId, score) {
-    let max = getRecord(gameId);
-    if (score > max) {
-        localStorage.setItem(`f10_${gameId}_max`, score);
-        return score;
-    }
-    return max;
-}
-
-function showProfile() {
-    document.getElementById('profile-coins').innerText = getCoins();
-    const statsHTML = `
-        <div class="profile-stat-item"><span>Ahorcado</span> <span class="stat-value">🏆 ${getRecord('hangman')}</span></div>
-        <div class="profile-stat-item"><span>Blur Guess</span> <span class="stat-value">🏆 ${getRecord('blur')}</span></div>
-        <div class="profile-stat-item"><span>Máquina del Tiempo</span> <span class="stat-value">🏆 ${getRecord('tm')}</span></div>
-        <div class="profile-stat-item"><span>Higher/Lower</span> <span class="stat-value">🏆 ${getRecord('hl')}</span></div>
-        <div class="profile-stat-item"><span>Guerra Aforos</span> <span class="stat-value">🏆 ${getRecord('aforos')}</span></div>
-        <div class="profile-stat-item"><span>Zoom Escudos</span> <span class="stat-value">🏆 ${getRecord('zoom')}</span></div>
-    `;
-    document.getElementById('profile-stats').innerHTML = statsHTML;
-    document.getElementById('profile-modal').classList.remove('hidden');
-}
-
-function closeProfile() {
-    document.getElementById('profile-modal').classList.add('hidden');
-}
-
-// Inicializar monedas en el menú al cargar
-document.addEventListener("DOMContentLoaded", () => {
-    const menuCoins = document.getElementById('menu-coins');
-    if(menuCoins) menuCoins.innerText = getCoins();
-});
-
-// ==========================================
-// 3. NAVEGACIÓN Y MENÚS
-// ==========================================
-
-function showMenu() {
-    if (elevenState.timer) clearInterval(elevenState.timer);
-    if (roscoState.timerInterval) clearInterval(roscoState.timerInterval);
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById('menu-screen').classList.remove('hidden');
-}
-
-function showRoscoMenu() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById('rosco-menu-screen').classList.remove('hidden');
-}
-
-function showCategory(category) {
-    if (elevenState.timer) clearInterval(elevenState.timer);
-    currentCategory = category;
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    
-    const catScreen = document.getElementById('category-screen');
-    const grid = document.getElementById('category-games-grid');
-    const title = document.getElementById('category-title');
-    
-    if (!catScreen || !grid) return;
-
-    catScreen.classList.remove('hidden');
-    grid.innerHTML = "";
-
-    if (category === 'laliga') {
-        title.innerHTML = "LALIGA <span>EA SPORTS</span>";
-        grid.innerHTML = `
-            <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
-                <div class="card-bg bg-ahorcado"></div>
-                <div class="card-info"><h3>Ahorcado</h3><p>Nivel Clásico</p></div>
-            </div>
-            <div class="menu-card blur-game-card" onclick="showGame('blur')">
-                <div class="card-bg bg-blur"></div> 
-                <div class="card-info"><h3>Blur Guess</h3><p>Adivina el jugador</p></div>
-            </div>
-            <div class="menu-card aforos-game-card" onclick="showGame('aforos')">
-                    <div class="card-bg bg-aforos"></div>
-                    <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
-                </div>`;
-   } else if (category === 'leyendas') {
-        title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
-        grid.innerHTML = `
-            <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
-                <div class="card-bg bg-timemachine"></div>
-                <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
-            </div>
-            <div class="menu-card coming-soon">
-                <span class="icon">📈</span>
-                <h3>Higher or Lower</h3><p>Próximamente</p>
-            </div>`;
-    } else if (category === 'europeos') {
-        title.innerHTML = "JUEGOS <span>EUROPEOS</span>";
-        grid.innerHTML = `
-            <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
-                <div class="card-bg bg-europeos"></div>
-                <div class="card-info"><h3>XI Histórico</h3><p>Adivina con Futdle</p></div>
-            </div>
-            <div class="menu-card knowball-game-card" onclick="showGame('knowball')">
-                <div class="card-bg bg-knowball"></div>
-                <div class="card-info"><h3>Knowball</h3><p>Pirámide Top 5</p></div>
-            </div>`;
-    } else {
-        title.innerHTML = "PREMIER <span>LEAGUE</span>";
-        grid.innerHTML = `
-            <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
-                <div class="card-bg bg-higherlower"></div>
-                <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
-            </div>
-            <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
-                <div class="card-bg bg-premier"></div>
-                <div class="card-info"><h3>Escudos Zoom</h3><p>Reconoce el detalle</p></div>
-            </div>`;
-    }
-}
-
-function showGame(gameId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    const target = document.getElementById(`${gameId}-screen`);
-    if(target) {
-        target.classList.remove('hidden');
-        if(gameId === 'hangman') initHangman();
-        if(gameId === 'blur') initBlurGame();
-        if(gameId === 'timemachine') initTimeMachine();
-        if(gameId === 'eleven') initElevenGame();
-        if(gameId === 'higherlower') initHigherLower(); 
-        if(gameId === 'aforos') initAforosGame();
-        if(gameId === 'zoom') initZoomGame();
-        if(gameId === 'top10') initTop10(); 
-        if(gameId === 'knowball') initKnowball();
-        if(gameId === 'album') initAlbum();
-    }
-}
-
-function backToCategory() { showCategory(currentCategory); }
-
-// ==========================================
-// 4. FUNCIONES DE UTILIDAD (MODALES, AUTOCOMPLETAR)
-// ==========================================
-
-function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
-    const modal = document.getElementById('custom-modal');
-    document.getElementById('modal-title').innerText = titulo;
-    document.getElementById('modal-message').innerText = mensaje;
-    
-    modal.classList.remove('hidden');
-    document.getElementById('modal-btn').onclick = () => {
-        modal.classList.add('hidden');
-        if (accionAlCerrar) accionAlCerrar();
-    };
-}
-
-function setupAutocomplete(inputId, suggestionId) {
-    const input = document.getElementById(inputId);
-    const box = document.getElementById(suggestionId);
-    if(!input || !box) return;
-
-    input.addEventListener('input', () => {
-        const val = input.value.toUpperCase().trim();
-        box.innerHTML = "";
-        if (val.length < 2) return;
-        
-        // Por defecto busca jugadores
-        let sourceArray = players; 
-        
-        // Si estamos en el juego de Zoom (equipos), cambiamos la lista a englishTeamsDB
-        if (inputId === 'zoomInput') {
-            sourceArray = englishTeamsDB; 
-        }
-        
-        // Filtra las coincidencias y muestra un máximo de 4
-        const matches = sourceArray.filter(p => p.includes(val)).slice(0, 4);
-        matches.forEach(match => {
-            const div = document.createElement('div');
-            div.textContent = match;
-            div.onclick = () => { 
-                input.value = match; 
-                box.innerHTML = ""; 
-            };
-            box.appendChild(div);
-        });
-    });
-}
-
-function obtenerDosRoscos() {
-    let r1 = [], r2 = [];
-    roscoQuestions.forEach(item => {
-        let options = [...item.preguntas];
-        options.sort(() => Math.random() - 0.5); 
-        r1.push({ letra: item.letra, respuesta: options[0].respuesta, hint: options[0].hint });
-        let idx2 = options.length > 1 ? 1 : 0;
-        r2.push({ letra: item.letra, respuesta: options[idx2].respuesta, hint: options[idx2].hint });
-    });
-    return [r1, r2];
-}
-
-// ==========================================
-// 5. LÓGICA DE JUEGOS INDIVIDUALES
-// ==========================================
-
-// --- AHORCADO ---
-function initHangman() {
-    // Intentar cargar progreso si existe
-    if (loadHangmanProgress()) {
-        document.getElementById('lives').innerText = 6 - gameState.mistakes;
-        document.getElementById('streak').innerText = gameState.streak;
-        document.getElementById('max-streak').innerText = getRecord('hangman');
-        renderKeyboard();
-        // Marcar teclas ya usadas
-        gameState.guessed.forEach(char => {
-            const el = document.getElementById(`key-${char}`);
-            if(el) el.classList.add('used');
-        });
-        updateDisplay();
-        drawCanvas(gameState.mistakes);
-        return; // Salimos de la función aquí si cargamos partida
-    }
-
-    // Si no hay partida guardada, empezamos nueva
-    gameState = { 
-        word: players[Math.floor(Math.random() * players.length)].toUpperCase(), 
-        guessed: [], 
-        mistakes: 0, 
-        streak: gameState.streak // Mantenemos la racha
-    };
-    
-    document.getElementById('lives').innerText = 6;
-    document.getElementById('streak').innerText = gameState.streak;
-    document.getElementById('max-streak').innerText = getRecord('hangman');
-    document.getElementById('wordInput').value = "";
-    document.getElementById('hangman-suggestions').innerHTML = "";
-    
-    renderKeyboard();
-    updateDisplay();
-    drawCanvas(0);
-    saveHangmanProgress();
-}
-
-function buyHangmanHint() {
-    if(getCoins() < 50) {
-        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 50 FutCoins para comprar una pista. ¡Acertando jugadores ganas monedas!");
-        return;
-    }
-    const nWord = removeAccents(gameState.word);
-    const unrevealed = nWord.split('').filter(c => c !== ' ' && !gameState.guessed.includes(c));
-    
-    if(unrevealed.length === 0) return;
-    
-    addCoins(-50); // Cobrar 50 monedas
-    const randomChar = unrevealed[Math.floor(Math.random() * unrevealed.length)];
-    handleInput(randomChar); // Simular que el usuario pulsó la letra
-}
-
-function renderKeyboard() {
-    const container = document.getElementById('qwerty-keyboard');
-    container.innerHTML = ''; 
-    QWERTY_LAYOUT.forEach(row => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'keyboard-row';
-        row.split('').forEach(letter => {
-            const keyDiv = document.createElement('div');
-            keyDiv.className = 'key';
-            keyDiv.textContent = letter;
-            keyDiv.id = `key-${letter}`;
-            keyDiv.onclick = () => handleInput(letter);
-            rowDiv.appendChild(keyDiv);
-        });
-        container.appendChild(rowDiv);
-    });
-}
-
-function handleInput(char) {
-    // Evitar que se pulse nada si el juego ya terminó
-    if (gameState.mistakes >= 6 || !document.getElementById('wordDisplay').textContent.includes("_")) return;
-    
-    if (gameState.guessed.includes(char)) return;
-    gameState.guessed.push(char);
-    const keyElement = document.getElementById(`key-${char}`);
-    if (keyElement) keyElement.classList.add('used');
-
-    const nWord = removeAccents(gameState.word);
-    
-    if (!nWord.includes(char)) {
-        gameState.mistakes++;
-        document.getElementById('lives').innerText = 6 - gameState.mistakes;
-        drawCanvas(gameState.mistakes);
-        
-        if (gameState.mistakes >= 6) {
-            localStorage.removeItem('f10_hangman_save'); // Limpiar guardado al perder
-            updateRecord('hangman', gameState.streak);
-            gameState.streak = 0; 
-            mostrarMensajePro("🧤 ¡TARJETA ROJA!", "La respuesta era: " + gameState.word + ".", () => initHangman());
-            return; // <--- VITAL: Cortar la función aquí para no volver a guardar
-        }
-    } else {
-        updateDisplay();
-        // Si al actualizar la pantalla detectamos que ya no hay guiones (victoria)
-        if (!document.getElementById('wordDisplay').textContent.includes("_")) {
-            return; // <--- VITAL: Cortar la función para no re-guardar la partida terminada
-        }
-    }
-    
-    // Si no hemos ganado ni perdido, guardamos el progreso y la letra
-    saveHangmanProgress(); 
-}
-
-function updateDisplay() {
-    const words = gameState.word.split(" ");
-    const displayHTML = words.map(word => {
-        const letters = word.split('').map(char => {
-            // El guion se muestra siempre (no es una letra oculta)
-            if (char === '-') return "-";
-            const normChar = removeAccents(char);
-            return gameState.guessed.includes(normChar) ? char : "_";
-        }).join(" ");
-        return `<span style="white-space: nowrap;">${letters}</span>`;
-    }).join(" &nbsp;&nbsp; "); 
-    
-    document.getElementById('wordDisplay').innerHTML = displayHTML;
-    
-    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
-        localStorage.removeItem('f10_hangman_save'); // Limpiar al ganar
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let livesLeft = 6 - gameState.mistakes;
-        let wonCoins = 0;
-        if (livesLeft === 6) wonCoins = 10;
-        else if (livesLeft === 5) wonCoins = 7;
-        else if (livesLeft === 4) wonCoins = 5;
-        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
-        else if (livesLeft === 1) wonCoins = 2;
-
-        addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡LOKUURA!", `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
-    }
-}
-
-function solveFullWord() {
-    const val = document.getElementById('wordInput').value.toUpperCase().trim();
-    const nVal = removeAccents(val);
-    const nWord = removeAccents(gameState.word);
-    
-    if (nVal === nWord && nVal !== "") {
-        localStorage.removeItem('f10_hangman_save'); // <--- Limpiar también al ganar del tirón
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-        
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let livesLeft = 6 - gameState.mistakes;
-        let wonCoins = 0;
-        if (livesLeft === 6) wonCoins = 10;
-        else if (livesLeft === 5) wonCoins = 7;
-        else if (livesLeft === 4) wonCoins = 5;
-        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
-        else if (livesLeft === 1) wonCoins = 2;
-
-        addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
-    } else {
-        localStorage.removeItem('f10_hangman_save'); // <--- Limpiar al fallar del tirón
-        updateRecord('hangman', gameState.streak);
-        gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
-    }
-}
-
-function drawCanvas(step) {
-    const c = document.getElementById('hangmanCanvas');
-    const ctx = c.getContext('2d');
-    ctx.strokeStyle = "#222"; ctx.lineWidth = 4;
-    if(step === 0) {
-        ctx.clearRect(0,0,220,280);
-        ctx.beginPath();
-        ctx.moveTo(20,260); ctx.lineTo(180,260);
-        ctx.moveTo(50,260); ctx.lineTo(50,20);
-        ctx.lineTo(150,20); ctx.lineTo(150,50);
-        ctx.stroke();
-        return;
-    }
-    if(step >= 1) { ctx.beginPath(); ctx.arc(150, 80, 25, 0, Math.PI*2); ctx.stroke(); }
-    if(step >= 2) { ctx.beginPath(); ctx.moveTo(150, 105); ctx.lineTo(150, 180); ctx.stroke(); }
-    if(step >= 3) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(120, 150); ctx.stroke(); }
-    if(step >= 4) { ctx.beginPath(); ctx.moveTo(150, 120); ctx.lineTo(180, 150); ctx.stroke(); }
-    if(step >= 5) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(120, 220); ctx.stroke(); }
-    if(step >= 6) { ctx.beginPath(); ctx.moveTo(150, 180); ctx.lineTo(180, 220); ctx.stroke(); }
-}
-
-// --- BLUR GUESS ---
-function initBlurGame() {
-    blurState.player = players[Math.floor(Math.random() * players.length)].toUpperCase();
-    blurState.blur = 30;
-    blurState.lives = 5;
-    document.getElementById('blur-lives').innerText = blurState.lives;
-    document.getElementById('blur-streak').innerText = blurState.streak;
-    document.getElementById('blur-max').innerText = getRecord('blur'); 
-    document.getElementById('blurInput').value = "";
-    document.getElementById('blur-suggestions').innerHTML = "";
-    const img = document.getElementById('playerImg');
-    img.src = `players/${blurState.player.replace(/ /g, '_')}.jpg`;
-    img.style.filter = `blur(${blurState.blur}px)`;
-}
-
-function checkBlurGuess() {
-    const input = document.getElementById('blurInput');
-    const val = input.value.toUpperCase().trim();
-    const nVal = removeAccents(val);
-    const nPlayer = removeAccents(blurState.player);
-    
-    if (nVal === nPlayer && nVal !== "") {
-        blurState.streak++;
-        let nuevoRecord = updateRecord('blur', blurState.streak); 
-        document.getElementById('blur-max').innerText = nuevoRecord; 
-        
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let wonCoins = 0;
-        if (blurState.lives === 5) wonCoins = 10;
-        else if (blurState.lives === 4) wonCoins = 7;
-        else if (blurState.lives === 3) wonCoins = 5;
-        else if (blurState.lives === 2) wonCoins = 3;
-        else if (blurState.lives === 1) wonCoins = 2;
-
-        addCoins(wonCoins); 
-        document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`, () => initBlurGame()), 300);
-    } else {
-        blurState.lives--;
-        blurState.blur -= 6;
-        if (blurState.lives <= 0) {
-            updateRecord('blur', blurState.streak); 
-            blurState.streak = 0;
-            document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
-        } else {
-            document.getElementById('blur-lives').innerText = blurState.lives;
-            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
-            input.value = "";
-        }
-    }
-}
-
-// --- TIME MACHINE ---
-function initTimeMachine() {
-    const randomEvent = timeMachineEvents[Math.floor(Math.random() * timeMachineEvents.length)];
-    timeMachineState.event = randomEvent.event;
-    timeMachineState.year = randomEvent.year;
-    timeMachineState.lives = 5;
-
-    document.getElementById('tm-lives').innerText = timeMachineState.lives;
-    document.getElementById('tm-streak').innerText = timeMachineState.streak;
-    document.getElementById('tm-max').innerText = getRecord('tm'); 
-    document.getElementById('tm-event-text').innerText = timeMachineState.event;
-    document.getElementById('tm-image').src = `events/${randomEvent.foto}.jpg`;
-    document.getElementById('tmInput').value = "";
-    document.getElementById('tm-feedback').innerText = "";
-    
-    setTimeout(() => document.getElementById('tmInput').focus(), 100);
-}
-
-function checkTimeMachineGuess() {
-    const inputField = document.getElementById('tmInput');
-    const guess = parseInt(inputField.value);
-    if(isNaN(guess)) return;
-
-    if (guess === timeMachineState.year) {
-        timeMachineState.streak++;
-        let nuevoRecord = updateRecord('tm', timeMachineState.streak); 
-        document.getElementById('tm-max').innerText = nuevoRecord; 
-        addCoins(2); 
-        mostrarMensajePro("⏳ ¡CLAVADO!", `Efectivamente, fue en el año ${timeMachineState.year}.\n¡Has ganado +2 FutCoins 🪙!`, () => initTimeMachine());
-    } else {
-        timeMachineState.lives--;
-        if (timeMachineState.lives <= 0) {
-            updateRecord('tm', timeMachineState.streak); 
-            timeMachineState.streak = 0;
-            mostrarMensajePro("❌ ¡FIN DEL TIEMPO!", `El año correcto era ${timeMachineState.year}.`, () => initTimeMachine());
-        } else {
-            document.getElementById('tm-lives').innerText = timeMachineState.lives;
-            document.getElementById('tm-feedback').innerText = guess < timeMachineState.year ? "⬆️ Es MÁS reciente" : "⬇️ Es MÁS antiguo";
-            inputField.value = "";
-            inputField.focus();
-        }
-    }
-}
-
-// --- EL ROSCO ---
-function initRosco(mode) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById('rosco-screen').classList.remove('hidden');
-
-    const circle = document.getElementById('rosco-circle');
-    circle.innerHTML = "";
-    if (roscoState.timerInterval) clearInterval(roscoState.timerInterval);
-    
-    let [q1, q2] = obtenerDosRoscos();
-
-    roscoState = { 
-        mode: mode,
-        currentPlayer: 1,
-        p1: { currentIndex: 0, results: {}, timeLeft: mode === 'individual' ? 300 : 150, questions: q1, done: false },
-        p2: { currentIndex: 0, results: {}, timeLeft: 150, questions: q2, done: false },
-        timerInterval: null
-    };
-
-    if (mode === 'individual') {
-        document.getElementById('rosco-single-timer').classList.remove('hidden');
-        document.getElementById('rosco-multi-timers').classList.add('hidden');
-        document.getElementById('rosco-player-title').style.display = 'none';
-        document.getElementById('rosco-timer-single').textContent = roscoState.p1.timeLeft;
-    } else {
-        document.getElementById('rosco-single-timer').classList.add('hidden');
-        document.getElementById('rosco-multi-timers').classList.remove('hidden');
-        document.getElementById('rosco-player-title').style.display = 'block';
-        document.getElementById('rosco-timer-p1').textContent = roscoState.p1.timeLeft;
-        document.getElementById('rosco-timer-p2').textContent = roscoState.p2.timeLeft;
-    }
-
-    roscoAlphabet.forEach((letra, i) => {
-        const div = document.createElement('div');
-        div.className = 'rosco-letter';
-        div.id = `letra-${letra}`;
-        div.textContent = letra;
-        const angle = (i * 360 / roscoAlphabet.length) - 90;
-        const radius = window.innerWidth < 600 ? 140 : 220;
-        const x = Math.cos(angle * Math.PI / 180) * radius;
-        const y = Math.sin(angle * Math.PI / 180) * radius;
-        div.style.left = `calc(50% + ${x}px)`;
-        div.style.top = `calc(50% + ${y}px)`;
-        circle.appendChild(div);
-    });
-
-    renderRoscoTurn();
-    startRoscoTimer();
-}
-
-function renderRoscoTurn() {
-    const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
-    const state = roscoState[pKey];
-
-    document.querySelectorAll('.rosco-letter').forEach((el, i) => {
-        const letra = roscoAlphabet[i];
-        el.className = 'rosco-letter'; 
-        if (state.results[letra] === 'correct') el.classList.add('correct');
-        else if (state.results[letra] === 'wrong') el.classList.add('wrong');
-    });
-
-    const currentEl = document.getElementById(`letra-${roscoAlphabet[state.currentIndex]}`);
-    currentEl.classList.add('current');
-    
-    if (roscoState.mode === 'multiplayer') {
-        currentEl.classList.add(roscoState.currentPlayer === 1 ? 'current-p1' : 'current-p2');
-        const titleEl = document.getElementById('rosco-player-title');
-        titleEl.textContent = `Turno: Jugador ${roscoState.currentPlayer}`;
-        titleEl.className = roscoState.currentPlayer === 1 ? 'title-p1' : 'title-p2';
-
-        document.getElementById('rosco-timer-p1').classList.toggle('timer-active', roscoState.currentPlayer === 1);
-        document.getElementById('rosco-timer-p2').classList.toggle('timer-active', roscoState.currentPlayer === 2);
-    }
-
-    const q = state.questions[state.currentIndex];
-    document.getElementById('rosco-letter-hint').textContent = q.letra;
-    document.getElementById('rosco-definition').textContent = q.hint;
-    document.getElementById('roscoInput').value = "";
-    document.getElementById('roscoInput').focus();
-}
-
-function startRoscoTimer() {
-    if(roscoState.timerInterval) clearInterval(roscoState.timerInterval);
-    roscoState.timerInterval = setInterval(() => {
-        const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
-        roscoState[pKey].timeLeft--;
-        
-        if (roscoState.mode === 'individual') {
-            document.getElementById('rosco-timer-single').textContent = roscoState.p1.timeLeft;
-        } else {
-            document.getElementById(`rosco-timer-${pKey}`).textContent = roscoState[pKey].timeLeft;
-        }
-        
-        if (roscoState[pKey].timeLeft <= 0) handlePlayerEnd();
-    }, 1000);
-}
-
-function handlePlayerEnd() {
-    const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
-    roscoState[pKey].done = true;
-
-    if (roscoState.mode === 'individual') {
-        endRosco("¡TIEMPO AGOTADO!");
-    } else {
-        const other = roscoState.currentPlayer === 1 ? 2 : 1;
-        if (roscoState[`p${other}`].done) {
-            endRosco("¡FIN DEL TIEMPO PARA AMBOS!");
-        } else {
-            clearInterval(roscoState.timerInterval);
-            mostrarMensajePro(`⏳ TIEMPO AGOTADO (J${roscoState.currentPlayer})`, "Turno del rival.", () => {
-                roscoState.currentPlayer = other;
-                renderRoscoTurn();
-                startRoscoTimer();
-            });
-        }
-    }
-}
-
-function checkRosco() {
-    const val = document.getElementById('roscoInput').value.toUpperCase().trim();
-    if(!val) return;
-    
-    const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
-    const state = roscoState[pKey];
-    const q = state.questions[state.currentIndex];
-    
-    const nVal = removeAccents(val);
-    const nAns = removeAccents(q.respuesta);
-
-    if(nVal === nAns) {
-        state.results[q.letra] = 'correct';
-        advanceRoscoTurn(true); 
-    } else {
-        state.results[q.letra] = 'wrong';
-        advanceRoscoTurn(false); 
-    }
-}
-
-function pasapalabra() { advanceRoscoTurn(false); }
-
-function advanceRoscoTurn(keepTurn) {
-    const pKey = roscoState.currentPlayer === 1 ? 'p1' : 'p2';
-    const state = roscoState[pKey];
-    let pending = false;
-    
-    for(let i=1; i <= roscoAlphabet.length; i++) {
-        let idx = (state.currentIndex + i) % roscoAlphabet.length;
-        if(!state.results[roscoAlphabet[idx]]) {
-            state.currentIndex = idx;
-            pending = true;
-            break;
-        }
-    }
-    
-    if(!pending) {
-        state.done = true;
-        const other = roscoState.currentPlayer === 1 ? 2 : 1;
-        if (roscoState.mode === 'individual' || roscoState[`p${other}`].done) {
-            endRosco("¡ROSCO COMPLETADO!");
-        } else {
-            clearInterval(roscoState.timerInterval);
-            mostrarMensajePro(`🏆 ¡ROSCO TERMINADO! (J${roscoState.currentPlayer})`, "Has terminado. Turno del rival.", () => {
-                roscoState.currentPlayer = other;
-                renderRoscoTurn();
-                startRoscoTimer();
-            });
-        }
-        return;
-    }
-    
-    if (!keepTurn && roscoState.mode === 'multiplayer') {
-        const other = roscoState.currentPlayer === 1 ? 2 : 1;
-        if (!roscoState[`p${other}`].done) roscoState.currentPlayer = other;
-    }
-    renderRoscoTurn();
-}
-
-function endRosco(msg) {
-    clearInterval(roscoState.timerInterval);
-    if (roscoState.mode === 'individual') {
-        let aciertos = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
-        mostrarMensajePro("FIN DEL JUEGO", `${msg}\nAciertos: ${aciertos}`, () => initRosco(roscoState.mode));
-    } else {
-        let aciertosP1 = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
-        let aciertosP2 = Object.values(roscoState.p2.results).filter(r => r === 'correct').length;
-        let winnerMsg = aciertosP1 > aciertosP2 ? "¡GANA EL JUGADOR 1! 🔵" : (aciertosP2 > aciertosP1 ? "¡GANA EL JUGADOR 2! 🔴" : "¡EMPATE TÉCNICO! 🤝");
-        mostrarMensajePro("FIN DEL PARTIDO", `${msg}\n${winnerMsg}\n\nJ1 Azul: ${aciertosP1} aciertos\nJ2 Rojo: ${aciertosP2} aciertos`, () => initRosco(roscoState.mode));
-    }
-}
-
-function salirDelRosco() {
-    if (roscoState.timerInterval) clearInterval(roscoState.timerInterval);
-    showMenu();
-}
-
-// --- XI HISTÓRICO EUROPEO (FUTDLE) ---
-function initElevenGame() {
-    if (elevenState.timer) clearInterval(elevenState.timer);
-    elevenState.match = elevenMatches[Math.floor(Math.random() * elevenMatches.length)];
-    elevenState.guessed = [];
-    elevenState.timeLeft = 180; 
-    elevenState.totalPlayers = 11;
-
-    updateElevenTimerDisplay();
-    document.getElementById('eleven-team').innerText = elevenState.match.team;
-    document.getElementById('eleven-desc').innerText = elevenState.match.desc;
-    renderPitch();
-    startElevenTimer();
-}
-
-function startElevenTimer() {
-    elevenState.timer = setInterval(() => {
-        elevenState.timeLeft--;
-        updateElevenTimerDisplay();
-        if(elevenState.timeLeft <= 0) {
-            clearInterval(elevenState.timer);
-            closeFutdleModal();
-            mostrarMensajePro("⏳ ¡TIEMPO AGOTADO!", "Te faltaron jugadores de " + elevenState.match.team + ".", () => initElevenGame());
-        }
-    }, 1000);
-}
-
-function updateElevenTimerDisplay() {
-    let m = Math.floor(elevenState.timeLeft / 60);
-    let s = elevenState.timeLeft % 60;
-    document.getElementById('eleven-timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-}
-
-function renderPitch() {
-    const pitch = document.getElementById('pitch');
-    pitch.innerHTML = "";
-    elevenState.match.xi.forEach((linea) => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'pitch-row';
-        linea.forEach((playerObj) => {
-            const playerDiv = document.createElement('div');
-            playerDiv.className = 'player-slot';
-            if (elevenState.guessed.includes(playerObj.name)) {
-                playerDiv.classList.add('revealed');
-                playerDiv.innerHTML = `<div class="shirt">👕</div><div class="name">${playerObj.name}</div>`;
-            } else {
-                playerDiv.classList.add('clickable');
-                playerDiv.innerHTML = `<div class="shirt empty">❓</div><div class="name hidden-name">---</div>`;
-                playerDiv.onclick = () => openFutdleForPlayer(playerObj);
-            }
-            rowDiv.appendChild(playerDiv);
-        });
-        pitch.appendChild(rowDiv);
-    });
-}
-
-function checkElevenWin() {
-    if (elevenState.guessed.length === elevenState.totalPlayers) {
-        clearInterval(elevenState.timer);
-        setTimeout(() => mostrarMensajePro("🏆 ¡LEYENDA EUROPEA!", "Has adivinado el XI Histórico completo.", () => initElevenGame()), 500);
-    }
-}
-
-function openFutdleForPlayer(playerObj) {
-    wordleState.targetPlayer = playerObj.name;
-    // Utilizamos removeAccents para que FUTDLE funcione correctamente al comparar
-    wordleState.answer = removeAccents(playerObj.name).toUpperCase();
-    wordleState.wordLength = wordleState.answer.length;
-    wordleState.guesses = [];
-    wordleState.currentGuess = "";
-    wordleState.maxGuesses = 6;
-
-    while(wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-') {
-        wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
-    }
-    document.getElementById('futdle-hint').innerText = `Pista: ${playerObj.hint}`;
-    document.getElementById('futdle-modal').classList.remove('hidden');
-    renderWordleGrid();
-    renderWordleKeyboard();
-}
-
-function closeFutdleModal() { document.getElementById('futdle-modal').classList.add('hidden'); }
-
-function renderWordleGrid() {
-    const grid = document.getElementById('wordle-grid');
-    grid.innerHTML = "";
-    for (let i = 0; i < wordleState.maxGuesses; i++) {
-        const row = document.createElement('div');
-        row.className = 'wordle-row';
-        const guess = wordleState.guesses[i] || (i === wordleState.guesses.length ? wordleState.currentGuess : "");
-        
-        for (let j = 0; j < wordleState.wordLength; j++) {
-            const targetChar = wordleState.answer[j];
-            if (targetChar === ' ' || targetChar === '-') {
-                const spacer = document.createElement('div');
-                spacer.className = 'wordle-spacer';
-                spacer.innerText = targetChar === '-' ? '-' : '';
-                row.appendChild(spacer);
-            } else {
-                const cell = document.createElement('div');
-                cell.className = 'wordle-cell';
-                const letter = guess[j] || "";
-                cell.innerText = letter;
-                if (letter && i === wordleState.guesses.length) cell.classList.add('active'); 
-                if (i < wordleState.guesses.length) {
-                    cell.classList.add('revealed'); 
-                    cell.classList.add(getWordleLetterStatus(guess, j));
-                }
-                row.appendChild(cell);
-            }
-        }
-        grid.appendChild(row);
-    }
-}
-
-function getWordleLetterStatus(guess, index) {
-    const letter = guess[index];
-    if (!letter || letter === ' ' || letter === '-') return "ignore";
-
-    const answer = wordleState.answer;
-
-    if (answer[index] === letter) return "correct";
-
-    let totalInAnswer = 0;
-    for (let i = 0; i < answer.length; i++) {
-        if (answer[i] === letter) totalInAnswer++;
-    }
-
-    let exactMatches = 0;
-    for (let i = 0; i < answer.length; i++) {
-        if (guess[i] === letter && answer[i] === letter) exactMatches++;
-    }
-
-    let availableYellows = totalInAnswer - exactMatches;
-
-    let previousYellowsUsed = 0;
-    for (let i = 0; i < index; i++) {
-        if (guess[i] === letter && answer[i] !== letter) {
-            previousYellowsUsed++;
-        }
-    }
-
-    if (previousYellowsUsed < availableYellows) {
-        return "present";
-    }
-
-    return "absent";
-}
-
-function renderWordleKeyboard() {
-    const container = document.getElementById('wordle-keyboard');
-    container.innerHTML = ''; 
-    const layout = ["QWERTYUIOP", "ASDFGHJKLÑ", "⌫ZXCVBNM↵"];
-    layout.forEach(row => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'keyboard-row';
-        Array.from(row).forEach(char => {
-            let letter = char; let display = char;
-            if (char === '⌫') { letter = 'BACKSPACE'; display = '⌫'; }
-            if (char === '↵') { letter = 'ENTER'; display = 'ENVIAR'; }
-
-            const keyDiv = document.createElement('div');
-            keyDiv.className = `key w-key ${letter === 'ENTER' || letter === 'BACKSPACE' ? 'wide-key' : ''}`;
-            keyDiv.textContent = display;
-            keyDiv.id = `wkey-${letter}`;
-            keyDiv.onclick = () => handleWordleKey(letter);
-            rowDiv.appendChild(keyDiv);
-        });
-        container.appendChild(rowDiv);
-    });
-    updateWordleKeyboard();
-}
-
-function updateWordleKeyboard() {
-    wordleState.guesses.forEach(guess => {
-        for (let i = 0; i < guess.length; i++) {
-            const letter = guess[i];
-            const keyEl = document.getElementById(`wkey-${letter}`);
-            if (!keyEl) continue;
-            
-            const status = getWordleLetterStatus(guess, i);
-            if (status === 'ignore') continue;
-            if (keyEl.classList.contains('correct')) continue; 
-            if (keyEl.classList.contains('present') && status === 'absent') continue;
-            
-            keyEl.className = `key w-key ${status}`;
-        }
-    });
-}
-
-function handleWordleKey(key) {
-    if (wordleState.guesses.length >= wordleState.maxGuesses) return;
-
-    if (key === 'ENTER') {
-        if (wordleState.currentGuess.length === wordleState.wordLength) submitWordleGuess();
-    } else if (key === 'BACKSPACE') {
-        if (wordleState.currentGuess.length > 0) {
-            while (wordleState.currentGuess.length > 0 && (wordleState.currentGuess.slice(-1) === ' ' || wordleState.currentGuess.slice(-1) === '-')) {
-                wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
-            }
-            if (wordleState.currentGuess.length > 0) wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
-            while (wordleState.currentGuess.length < wordleState.wordLength && (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
-                wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
-            }
-            renderWordleGrid();
-        }
-    } else if (wordleState.currentGuess.length < wordleState.wordLength && /^[A-ZÑ]$/.test(key)) {
-        wordleState.currentGuess += key;
-        while (wordleState.currentGuess.length < wordleState.wordLength && (wordleState.answer[wordleState.currentGuess.length] === ' ' || wordleState.answer[wordleState.currentGuess.length] === '-')) {
-            wordleState.currentGuess += wordleState.answer[wordleState.currentGuess.length];
-        }
-        renderWordleGrid();
-    }
-}
-
-function submitWordleGuess() {
-    wordleState.guesses.push(wordleState.currentGuess);
-    const isWin = wordleState.currentGuess === wordleState.answer;
-    wordleState.currentGuess = "";
-    renderWordleGrid();
-    updateWordleKeyboard();
-
-    if (isWin) {
-        setTimeout(() => {
-            closeFutdleModal();
-            elevenState.guessed.push(wordleState.targetPlayer);
-            renderPitch();
-            checkElevenWin();
-        }, 1000);
-    } else if (wordleState.guesses.length >= wordleState.maxGuesses) {
-        setTimeout(() => {
-            closeFutdleModal();
-            mostrarMensajePro("❌ ¡FALLASTE!", "El jugador era: " + wordleState.targetPlayer + ". \n¡Prueba con otro mientras te quede tiempo!");
-        }, 1000);
-    }
-}
-
-// --- KNOWBALL (PIRÁMIDE DEL 1 AL 5) ---
-function initKnowball() {
-    kbState.currentTrivia = knowballDB[Math.floor(Math.random() * knowballDB.length)];
-    
-    document.getElementById('kb-title').innerText = kbState.currentTrivia.title;
-    document.getElementById('kb-desc').innerText = kbState.currentTrivia.desc;
-    
-    // Desordenar tarjetas para el inicio
-    let shuffledItems = [...kbState.currentTrivia.items].sort(() => Math.random() - 0.5);
-    
-    const cardsContainer = document.getElementById('kb-cards-container');
-    cardsContainer.innerHTML = "";
-    
-    // Vaciar slots de la pirámide
-    for(let i=1; i<=5; i++) {
-        document.getElementById(`kb-slot-${i}`).innerHTML = "";
-    }
-
-    // Crear tarjetas
-    shuffledItems.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'kb-card';
-        card.draggable = true;
-        card.id = `kb-card-${index}`;
-        card.innerText = item;
-        card.dataset.value = item;
-        
-        // Eventos Drag & Drop
-        card.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', card.id);
-            setTimeout(() => card.classList.add('dragging'), 0);
-        });
-        card.addEventListener('dragend', () => {
-            card.classList.remove('dragging');
-        });
-        
-        cardsContainer.appendChild(card);
-    });
-
-    setupKnowballDropZones();
-}
-
-function setupKnowballDropZones() {
-    const dropZones = document.querySelectorAll('.kb-dropzone');
-    
-    dropZones.forEach(zone => {
-        // Prevenir el comportamiento por defecto (necesario para permitir drop)
-        zone.addEventListener('dragover', e => {
-            e.preventDefault();
-            zone.classList.add('drag-over');
-        });
-        
-        zone.addEventListener('dragleave', () => {
-            zone.classList.remove('drag-over');
-        });
-        
-        zone.addEventListener('drop', e => {
-            e.preventDefault();
-            zone.classList.remove('drag-over');
-            
-            const cardId = e.dataTransfer.getData('text/plain');
-            const card = document.getElementById(cardId);
-            
-            if (card) {
-                // Si la zona de drop ya tiene una tarjeta, la devolvemos al contenedor original
-                if (zone.children.length > 0 && zone.id !== 'kb-cards-container') {
-                    document.getElementById('kb-cards-container').appendChild(zone.children[0]);
-                }
-                zone.appendChild(card);
-            }
-        });
-    });
-}
-
-function checkKnowball() {
-    let isCorrect = true;
-    const correctOrder = kbState.currentTrivia.items;
-    
-    for(let i=1; i<=5; i++) {
-        const slot = document.getElementById(`kb-slot-${i}`);
-        if(slot.children.length === 0) {
-            mostrarMensajePro("⚠️ ATENCIÓN", "Rellena todos los huecos de la pirámide antes de comprobar.");
-            return;
-        }
-        
-        const cardValue = slot.children[0].dataset.value;
-        if(cardValue !== correctOrder[i-1]) {
-            isCorrect = false;
-        }
-    }
-    
-    if(isCorrect) {
-        mostrarMensajePro("🏆 ¡KNOWBALL PERFECTO!", "Has ordenado la pirámide correctamente.", () => initKnowball());
-    } else {
-        mostrarMensajePro("❌ ¡CASI!", "El orden no es correcto. ¡Sigue intentándolo!");
-    }
-}
-
-// --- HIGHER OR LOWER (PREMIER) ---
-function initHigherLower() {
-    hlState.score = 0;
-    document.getElementById('hl-score').innerText = hlState.score;
-    document.getElementById('hl-max').innerText = getRecord('hl'); 
-    hlState.p1 = premierPlayers[Math.floor(Math.random() * premierPlayers.length)];
-    pickNewPlayer2();
-    renderHL();
-}
-
-function pickNewPlayer2() {
-    let available = premierPlayers.filter(p => p.name !== hlState.p1.name);
-    hlState.p2 = available[Math.floor(Math.random() * available.length)];
-}
-
-function renderHL() {
-    document.getElementById('hl-controls').classList.remove('hidden');
-    document.getElementById('hl-val-2').classList.add('hidden-val');
-    document.getElementById('hl-val-2').innerText = "???";
-
-    document.getElementById('hl-name-1').innerText = hlState.p1.name;
-    document.getElementById('hl-val-1').innerText = hlState.p1.value + " M€";
-    document.getElementById('hl-img-1').src = `premier/${hlState.p1.name.replace(/ /g, "_")}.jpg`;
-
-    document.getElementById('hl-name-2').innerText = hlState.p2.name;
-    document.getElementById('hl-img-2').src = `premier/${hlState.p2.name.replace(/ /g, "_")}.jpg`;
-}
-
-function checkHigherLower(guess) {
-    let v1 = hlState.p1.value;
-    let v2 = hlState.p2.value;
-    let isCorrect = (guess === 'higher' && v2 >= v1) || (guess === 'lower' && v2 <= v1);
-
-    document.getElementById('hl-controls').classList.add('hidden');
-    const val2El = document.getElementById('hl-val-2');
-    val2El.innerText = v2 + " M€";
-    val2El.classList.remove('hidden-val');
-
-    setTimeout(() => {
-        if (isCorrect) {
-            hlState.score++;
-            document.getElementById('hl-score').innerText = hlState.score;
-            let nuevoRecord = updateRecord('hl', hlState.score); 
-            document.getElementById('hl-max').innerText = nuevoRecord; 
-            addCoins(2); 
-            hlState.p1 = hlState.p2;
-            pickNewPlayer2();
-            renderHL();
-        } else {
-            updateRecord('hl', hlState.score); 
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
-        }
-    }, 1500);
-}
-
-// --- GUERRA DE AFOROS (LALIGA) ---
-function initAforosGame() {
-    aforosState.score = 0;
-    document.getElementById('aforos-score').innerText = aforosState.score;
-    document.getElementById('aforos-max').innerText = getRecord('aforos'); 
-    aforosState.p1 = estadiosLaLiga[Math.floor(Math.random() * estadiosLaLiga.length)];
-    pickNewEstadio2();
-    renderAforos();
-}
-
-function pickNewEstadio2() {
-    let available = estadiosLaLiga.filter(p => p.name !== aforosState.p1.name);
-    aforosState.p2 = available[Math.floor(Math.random() * available.length)];
-}
-
-function renderAforos() {
-    document.getElementById('aforos-controls').classList.remove('hidden');
-    document.getElementById('aforos-val-2').classList.add('hidden-val');
-    document.getElementById('aforos-val-2').innerText = "???";
-
-    document.getElementById('aforos-name-1').innerText = aforosState.p1.name;
-    document.getElementById('aforos-val-1').innerText = aforosState.p1.value.toLocaleString('es-ES');
-    document.getElementById('aforos-img-1').src = `estadios/${aforosState.p1.name.replace(/ /g, "_")}.jpg`; 
-
-    document.getElementById('aforos-name-2').innerText = aforosState.p2.name;
-    document.getElementById('aforos-img-2').src = `estadios/${aforosState.p2.name.replace(/ /g, "_")}.jpg`;
-}
-
-function checkAforos(guess) {
-    let v1 = aforosState.p1.value;
-    let v2 = aforosState.p2.value;
-    let isCorrect = (guess === 'higher' && v2 >= v1) || (guess === 'lower' && v2 <= v1);
-
-    document.getElementById('aforos-controls').classList.add('hidden');
-    const val2El = document.getElementById('aforos-val-2');
-    val2El.innerText = v2.toLocaleString('es-ES');
-    val2El.classList.remove('hidden-val');
-
-    setTimeout(() => {
-        if (isCorrect) {
-            aforosState.score++;
-            document.getElementById('aforos-score').innerText = aforosState.score;
-            let nuevoRecord = updateRecord('aforos', aforosState.score); 
-            document.getElementById('aforos-max').innerText = nuevoRecord; 
-            addCoins(2); 
-            aforosState.p1 = aforosState.p2;
-            pickNewEstadio2();
-            renderAforos();
-        } else {
-            updateRecord('aforos', aforosState.score); 
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El aforo de ${aforosState.p2.name} es de ${v2.toLocaleString('es-ES')} espectadores.\nHas conseguido ${aforosState.score} puntos.`, () => initAforosGame());
-        }
-    }, 1500);
-}
-
-// --- ESCUDOS ZOOM (PREMIER) ---
-function initZoomGame() {
-    zoomState.team = englishTeamsDB[Math.floor(Math.random() * englishTeamsDB.length)];
-    zoomState.lives = 5;
-    zoomState.currentScale = 4;
-    document.getElementById('zoom-lives').innerText = zoomState.lives;
-    document.getElementById('zoom-streak').innerText = zoomState.streak;
-    document.getElementById('zoom-max').innerText = getRecord('zoom'); 
-    document.getElementById('zoomInput').value = "";
-    document.getElementById('zoom-suggestions').innerHTML = "";
-    
-    const img = document.getElementById('zoom-image');
-    // Carga el .jpg exactamente con el nombre que sale en el array (con espacios)
-    img.src = `teams/${zoomState.team}.jpg`; 
-    img.style.transform = `scale(${zoomState.currentScale})`;
-    
-    const randomX = Math.floor(Math.random() * 60) + 20; 
-    const randomY = Math.floor(Math.random() * 60) + 20;
-    img.style.transformOrigin = `${randomX}% ${randomY}%`;
-}
-function checkZoomGuess() {
-    const val = document.getElementById('zoomInput').value.toUpperCase().trim();
-    if (val === zoomState.team) {
-        zoomState.streak++;
-        let nuevoRecord = updateRecord('zoom', zoomState.streak); 
-        document.getElementById('zoom-max').innerText = nuevoRecord; 
-        addCoins(2); 
-        document.getElementById('zoom-image').style.transform = "scale(1)"; 
-        setTimeout(() => mostrarMensajePro("🎯 ¡DIANA!", "Es el escudo del " + zoomState.team + "\n¡Has ganado +2 FutCoins 🪙!", () => initZoomGame()), 800);
-    } else {
-        zoomState.lives--;
-        document.getElementById('zoom-lives').innerText = zoomState.lives;
-        
-        if (zoomState.lives <= 0) {
-            updateRecord('zoom', zoomState.streak); 
-            zoomState.streak = 0;
-            document.getElementById('zoom-image').style.transform = "scale(1)";
-            setTimeout(() => mostrarMensajePro("❌ ¡FALLO!", "Era el escudo del " + zoomState.team, () => initZoomGame()), 800);
-        } else {
-            zoomState.currentScale = Math.max(1, zoomState.currentScale - 0.6);
-            document.getElementById('zoom-image').style.transform = `scale(${zoomState.currentScale})`;
-            document.getElementById('zoomInput').value = "";
-            document.getElementById('zoomInput').focus();
-        }
-    }
-}
-
-// --- EL TOP 10 ---
-function initTop10() {
-    const randomList = top10DB[Math.floor(Math.random() * top10DB.length)];
-    top10State.currentList = JSON.parse(JSON.stringify(randomList));
-    top10State.guessedCount = 0;
-    
-    document.getElementById('top10-title').innerText = top10State.currentList.title;
-    document.getElementById('top10-desc').innerText = top10State.currentList.desc;
-    document.getElementById('top10-score').innerText = '0';
-    document.getElementById('top10Input').value = "";
-    document.getElementById('top10-suggestions').innerHTML = "";
-    
-    renderTop10List();
-    setTimeout(() => document.getElementById('top10Input').focus(), 100);
-}
-
-function renderTop10List() {
-    const listContainer = document.getElementById('top10-list');
-    listContainer.innerHTML = "";
-    
-    top10State.currentList.items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `top10-item ${item.revealed ? 'revealed' : ''}`;
-        
-        const nameDisplay = item.revealed ? item.name : '????????????';
-        
-        div.innerHTML = `
-            <div class="top10-rank">${item.rank}</div>
-            <div class="top10-info">
-                <span class="top10-name">${nameDisplay}</span>
-                <span class="top10-hint">
-                    <img src="banderas/foto-${item.flag}.jpg" alt="${item.flag}" class="flag-icon"> 
-                    ${item.stat}
-                </span>
-            </div>
-        `;
-        listContainer.appendChild(div);
-    });
-}
-
-function checkTop10Guess() {
-    const inputEl = document.getElementById('top10Input');
-    const val = inputEl.value.toUpperCase().trim();
-    if(!val) return;
-    
-    const nVal = removeAccents(val);
-    let found = false;
-    
-    top10State.currentList.items.forEach(item => {
-        if (!item.revealed) {
-            const nAns = removeAccents(item.name);
-            const words = nAns.split(' ');
-            
-            if (nVal === nAns || words.includes(nVal) || nVal === words[words.length - 1]) {
-                item.revealed = true;
-                top10State.guessedCount++;
-                found = true;
-            }
-        }
-    });
-    
-    if (found) {
-        inputEl.value = "";
-        document.getElementById('top10-score').innerText = top10State.guessedCount;
-        renderTop10List();
-        
-        if (top10State.guessedCount === 10) {
-            setTimeout(() => mostrarMensajePro("🏆 ¡TOP 10 COMPLETADO!", "¡Conoces a la élite del fútbol al detalle!", () => initTop10()), 800);
-        }
-    } else {
-        inputEl.classList.add("input-error");
-        setTimeout(() => {
-            inputEl.classList.remove("input-error");
-        }, 400);
-    }
-}
-
-// Nueva función de rendirse
-function giveUpTop10() {
-    top10State.currentList.items.forEach(item => item.revealed = true);
-    renderTop10List();
-    setTimeout(() => mostrarMensajePro("🏳️ TE HAS RENDIDO", "Aquí tienes las respuestas que te faltaban. ¡A la próxima!", () => initTop10()), 500);
-}
-
-// ==========================================
-// 6. EVENT LISTENERS GENERALES
-// ==========================================
-
-setupAutocomplete('wordInput', 'hangman-suggestions');
-setupAutocomplete('blurInput', 'blur-suggestions');
-setupAutocomplete('zoomInput', 'zoom-suggestions'); 
-setupAutocomplete('top10Input', 'top10-suggestions');
-setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
-
-document.getElementById('solveButton').onclick = solveFullWord;
-document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
-document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
-document.getElementById('btnRoscoCheck').onclick = checkRosco;
-document.getElementById('btnPasapalabra').onclick = pasapalabra;
-document.getElementById('btnZoomCheck').onclick = checkZoomGuess; 
-document.getElementById('btnTop10Check').onclick = checkTop10Guess;
-
-document.addEventListener('keydown', (e) => {
-    const isTyping = document.activeElement.tagName === 'INPUT';
-    
-    if (!isTyping && !document.getElementById('hangman-screen').classList.contains('hidden')) {
-        const key = e.key.toUpperCase();
-        if (QWERTY_LAYOUT.join('').includes(key)) handleInput(key);
-    }
-    
-    if (!isTyping && !document.getElementById('futdle-modal').classList.contains('hidden')) {
-        if (e.key === 'Enter') handleWordleKey('ENTER');
-        else if (e.key === 'Backspace') handleWordleKey('BACKSPACE');
-        else {
-            const k = e.key.toUpperCase();
-            if (/^[A-ZÑ]$/.test(k)) handleWordleKey(k);
-        }
-    }
-
-    if (e.key === 'Enter' && isTyping) {
-        if (document.activeElement.id === 'wordInput') solveFullWord();
-        if (document.activeElement.id === 'blurInput') checkBlurGuess();
-        if (document.activeElement.id === 'roscoInput') checkRosco();
-        if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
-        if (document.activeElement.id === 'zoomInput') checkZoomGuess(); 
-        if (document.activeElement.id === 'top10Input') checkTop10Guess();
-        if (document.activeElement.id === 'marketBuyInput') buySpecificPlayer();
-    }
-});
-
-// ==========================================
-// 10. LÓGICA DEL ÁLBUM Y SOBRES F10
-// ==========================================
-
-let isOpeningPack = false;
-
-// BASE DE DATOS DE SOBRES POR CATEGORÍA
-const packsDB = {
-    bronce: {
-        cost: 25,
-        players: ["ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER", "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS","TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI","IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA"]
-    },
-    plata: {
-        cost: 50,
-        players: ["RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES","SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR","VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY","SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ"]
-    },
-    oro: {
-        cost: 100,
-        players: ["UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA","DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA","REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON","JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ"]
-    },
-    diamante: {
-        cost: 200,
-        players: ["BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO","DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO","RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI","ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL"]
-    },
-    platino: {
-        cost: 400,
-        players: ["COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA","OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH","JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI","DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE"]
-    }
-};
-
-const tierValues = { bronce: 10, plata: 20, oro: 40, diamante: 80, platino: 160 };
-
-const tierStyles = {
-    bronce: "border: 3px solid #cd7f32; box-shadow: 0 0 10px #cd7f32;",
-    plata: "border: 3px solid #c0c0c0; box-shadow: 0 0 10px #c0c0c0;",
-    oro: "border: 3px solid #ffd700; box-shadow: 0 0 15px #ffd700;",
-    diamante: "border: 3px solid #00bfff; box-shadow: 0 0 20px #00bfff;",
-    platino: "border: 3px solid #e5e4e2; box-shadow: 0 0 20px #e5e4e2; background: linear-gradient(45deg, #111, #333);"
-};
-
-function getPlayerTier(playerName) {
-    for (const tier in packsDB) {
-        if (packsDB[tier].players.includes(playerName)) {
-            return tier;
-        }
-    }
-    return 'bronce';
-}
-
-// Helpers para guardar y cargar datos del álbum
-function getAlbumData() {
-    return JSON.parse(localStorage.getItem('f10_album') || '{"unlocked":[], "duplicates":{}}');
-}
-function saveAlbumData(data) {
-    localStorage.setItem('f10_album', JSON.stringify(data));
-}
-
-function initAlbum() {
-    document.getElementById('album-coins').innerText = getCoins();
-    switchAlbumTab('pack');
-}
-
-function switchAlbumTab(tab) {
-    document.querySelectorAll('.album-tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.album-tab').forEach(el => el.classList.remove('active'));
-    
-    document.getElementById(`tab-${tab}`).classList.remove('hidden');
-    document.getElementById(`tab-btn-${tab}`).classList.add('active');
-
-    if(tab === 'collection') renderAlbum();
-    if(tab === 'market') renderDuplicates();
-    
-    if(tab === 'pack' && !isOpeningPack) {
-        document.getElementById('pack-reveal').classList.add('hidden');
-        document.getElementById('pack-container').classList.remove('hidden');
-    }
-}
-
-function openPack(event, type) {
-    if(isOpeningPack) return;
-    
-    const packInfo = packsDB[type];
-    
-    if(getCoins() < packInfo.cost) {
-        mostrarMensajePro("⚠️ SIN FONDOS", `Necesitas ${packInfo.cost} FutCoins para abrir este sobre.`);
-        return;
-    }
-    
-    // Descontar monedas
-    addCoins(-packInfo.cost);
-    document.getElementById('album-coins').innerText = getCoins();
-    
-    isOpeningPack = true;
-    
-    // Aplicar animación solo al sobre seleccionado
-    const packVisual = event.currentTarget.querySelector('.pack-visual');
-    if(packVisual) packVisual.classList.add('pack-opening-anim');
-
-    setTimeout(() => {
-        if(packVisual) packVisual.classList.remove('pack-opening-anim');
-        revealPackCards(type);
-    }, 800);
-}
-
-function revealPackCards(type) {
-    const data = getAlbumData();
-    const pool = packsDB[type].players;
-    
-    const p1 = pool[Math.floor(Math.random() * pool.length)];
-    let p2 = pool[Math.floor(Math.random() * pool.length)];
-    
-    // Evitar que salgan dos repetidos en el mismo sobre
-    while (p1 === p2) {
-        p2 = pool[Math.floor(Math.random() * pool.length)];
-    }
-
-    [p1, p2].forEach(p => {
-        if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
-        } else {
-            data.unlocked.push(p);
-        }
-    });
-    
-    saveAlbumData(data);
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    const pStyle = tierStyles[type] || "";
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card" style="${pStyle}">
-            <img src="players/${p1.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card" style="${pStyle}">
-            <img src="players/${p2.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
-}
-
-function closePackReveal() {
-    document.getElementById('pack-reveal').classList.add('hidden');
-    document.getElementById('pack-container').classList.remove('hidden');
-}
-
-function renderAlbum() {
-    const data = getAlbumData();
-    const grid = document.getElementById('album-grid');
-    grid.innerHTML = "";
-    
-    // Porcentaje y progreso
-    const percentage = ((data.unlocked.length / players.length) * 100).toFixed(1);
-    document.getElementById('album-progress-text').innerText = `${percentage}%`;
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const sortedPlayers = [...players].sort();
-
-    sortedPlayers.forEach(p => {
-        const isUnlocked = data.unlocked.includes(p);
-        const tier = getPlayerTier(p);
-        const pStyle = isUnlocked ? tierStyles[tier] : "";
-        
-        const card = document.createElement('div');
-        card.className = `f10-card ${isUnlocked ? '' : 'locked'}`;
-        card.style.cssText = pStyle;
-        
-        card.innerHTML = `
-            <img src="players/${p.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p}</div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function renderDuplicates() {
-    const data = getAlbumData();
-    const grid = document.getElementById('market-grid');
-    grid.innerHTML = "";
-
-    const duplicates = Object.entries(data.duplicates).filter(([_, count]) => count > 0);
-    
-    if(duplicates.length === 0) {
-        grid.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:white; padding: 20px;'>No tienes cartas repetidas actualmente.</p>";
-        return;
-    }
-
-    // Calcular el valor total de todas las repetidas
-    let totalAllValue = 0;
-    duplicates.forEach(([p, count]) => {
-        const tier = getPlayerTier(p);
-        totalAllValue += tierValues[tier] * count;
-    });
-
-    // Botón de VENTA MASIVA
-    const sellAllDiv = document.createElement('div');
-    sellAllDiv.style.gridColumn = "1 / -1";
-    sellAllDiv.style.textAlign = "center";
-    sellAllDiv.style.marginBottom = "20px";
-    sellAllDiv.innerHTML = `<button class="sell-btn" style="background-color: #e63946; padding: 12px 24px; font-size: 1.1em; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; color: white;" onclick="sellAllDuplicates()">VENDER TODAS (+${totalAllValue}🪙)</button>`;
-    grid.appendChild(sellAllDiv);
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-
-    duplicates.forEach(([p, count]) => {
-        const tier = getPlayerTier(p);
-        const value = tierValues[tier];
-        const pStyle = tierStyles[tier];
-
-        const item = document.createElement('div');
-        item.className = 'market-item';
-        item.innerHTML = `
-            <div class="f10-card" style="${pStyle}">
-                <img src="players/${p.replace(/ /g, '_')}.jpg" onerror="this.src='${fallbackImg}'">
-                <div class="card-name">${p}</div>
-            </div>
-            <div style="color:var(--primary); font-family:'Orbitron'; font-weight:bold; margin-top:5px;">x${count} Repetida(s)</div>
-            <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (${value}🪙)</button>
-        `;
-        grid.appendChild(item);
-    });
-}
-
-function sellDuplicate(playerName) {
-    const data = getAlbumData();
-    
-    if(data.duplicates[playerName] > 0) {
-        data.duplicates[playerName]--;
-        
-        if(data.duplicates[playerName] === 0) {
-            delete data.duplicates[playerName];
-        }
-        
-        saveAlbumData(data);
-        
-        const tier = getPlayerTier(playerName);
-        const value = tierValues[tier];
-        
-        addCoins(value); 
-        document.getElementById('album-coins').innerText = getCoins();
-        renderDuplicates(); 
-        
-        mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por ${value}🪙.`);
-    }
-}
-
-// Nueva función de VENTA MASIVA
-function sellAllDuplicates() {
-    const data = getAlbumData();
-    let totalValue = 0;
-    let countSold = 0;
-
-    for (const [p, count] of Object.entries(data.duplicates)) {
-        if (count > 0) {
-            const tier = getPlayerTier(p);
-            totalValue += tierValues[tier] * count;
-            countSold += count;
-        }
-    }
-
-    if (countSold === 0) return;
-
-    data.duplicates = {};
-    saveAlbumData(data);
-    addCoins(totalValue);
-
-    document.getElementById('album-coins').innerText = getCoins();
-    renderDuplicates();
-
-    mostrarMensajePro("💸 VENTA MASIVA", `Has vendido ${countSold} cartas repetidas por un total de ${totalValue}🪙.`);
-}
-
-function buySpecificPlayer() {
-    const val = document.getElementById('marketBuyInput').value.toUpperCase().trim();
-    if (!val) return;
-
-    const nVal = removeAccents(val);
-    const playerFound = players.find(p => removeAccents(p) === nVal);
-
-    if (!playerFound) {
-        mostrarMensajePro("❌ JUGADOR NO ENCONTRADO", "Asegúrate de escribir el nombre exactamente como aparece en el juego.");
-        return;
-    }
-
-    const data = getAlbumData();
-
-    if (data.unlocked.includes(playerFound)) {
-        mostrarMensajePro("⚠️ YA LO TIENES", `El jugador ${playerFound} ya está en tu álbum. No tires el dinero.`);
-        return;
-    }
-
-    if (getCoins() < 750) {
-        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 750 FutCoins para fichar a la carta. ¡Toca jugar más minijuegos!");
-        return;
-    }
-
-    addCoins(-750);
-    data.unlocked.push(playerFound);
-    saveAlbumData(data);
-
-    document.getElementById('marketBuyInput').value = "";
-    document.getElementById('album-coins').innerText = getCoins();
-    
-    mostrarMensajePro("🤝 ¡FICHAJE ESTRELLA!", `¡Has fichado a ${playerFound} por 750🪙!\nYa está en tu colección.`);
-}
-
-function saveHangmanProgress() {
-    localStorage.setItem('f10_hangman_save', JSON.stringify(gameState));
-}
-
-function loadHangmanProgress() {
-    const saved = localStorage.getItem('f10_hangman_save');
-    if (saved) {
-        gameState = JSON.parse(saved);
-        return true;
-    }
-    return false;
-}
+:root {
+    /* Color base genérico, se sobreescribe dinámicamente en cada pantalla */
+    --primary: #00ff87;
+    --primary-glow: rgba(0, 255, 135, 0.3);
+    --secondary: #6e2cf2;
+    --bg: #0b0e14;
+    --card: #1c2128;
+    --text: #ffffff;
+    --text-dim: #9096a2;
+    --error: #ff4d4d;
+}
+
+/* ==========================================
+   1. TEMAS DINÁMICOS POR CATEGORÍA
+   ========================================== */
+.rosco-game-card, #rosco-menu-screen .menu-card { border-color: #0044cc !important; }
+#rosco-screen {
+    --primary: #0044cc;
+    --primary-glow: rgba(0, 68, 204, 0.3);
+    --secondary: #002288;
+}
+
+.laliga-card, .hangman-game-card, .blur-game-card, .aforos-game-card { border-color: #ff4d4d !important; }
+#hangman-screen, #blur-screen, #aforos-screen {
+    --primary: #ff4d4d;
+    --primary-glow: rgba(255, 77, 77, 0.3);
+    --secondary: #cc0000;
+}
+
+.premier-card, .hl-game-card, .zoom-game-card { border-color: #9b59b6 !important; }
+#higherlower-screen, #zoom-screen {
+    --primary: #9b59b6;
+    --primary-glow: rgba(155, 89, 182, 0.3);
+    --secondary: #8e44ad;
+}
+
+.europeos-card, .eleven-game-card, .knowball-game-card { border-color: #00ff87 !important; }
+#eleven-screen, #knowball-screen {
+    --primary: #00ff87;
+    --primary-glow: rgba(0, 255, 135, 0.3);
+    --secondary: #00cc66;
+}
+
+.leyendas-card, .timemachine-game-card { border-color: #ffd700 !important; }
+#timemachine-screen {
+    --primary: #ffd700;
+    --primary-glow: rgba(255, 215, 0, 0.3);
+    --secondary: #ccaa00;
+}
+
+.top10-card { border-color: #f5cf8e !important; }
+#top10-screen {
+    --primary: #f5cf8e;
+    --primary-glow: rgba(245, 207, 142, 0.3);
+    --secondary: #d4a353;
+}
+
+/* ==========================================
+   2. BASE Y LAYOUT GENERAL
+   ========================================== */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(110, 44, 242, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 135, 0.05) 0%, transparent 50%);
+    color: var(--text);
+    overflow-x: hidden; 
+    line-height: 1.6;
+    background-attachment: fixed;
+}
+
+.screen {
+    min-height: 100svh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    padding: clamp(20px, 4vh, 40px) 1rem;
+    box-sizing: border-box;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.screen::before, .screen::after { content: ''; flex: 1; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden { display: none !important; }
+
+/* ==========================================
+   3. TIPOGRAFÍA Y UI GLOBAL
+   ========================================== */
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    margin: 0 0 2vh 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--primary-glow);
+    text-align: center;
+}
+.logo span { color: var(--primary); }
+
+.game-nav {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vh;
+    padding: 10px;
+    gap: 10px;
+}
+
+.back-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 20px);
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.7rem, 2vw, 0.8rem);
+    transition: 0.3s;
+    white-space: nowrap;
+}
+.back-btn:hover { background: var(--primary); color: var(--bg); }
+
+.score-board {
+    background: var(--card);
+    padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 25px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    text-align: center;
+    border-color: var(--primary);
+}
+.score-board span { color: var(--primary); font-weight: bold; }
+
+.input-container { position: relative; width: 100%; max-width: 100%; margin: 15px 0; }
+.input-group { display: flex; gap: 8px; width: 100%; flex-wrap: wrap; justify-content: center; }
+
+input[type="text"], input[type="number"] {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: clamp(10px, 3vw, 15px);
+    border-radius: 12px;
+    color: white;
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    flex: 1;
+    min-width: 150px; 
+    transition: 0.3s;
+    -moz-appearance: textfield;
+}
+input[type="text"]:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary); 
+    background: rgba(255,255,255,0.08);
+}
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+.secondary-btn {
+    background: var(--primary); 
+    color: var(--bg);
+    border: none;
+    padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 25px);
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+.secondary-btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+
+.info-footer { margin-top: 15px; font-family: 'Orbitron', sans-serif; color: var(--primary); font-weight: bold; }
+
+/* ==========================================
+   4. TARJETAS DEL MENÚ Y FONDOS
+   ========================================== */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.menu-card {
+    background: var(--card);
+    padding: 0 !important;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+.menu-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.card-info { position: relative; z-index: 2; text-align: center; pointer-events: none; padding: 10px; }
+.card-info h3 { font-family: 'Orbitron', sans-serif; margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.4rem); }
+.card-info p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
+
+.coming-soon { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.8); pointer-events: none; padding: 2rem !important; display: block; }
+.coming-soon .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+.card-bg, .bg-rosco, .bg-laliga, .bg-premier, .bg-europeos, .bg-leyendas, .bg-ahorcado, .bg-blur, .bg-timemachine, .bg-higherlower, .bg-top10, .bg-aforos, .bg-knowball {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    transition: 0.5s ease; z-index: 1; pointer-events: none;
+    filter: brightness(0.4) blur(2px);
+}
+
+.menu-card:hover .card-bg { filter: brightness(0.6) blur(0px); transform: scale(1.1); }
+.bg-ahorcado, .bg-timemachine { filter: brightness(0.4) blur(0px); }
+
+/* RUTAS DE TUS IMÁGENES */
+.bg-laliga { background-image: url('players/fondo-laliga.jpg'); }
+.bg-premier { background-image: url('players/fondo-premier.jpg'); }
+.bg-higherlower { background-image: url('players/fondo-valormercado.jpg'); } 
+.bg-leyendas { background-image: url('players/fondo-leyendas.jpg'); }
+.bg-europeos { background-image: url('players/fondo-once.jpg'); }
+.bg-rosco { background-image: url('players/fondo-rosco.jpg'); }
+.bg-ahorcado { background-image: url('players/fondo-ahorcado.jpg'); }
+.bg-blur { background-image: url('players/fondo-blur.jpg'); } 
+.bg-timemachine { background-image: url('players/fondo-maquina.jpg'); } 
+.bg-top10 { background-image: url('players/fondo-top10.jpg'); }
+.bg-aforos { background-image: url('players/fondo-aforos.jpg'); }
+.bg-knowball { background-image: url('players/fondo-once.jpg'); }
+
+/* ==========================================
+   5. NUEVO LOGO CIBERNÉTICO F10
+   ========================================== */
+.logo-f10-container {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 30px; animation: pulseLogo 3s infinite alternate ease-in-out;
+}
+.f10-icon {
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(110, 44, 242, 0.15); border: 2px solid #6e2cf2;
+    border-radius: 15px; padding: 5px 25px;
+    box-shadow: 0 0 25px rgba(110, 44, 242, 0.5), inset 0 0 15px rgba(110, 44, 242, 0.3);
+    margin-bottom: 10px; transform: perspective(500px) rotateX(10deg);
+}
+.f-part {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 4.5rem); font-weight: 700;
+    color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); line-height: 1; margin-right: 8px;
+}
+.ten-part {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 12vw, 5rem); font-weight: 700;
+    color: #00ff87; text-shadow: 0 0 20px #00ff87; line-height: 1;
+}
+.logo-texto-inferior {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 4vw, 1.8rem); margin: 0;
+    color: white; letter-spacing: 5px; text-transform: uppercase;
+}
+.logo-texto-inferior span { color: #00ff87; text-shadow: 0 0 15px rgba(0,255,135,0.5); }
+@keyframes pulseLogo {
+    0% { transform: perspective(500px) rotateX(10deg) scale(1); filter: brightness(1); }
+    100% { transform: perspective(500px) rotateX(10deg) scale(1.05); filter: brightness(1.2); }
+}
+
+/* ==========================================
+   6. ESTILOS ESPECÍFICOS DE MINIJUEGOS
+   ========================================== */
+
+/* Ahorcado & Futdle (Teclados y Grids) */
+.game-layout { display: flex; gap: clamp(15px, 4vw, 50px); flex-wrap: wrap; justify-content: center; width: 100%; max-width: 1100px; }
+.canvas-side { display: flex; justify-content: center; width: 100%; max-width: 300px; }
+.canvas-side canvas { background: #e0e0e0; border-radius: 20px; width: 100%; max-width: 220px; aspect-ratio: 220 / 280; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid var(--card); }
+.play-side { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+.word-container { font-size: clamp(1.2rem, 5vw, 2.2rem); font-family: 'Orbitron', sans-serif; letter-spacing: clamp(2px, 1vw, 5px); margin-bottom: 2vh; min-height: 40px; text-shadow: 0 0 10px rgba(255,255,255,0.2); text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+.keyboard-container { display: flex; flex-direction: column; gap: clamp(4px, 1.5vw, 10px); width: 100%; align-items: center; }
+.keyboard-row { display: flex; gap: clamp(3px, 1vw, 8px); justify-content: center; width: 100%; }
+.key { width: clamp(25px, 8vw, 45px); height: clamp(35px, 10vw, 50px); background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; user-select: none; font-size: clamp(0.8rem, 3vw, 1rem); }
+.key:hover { border-color: var(--primary); color: var(--primary); transform: scale(1.05); }
+.key.used { opacity: 0.2; pointer-events: none; transform: scale(0.9); }
+.w-key.correct { background: #00ff87; color: #000; border-color: #00ff87; box-shadow: 0 0 10px rgba(0,255,135,0.5);}
+.w-key.present { background: #ffd700; color: #000; border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
+.w-key.absent { opacity: 0.2; pointer-events: none; }
+.wide-key { width: auto; min-width: clamp(40px, 12vw, 65px); padding: 0 5px; font-size: clamp(0.7rem, 2vw, 0.9rem); }
+
+/* Autocompletar / Sugerencias */
+.suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; z-index: 100; background: #1c2128; border: 1px solid var(--primary); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+.suggestions-box div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.suggestions-box div:hover { background: var(--secondary); }
+
+/* Blur Guess */
+.blur-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.image-box { max-width: 100%; width: clamp(200px, 70vw, 320px); height: auto; aspect-ratio: 1/1; border-radius: 25px; border: 5px solid var(--primary); box-shadow: 0 0 40px var(--primary-glow); margin-bottom: 1rem; box-sizing: border-box; }
+.image-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+/* Máquina del Tiempo */
+.tm-layout { display: flex; flex-direction: column; align-items: center; gap: 2vh; width: 100%; max-width: 500px; }
+.tm-title { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: clamp(1.1rem, 4vw, 1.5rem); letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px var(--primary-glow); text-align: center; }
+.tm-monitor { position: relative; width: 100%; max-width: 320px; height: clamp(180px, 30vh, 250px); border: 2px solid var(--primary-glow); border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.8); background: #000; }
+.tm-monitor img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; filter: sepia(0.3) contrast(1.1); }
+.tm-event-card { background: var(--card); padding: clamp(10px, 2vh, 15px) !important; border-radius: 12px; border: 1px solid var(--primary-glow); width: 100%; text-align: center; font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
+.tm-controls { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
+.tm-controls input { text-align: center; font-size: clamp(1.2rem, 4vw, 1.5rem) !important; letter-spacing: 4px; color: var(--primary) !important; }
+.tm-status { display: flex; justify-content: space-between; align-items: center; font-size: clamp(0.75rem, 3vw, 0.9rem); font-family: 'Orbitron', sans-serif; }
+#tm-feedback { color: var(--primary); font-weight: bold; }
+.tm-lives-badge { background: rgba(255, 255, 255, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--primary); font-weight: bold; }
+
+/* XI Histórico Europeos */
+.eleven-layout { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
+.eleven-header { text-align: center; margin-bottom: 2vh; }
+.pitch-container { width: 100%; max-width: 600px; height: auto; min-height: clamp(300px, 50vh, 450px); background: linear-gradient(0deg, #2e7d32 0%, #1b5e20 100%); border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-evenly; padding: 10px 2px; position: relative; box-sizing: border-box; box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3); }
+.pitch-container::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255, 255, 255, 0.4); transform: translateY(-50%); }
+.pitch-container::after { content: ''; position: absolute; top: 50%; left: 50%; width: 20%; aspect-ratio: 1/1; border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 50%; transform: translate(-50%, -50%); }
+.pitch-row { display: flex; justify-content: space-around; width: 100%; z-index: 2; gap: 2px; }
+.player-slot { display: flex; flex-direction: column; align-items: center; width: clamp(45px, 18vw, 80px); text-align: center; transition: 0.3s; }
+.player-slot.clickable { cursor: pointer; }
+.player-slot.clickable:hover { transform: scale(1.1); }
+.player-slot .shirt { font-size: clamp(1.2rem, 5vw, 2rem); filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); transition: 0.3s; margin-bottom: 2px; }
+.player-slot .shirt.empty { opacity: 0.6; filter: grayscale(1); }
+.player-slot .name { background: rgba(0, 0, 0, 0.7); color: white; font-size: clamp(0.5rem, 2vw, 0.75rem); padding: 2px 4px; border-radius: 4px; font-family: 'Orbitron', sans-serif; border: 1px solid rgba(255,255,255,0.2); line-height: 1.1; width: 100%; box-sizing: border-box; word-wrap: break-word; white-space: normal; }
+.player-slot .hidden-name { color: #555; border-color: rgba(255,255,255,0.05); }
+.player-slot.revealed { animation: modalPop 0.4s ease-out; }
+
+/* El Rosco */
+.rosco-wrapper { position: relative; margin: 2vh auto; width: 100%; max-width: 500px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
+@media (max-width: 600px) { .rosco-wrapper { max-width: 320px; } }
+.rosco-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; }
+.rosco-letter { position: absolute; width: clamp(25px, 6vw, 40px); height: clamp(25px, 6vw, 40px); background: #002288; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; transform: translate(-50%, -50%); transition: 0.3s; font-size: clamp(0.7rem, 2vw, 1rem); }
+.rosco-letter.current { background: white; color: #0044cc; box-shadow: 0 0 20px white; scale: 1.2; z-index: 10; }
+.rosco-letter.correct { background: #00ff87; border-color: #00ff87; } 
+.rosco-letter.wrong { background: #ff4d4d; border-color: #ff4d4d; }
+.rosco-content { text-align: center; z-index: 5; width: 65%; max-width: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#rosco-player-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 3vw, 1.2rem); margin: 0 0 5px 0; color: white;}
+#rosco-letter-hint { font-size: clamp(2rem, 10vw, 4rem); color: var(--primary); margin: 0; font-family: 'Orbitron'; line-height: 1; }
+#rosco-definition { font-size: clamp(0.75rem, 3vw, 1rem); margin-bottom: 15px; max-height: 12vh; overflow-y: auto; padding: 0 5px; line-height: 1.4; }
+.rosco-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; width: 100%; }
+.timer-p1 { color: #00a8ff; transition: 0.3s; padding: 0 5px; }
+.timer-p2 { color: #ff4d4d; transition: 0.3s; padding: 0 5px; }
+.timer-active { transform: scale(1.3); font-weight: bold; display: inline-block; }
+.title-p1 { color: #00a8ff !important; text-shadow: 0 0 10px rgba(0, 168, 255, 0.4); }
+.title-p2 { color: #ff4d4d !important; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); }
+.rosco-letter.current.current-p1 { color: #00a8ff !important; box-shadow: 0 0 20px #00a8ff !important; }
+.rosco-letter.current.current-p2 { color: #ff4d4d !important; box-shadow: 0 0 20px #ff4d4d !important; }
+
+/* Higher / Lower & Guerra de Aforos (Layout Unificado) */
+.hl-layout { display: flex; flex-direction: column; width: 100%; max-width: 900px; gap: 15px; align-items: center; justify-content: center; position: relative; margin-top: 1vh; }
+@media(min-width: 768px) { .hl-layout { flex-direction: row; gap: 30px; } }
+.hl-card { width: 100%; max-width: 320px; background: #1c2128; border: 2px solid var(--primary-glow); border-radius: 20px; overflow: hidden; position: relative; aspect-ratio: 4/5; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: 0.3s; }
+.hl-card:hover { border-color: var(--primary); box-shadow: 0 0 30px var(--primary-glow); }
+.hl-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.5; transition: opacity 0.5s; }
+.hl-card:hover img { opacity: 0.7; }
+.hl-info { position: relative; z-index: 1; text-align: center; padding: 30px 20px; background: linear-gradient(to top, rgba(11, 14, 20, 1) 0%, rgba(11, 14, 20, 0.8) 50%, transparent 100%); }
+.hl-info h3 { margin: 0 0 5px 0; font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 5vw, 1.8rem); color: white; text-shadow: 0 2px 5px rgba(0,0,0,1); }
+.hl-subtitle { color: #ccc; margin: 0 0 5px 0; font-size: 0.9rem; }
+.hl-value { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: bold; color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); transition: 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.27); margin: 10px 0; }
+.hidden-val { opacity: 0; transform: scale(0.2) translateY(-50px); pointer-events: none; height: 0; margin: 0; }
+.hl-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+.hl-btn { padding: clamp(12px, 3vw, 15px); border: none; border-radius: 12px; font-family: 'Orbitron', sans-serif; font-size: clamp(1rem, 3vw, 1.2rem); font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; }
+.btn-higher { background: rgba(255, 255, 255, 0.1); color: var(--primary); border: 2px solid var(--primary); }
+.btn-higher:hover { background: var(--primary); color: var(--bg); transform: translateY(-3px); box-shadow: 0 5px 15px var(--primary-glow); }
+.btn-lower { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 2px solid #ff4d4d; }
+.btn-lower:hover { background: #ff4d4d; color: white; transform: translateY(3px); box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4); }
+.hl-vs { width: 60px; height: 60px; background: white; color: var(--bg); font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 10; border: 5px solid var(--primary); margin: -25px 0; box-shadow: 0 0 20px var(--primary-glow); }
+@media(min-width: 768px) { .hl-vs { margin: 0 -35px; } }
+
+/* Escudos Zoom (Premier) */
+.zoom-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+.zoom-box-container { width: clamp(200px, 60vw, 300px); aspect-ratio: 1/1; border-radius: 20px; border: 4px solid var(--primary); padding: 10px; background: var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-glow); margin-bottom: 20px; }
+.zoom-lens { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; }
+.zoom-lens img { width: 80%; height: 80%; object-fit: contain; transition: transform 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.27); will-change: transform; }
+
+/* ==========================================
+   7. MODALES GLOBALES
+   ========================================== */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px); padding: 10px; box-sizing: border-box; }
+.modal-content { background: var(--card); padding: clamp(1rem, 4vw, 2rem); border-radius: 20px; border: 2px solid var(--primary); text-align: center; max-width: 500px; width: 100%; max-height: 90svh; overflow-y: auto; box-shadow: 0 0 30px var(--primary-glow); animation: modalPop 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.27); box-sizing: border-box; }
+@keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#modal-title { font-family: 'Orbitron', sans-serif; color: var(--primary); margin-top: 0; font-size: clamp(1.2rem, 5vw, 1.8rem); }
+#modal-message { font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--text); margin: 1.5rem 0; }
+#modal-btn { background: var(--primary); color: var(--bg); border: none; padding: 12px 30px; border-radius: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; font-weight: bold;}
+#modal-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
+
+/* Futdle Grid */
+.wordle-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; align-items: center; width: 100%; }
+.wordle-row { display: flex; gap: clamp(2px, 1vw, 6px); justify-content: center; flex-wrap: nowrap; width: 100%; }
+.wordle-spacer { width: clamp(5px, 2vw, 15px); display: flex; justify-content: center; align-items: center; font-size: clamp(1rem, 3vw, 1.5rem); font-family: 'Orbitron', sans-serif; color: rgba(255,255,255,0.5); }
+.wordle-cell { flex: 1; max-width: 45px; aspect-ratio: 1/1; background: rgba(28, 33, 40, 0.6); border: 2px solid rgba(255,255,255,0.05); border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: clamp(0.8rem, 4vw, 1.6rem); font-family: 'Orbitron', sans-serif; font-weight: bold; text-transform: uppercase; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; }
+.wordle-cell.active { border-color: var(--secondary); box-shadow: 0 0 15px rgba(110, 44, 242, 0.4), inset 0 0 10px rgba(110, 44, 242, 0.2); transform: scale(1.08); }
+.wordle-cell.revealed { transition: transform 0.6s ease, background 0.3s 0.3s, border-color 0.3s 0.3s; }
+.wordle-cell.revealed.correct { background: #00ff87; color: #000; border-color: #00ff87; box-shadow: 0 0 15px rgba(0,255,135,0.5); transform: rotateX(360deg); }
+.wordle-cell.revealed.present { background: #ffd700; color: #000; border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: rotateX(360deg); }
+.wordle-cell.revealed.absent { background: #0f1218; color: #444; border-color: #1a1e24; box-shadow: inset 0 0 15px rgba(0,0,0,1); transform: rotateX(360deg); }
+
+/* ==========================================
+   TOP 10 LAYOUT (COMPACTO CON BANDERAS)
+   ========================================== */
+.top10-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; padding-bottom: 70px; position: relative; }
+.top10-header { text-align: center; width: 100%; margin-bottom: 5px; }
+#top10-desc { margin-bottom: 10px !important; font-size: 0.85rem; }
+.top10-list { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-bottom: 10px; }
+
+.top10-item { 
+    display: flex; 
+    align-items: center; 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 8px; 
+    padding: 6px 12px; 
+    font-family: 'Orbitron', sans-serif; 
+    transition: all 0.4s ease; 
+}
+.top10-item.revealed { 
+    background: rgba(245, 207, 142, 0.15); 
+    border-color: var(--primary); 
+    box-shadow: inset 0 0 15px rgba(245, 207, 142, 0.1); 
+}
+.top10-rank { font-size: 1.1rem; font-weight: bold; color: rgba(255,255,255,0.2); width: 30px; text-align: center; }
+.top10-item.revealed .top10-rank { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+
+.top10-info { flex: 1; display: flex; justify-content: space-between; align-items: center; margin-left: 10px; }
+.top10-name { font-size: clamp(0.8rem, 2.5vw, 0.95rem); color: #fff; letter-spacing: 1px; font-weight: bold; }
+
+.top10-hint { display: flex; align-items: center; gap: 6px; font-size: clamp(0.7rem, 2.5vw, 0.85rem); color: var(--text-dim); text-align: right; }
+.top10-item.revealed .top10-hint { color: var(--primary); opacity: 0.9; }
+.flag-icon { width: 22px; height: auto; border-radius: 2px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+.top10-input-area { 
+    position: fixed; 
+    bottom: 10px; 
+    max-width: 600px; 
+    width: calc(100% - 2rem); 
+    background: rgba(11, 14, 20, 0.95); 
+    padding: 10px; 
+    border-radius: 12px; 
+    border: 1px solid var(--primary); 
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.8); 
+    backdrop-filter: blur(10px); 
+    z-index: 10; 
+}
+
+@keyframes shakeInput {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+.input-error { border-color: var(--error) !important; animation: shakeInput 0.2s ease-in-out 0s 2; }
+
+/* ==========================================
+   8. KNOWBALL (PIRÁMIDE DRAG & DROP)
+   ========================================== */
+.kb-header { text-align: center; width: 100%; max-width: 600px; }
+.kb-layout { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; gap: 20px; margin-top: 10px;}
+
+.kb-pyramid { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.kb-slot-container { display: flex; align-items: center; gap: 10px; }
+
+.kb-slot-num { 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    color: var(--primary); 
+    width: 25px; 
+    text-align: right; 
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.kb-slot { 
+    flex: 1; 
+    min-height: 50px; 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 2px dashed rgba(255, 255, 255, 0.2); 
+    border-radius: 12px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    transition: all 0.3s ease;
+}
+
+.kb-slot.drag-over { 
+    background: rgba(0, 255, 135, 0.1); 
+    border-color: var(--primary); 
+    transform: scale(1.02);
+}
+
+.kb-cards-area { width: 100%; text-align: center; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+
+.kb-cards { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 10px; 
+    min-height: 60px;
+}
+
+.kb-card { 
+    background: var(--card); 
+    border: 1px solid var(--primary); 
+    color: white; 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    cursor: grab; 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+    font-weight: bold; 
+    user-select: none; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.kb-card:hover { border-color: white; box-shadow: 0 0 15px var(--primary-glow); }
+.kb-card:active { cursor: grabbing; }
+.kb-card.dragging { opacity: 0.5; transform: scale(0.95); }
+.kb-slot .kb-card { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box; border: none; background: rgba(0, 255, 135, 0.15); box-shadow: none; font-size: clamp(0.8rem, 3vw, 1rem); }
+
+/* ==========================================
+   9. SISTEMA DE PERFIL Y MONEDAS
+   ========================================== */
+.user-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; width: 100%; max-width: 400px; z-index: 10; position: relative; }
+.coin-badge { background: rgba(255, 215, 0, 0.15); border: 1px solid #ffd700; color: #ffd700; padding: 8px 20px; border-radius: 12px; font-family: 'Orbitron', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+.stats-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; text-align: left; }
+.profile-stat-item { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); font-family: 'Orbitron', sans-serif; font-size: 0.9rem;}
+.stat-value { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
+
+/* ==========================================
+   10. ÁLBUM Y SOBRES F10
+   ========================================== */
+.sobres-card { border-color: #00ffff !important; }
+.bg-sobres { background-image: url('players/fondo-laliga.jpg'); filter: brightness(0.3) blur(2px) hue-rotate(180deg); }
+
+#album-screen {
+    --primary: #00ffff;
+    --primary-glow: rgba(0, 255, 255, 0.3);
+    --secondary: #008888;
+}
+
+.album-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px;
+    border-radius: 15px;
+}
+.album-tab {
+    flex: 1;
+    background: transparent;
+    border: 2px solid transparent;
+    color: white;
+    padding: 12px 5px;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.album-tab.active {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary);
+}
+.album-tab-content { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; }
+
+/* SOBRE VISUAL */
+.pack-container { cursor: pointer; transition: 0.2s; animation: floatPack 3s ease-in-out infinite; perspective: 1000px; }
+.pack-container:hover { transform: scale(1.05) translateY(-10px); }
+.pack-visual {
+    width: 220px;
+    height: 320px;
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    border-radius: 15px;
+    border: 4px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 15px 35px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.5);
+    position: relative;
+    overflow: hidden;
+}
+.pack-visual::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg);
+    animation: shinePack 3s infinite;
+}
+.pack-logo { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: #111; font-weight: bold; text-shadow: 2px 2px 0px rgba(255,255,255,0.5); margin-bottom: 10px;}
+.pack-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #111; font-weight: bold; background: rgba(255,255,255,0.8); padding: 5px 15px; border-radius: 5px;}
+.pack-price { margin-top: 20px; font-weight: bold; color: #111; font-size: 1.2rem; background: #fff; padding: 5px 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+
+@keyframes floatPack { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes shinePack { 0% { left: -100%; } 20%, 100% { left: 100%; } }
+
+.pack-opening-anim { animation: shakePack 0.6s cubic-bezier(.36,.07,.19,.97) both; filter: brightness(1.5); }
+@keyframes shakePack {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    10%, 90% { transform: translate3d(-2px, 0, 0) scale(1.05); }
+    20%, 80% { transform: translate3d(4px, 0, 0) scale(1.05); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0) scale(1.1); }
+    40%, 60% { transform: translate3d(8px, 0, 0) scale(1.1); }
+    100% { transform: translate3d(0, 0, 0) scale(1.2) rotateY(90deg); opacity: 0; }
+}
+
+/* CARTAS FUT */
+.reveal-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; animation: modalPop 0.5s ease-out; margin-top: 20px;}
+
+.f10-card {
+    width: clamp(120px, 30vw, 150px);
+    aspect-ratio: 2.5 / 3.5;
+    background: #1a1c23;
+    border-radius: 12px;
+    border: 3px solid transparent; /* Por defecto transparente, lo manejan las clases tier */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+.f10-card:hover { transform: translateY(-5px) scale(1.02); }
+
+.f10-card img { 
+    width: 100%; 
+    flex: 1; 
+    min-height: 0; 
+    object-fit: cover; 
+    object-position: top; 
+    background: #1a1c23;
+    border-bottom: 2px solid rgba(255,255,255,0.6); 
+}
+
+.f10-card .card-name {
+    background: linear-gradient(180deg, #ffd700, #b8860b);
+    color: #000; 
+    text-align: center; 
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.6rem, 2vw, 0.8rem); 
+    padding: 8px 4px; 
+    font-weight: bold; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    word-wrap: break-word; 
+    line-height: 1.1;
+    min-height: 35px; 
+    border-top: none; 
+}
+
+/* CLASES DE TIERS PARA BORDES Y BRILLOS */
+.tier-bronce { border-color: #cd7f32; box-shadow: 0 0 10px #cd7f32; }
+.tier-plata { border-color: #c0c0c0; box-shadow: 0 0 10px #c0c0c0; }
+.tier-oro { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+.tier-diamante { border-color: #00bfff; box-shadow: 0 0 20px #00bfff; }
+.tier-platino { border-color: #e5e4e2; box-shadow: 0 0 20px #e5e4e2; background: linear-gradient(45deg, #111, #333); }
+
+/* ÁLBUM GRID */
+.album-progress { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; background: rgba(0, 255, 255, 0.1); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--primary); }
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    width: 100%;
+    padding: 10px;
+    justify-items: center;
+}
+.f10-card.locked {
+    border-color: #333 !important;
+    box-shadow: none !important;
+    filter: grayscale(1) brightness(0.4);
+}
+.f10-card.locked .card-name { background: #333; color: #888; border-top-color: #222;}
+.f10-card.locked:hover { transform: none; box-shadow: none; }
+
+/* MERCADO */
+.market-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 150px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);}
+.sell-btn { background: #ff4d4d; color: white; border: none; padding: 8px 10px; border-radius: 8px; font-family: 'Orbitron', sans-serif; cursor: pointer; width: 100%; font-weight: bold; font-size: 0.8rem; transition: 0.2s;}
+.sell-btn:hover { background: #ff1a1a; transform: scale(1.05); box-shadow: 0 0 15px rgba(255,77,77,0.5); }
