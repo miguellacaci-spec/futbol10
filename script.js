@@ -885,6 +885,9 @@ function renderKeyboard() {
 }
 
 function handleInput(char) {
+    // Evitar que se pulse nada si el juego ya terminó
+    if (gameState.mistakes >= 6 || !document.getElementById('wordDisplay').textContent.includes("_")) return;
+    
     if (gameState.guessed.includes(char)) return;
     gameState.guessed.push(char);
     const keyElement = document.getElementById(`key-${char}`);
@@ -902,11 +905,18 @@ function handleInput(char) {
             updateRecord('hangman', gameState.streak);
             gameState.streak = 0; 
             mostrarMensajePro("🧤 ¡TARJETA ROJA!", "La respuesta era: " + gameState.word + ".", () => initHangman());
+            return; // <--- VITAL: Cortar la función aquí para no volver a guardar
         }
     } else {
         updateDisplay();
+        // Si al actualizar la pantalla detectamos que ya no hay guiones (victoria)
+        if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+            return; // <--- VITAL: Cortar la función para no re-guardar la partida terminada
+        }
     }
-    saveHangmanProgress(); // Guardamos progreso tras cada letra
+    
+    // Si no hemos ganado ni perdido, guardamos el progreso y la letra
+    saveHangmanProgress(); 
 }
 
 function updateDisplay() {
@@ -949,6 +959,7 @@ function solveFullWord() {
     const nWord = removeAccents(gameState.word);
     
     if (nVal === nWord && nVal !== "") {
+        localStorage.removeItem('f10_hangman_save'); // <--- Limpiar también al ganar del tirón
         gameState.streak++;
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
@@ -965,6 +976,7 @@ function solveFullWord() {
         addCoins(wonCoins);
         mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
     } else {
+        localStorage.removeItem('f10_hangman_save'); // <--- Limpiar al fallar del tirón
         updateRecord('hangman', gameState.streak);
         gameState.streak = 0;
         mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
