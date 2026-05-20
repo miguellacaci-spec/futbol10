@@ -803,9 +803,30 @@ function obtenerDosRoscos() {
 
 // --- AHORCADO ---
 function initHangman() {
-    gameState.word = players[Math.floor(Math.random() * players.length)].toUpperCase();
-    gameState.guessed = [];
-    gameState.mistakes = 0;
+function initHangman() {
+    // Intentar cargar progreso si existe
+    if (loadHangmanProgress()) {
+        document.getElementById('lives').innerText = 6 - gameState.mistakes;
+        document.getElementById('streak').innerText = gameState.streak;
+        document.getElementById('max-streak').innerText = getRecord('hangman');
+        renderKeyboard();
+        // Marcar teclas ya usadas
+        gameState.guessed.forEach(char => {
+            const el = document.getElementById(`key-${char}`);
+            if(el) el.classList.add('used');
+        });
+        updateDisplay();
+        drawCanvas(gameState.mistakes);
+        return; // Salimos de la función aquí si cargamos partida
+    }
+
+    // Si no hay partida guardada, empezamos nueva
+    gameState = { 
+        word: players[Math.floor(Math.random() * players.length)].toUpperCase(), 
+        guessed: [], 
+        mistakes: 0, 
+        streak: gameState.streak // Mantenemos la racha
+    };
     
     document.getElementById('lives').innerText = 6;
     document.getElementById('streak').innerText = gameState.streak;
@@ -816,6 +837,7 @@ function initHangman() {
     renderKeyboard();
     updateDisplay();
     drawCanvas(0);
+    saveHangmanProgress();
 }
 
 function buyHangmanHint() {
@@ -2126,4 +2148,17 @@ function buySpecificPlayer() {
     document.getElementById('album-coins').innerText = getCoins();
     
     mostrarMensajePro("🤝 ¡FICHAJE ESTRELLA!", `¡Has fichado a ${playerFound} por 750🪙!\nYa está en tu colección.`);
+}
+
+function saveHangmanProgress() {
+    localStorage.setItem('f10_hangman_save', JSON.stringify(gameState));
+}
+
+function loadHangmanProgress() {
+    const saved = localStorage.getItem('f10_hangman_save');
+    if (saved) {
+        gameState = JSON.parse(saved);
+        return true;
+    }
+    return false;
 }
