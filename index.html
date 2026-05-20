@@ -12,7 +12,6 @@
         
         <!-- PANTALLA: MENÚ PRINCIPAL -->
         <div id="menu-screen" class="screen">
-            <!-- NUEVA BARRA DE USUARIO -->
             <div class="user-bar">
                 <button onclick="showProfile()" class="back-btn">👤 PERFIL</button>
                 <div class="coin-badge">🪙 <span id="menu-coins">0</span></div>
@@ -27,8 +26,7 @@
             </div>
             
             <div class="menu-grid">
-                
-                <!-- NUEVO: TARJETA ÁLBUM F10 -->
+                <!-- TARJETA ÁLBUM F10 -->
                 <div class="menu-card sobres-card" onclick="showGame('album')">
                     <div class="card-bg bg-sobres"></div>
                     <div class="card-info">
@@ -123,7 +121,7 @@
 
         <!-- ================= MINIJUEGOS ================= -->
 
-        <!-- NUEVO JUEGO: ÁLBUM Y SOBRES -->
+        <!-- ÁLBUM Y SOBRES -->
         <div id="album-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
@@ -142,7 +140,6 @@
             <div id="tab-pack" class="album-tab-content">
                 <div id="pack-container" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; padding: 10px;">
                     
-                    <!-- SOBRE BRONCE -->
                     <div class="pack-container" onclick="openPack(event, 'bronce')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);">
                             <div class="pack-logo">F10</div>
@@ -151,7 +148,6 @@
                         </div>
                     </div>
 
-                    <!-- SOBRE PLATA -->
                     <div class="pack-container" onclick="openPack(event, 'plata')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #e6e8fa 0%, #a9a9a9 100%);">
                             <div class="pack-logo">F10</div>
@@ -160,7 +156,6 @@
                         </div>
                     </div>
 
-                    <!-- SOBRE ORO -->
                     <div class="pack-container" onclick="openPack(event, 'oro')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);">
                             <div class="pack-logo">F10</div>
@@ -169,7 +164,6 @@
                         </div>
                     </div>
 
-                    <!-- SOBRE DIAMANTE -->
                     <div class="pack-container" onclick="openPack(event, 'diamante')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #00ffff 0%, #0088cc 100%);">
                             <div class="pack-logo">F10</div>
@@ -178,7 +172,6 @@
                         </div>
                     </div>
 
-                    <!-- SOBRE PLATINO -->
                     <div class="pack-container" onclick="openPack(event, 'platino')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #a200ff 0%, #4b0082 100%);">
                             <div class="pack-logo">F10</div>
@@ -202,8 +195,6 @@
 
             <!-- TAB: MERCADO (REPETIDOS Y FICHAJES) -->
             <div id="tab-market" class="album-tab-content hidden">
-                
-                <!-- NUEVO: SECCIÓN DE FICHAJES -->
                 <div class="market-buy-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--primary);">
                     <h3 style="color: var(--primary); font-family: 'Orbitron'; margin-top: 0; font-size: 1.2rem;">FICHAR JUGADOR ESTRELLA</h3>
                     <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 15px;">¿Te falta alguno? Búscalo y fíchalo a la carta por 750🪙.</p>
@@ -217,10 +208,11 @@
                 </div>
 
                 <h3 style="color: white; font-family: 'Orbitron'; margin-bottom: 5px; width: 100%; text-align: center;">TUS REPETIDOS</h3>
-                <p style="text-align:center; color:var(--text-dim); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 0.85rem;">Vende tus cartas repetidas por 25🪙 cada una.</p>
+                <p style="text-align:center; color:var(--text-dim); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 0.85rem;">Vende tus cartas repetidas según su rareza.</p>
                 <div class="album-grid" id="market-grid"></div>
             </div>
         </div>
+
         <!-- JUEGO: AHORCADO -->
         <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
