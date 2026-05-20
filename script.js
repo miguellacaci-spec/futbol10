@@ -731,6 +731,7 @@ function showGame(gameId) {
         if(gameId === 'zoom') initZoomGame();
         if(gameId === 'top10') initTop10(); 
         if(gameId === 'knowball') initKnowball();
+        if(gameId === 'album') initAlbum();
     }
 }
 
@@ -755,6 +756,8 @@ function mostrarMensajePro(titulo, mensaje, accionAlCerrar) {
 function setupAutocomplete(inputId, suggestionId) {
     const input = document.getElementById(inputId);
     const box = document.getElementById(suggestionId);
+    if(!input || !box) return;
+
     input.addEventListener('input', () => {
         const val = input.value.toUpperCase().trim();
         box.innerHTML = "";
@@ -871,62 +874,62 @@ function handleInput(char) {
 }
 
 function updateDisplay() {
-    const words = gameState.word.split(" ");
-    const displayHTML = words.map(word => {
-        const letters = word.split('').map(char => {
-            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            return gameState.guessed.includes(normChar) ? char : "_";
-        }).join(" ");
-        return `<span style="white-space: nowrap;">${letters}</span>`;
-    }).join(" &nbsp;&nbsp; "); 
-    
-    document.getElementById('wordDisplay').innerHTML = displayHTML;
-    
-    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-        
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let livesLeft = 6 - gameState.mistakes;
-        let wonCoins = 0;
-        if (livesLeft === 6) wonCoins = 10;
-        else if (livesLeft === 5) wonCoins = 7;
-        else if (livesLeft === 4) wonCoins = 5;
-        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
-        else if (livesLeft === 1) wonCoins = 2;
+    const words = gameState.word.split(" ");
+    const displayHTML = words.map(word => {
+        const letters = word.split('').map(char => {
+            const normChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return gameState.guessed.includes(normChar) ? char : "_";
+        }).join(" ");
+        return `<span style="white-space: nowrap;">${letters}</span>`;
+    }).join(" &nbsp;&nbsp; "); 
+    
+    document.getElementById('wordDisplay').innerHTML = displayHTML;
+    
+    if (!document.getElementById('wordDisplay').textContent.includes("_")) {
+        gameState.streak++;
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let livesLeft = 6 - gameState.mistakes;
+        let wonCoins = 0;
+        if (livesLeft === 6) wonCoins = 10;
+        else if (livesLeft === 5) wonCoins = 7;
+        else if (livesLeft === 4) wonCoins = 5;
+        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
+        else if (livesLeft === 1) wonCoins = 2;
 
-        addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡LOKUURA!", `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
-    }
+        addCoins(wonCoins);
+        mostrarMensajePro("🔥 ¡LOKUURA!", `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+    }
 }
 
 function solveFullWord() {
-    const val = document.getElementById('wordInput').value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
-    if (nVal === nWord && nVal !== "") {
-        gameState.streak++;
-        let nuevoRecord = updateRecord('hangman', gameState.streak);
-        document.getElementById('max-streak').innerText = nuevoRecord;
-        
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let livesLeft = 6 - gameState.mistakes;
-        let wonCoins = 0;
-        if (livesLeft === 6) wonCoins = 10;
-        else if (livesLeft === 5) wonCoins = 7;
-        else if (livesLeft === 4) wonCoins = 5;
-        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
-        else if (livesLeft === 1) wonCoins = 2;
+    const val = document.getElementById('wordInput').value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nWord = gameState.word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nWord && nVal !== "") {
+        gameState.streak++;
+        let nuevoRecord = updateRecord('hangman', gameState.streak);
+        document.getElementById('max-streak').innerText = nuevoRecord;
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let livesLeft = 6 - gameState.mistakes;
+        let wonCoins = 0;
+        if (livesLeft === 6) wonCoins = 10;
+        else if (livesLeft === 5) wonCoins = 7;
+        else if (livesLeft === 4) wonCoins = 5;
+        else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
+        else if (livesLeft === 1) wonCoins = 2;
 
-        addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
-    } else {
-        updateRecord('hangman', gameState.streak);
-        gameState.streak = 0;
-        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
-    }
+        addCoins(wonCoins);
+        mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+    } else {
+        updateRecord('hangman', gameState.streak);
+        gameState.streak = 0;
+        mostrarMensajePro("🧤 ¡TARJETA ROJA!", "Te la jugaste y fallaste... Era: " + gameState.word + ".", () => initHangman());
+    }
 }
 
 function drawCanvas(step) {
@@ -966,41 +969,41 @@ function initBlurGame() {
 }
 
 function checkBlurGuess() {
-    const input = document.getElementById('blurInput');
-    const val = input.value.toUpperCase().trim();
-    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
-    if (nVal === nPlayer && nVal !== "") {
-        blurState.streak++;
-        let nuevoRecord = updateRecord('blur', blurState.streak); 
-        document.getElementById('blur-max').innerText = nuevoRecord; 
-        
-        // SISTEMA DE RECOMPENSAS POR VIDAS
-        let wonCoins = 0;
-        if (blurState.lives === 5) wonCoins = 10;
-        else if (blurState.lives === 4) wonCoins = 7;
-        else if (blurState.lives === 3) wonCoins = 5;
-        else if (blurState.lives === 2) wonCoins = 3;
-        else if (blurState.lives === 1) wonCoins = 2;
+    const input = document.getElementById('blurInput');
+    const val = input.value.toUpperCase().trim();
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nPlayer = blurState.player.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (nVal === nPlayer && nVal !== "") {
+        blurState.streak++;
+        let nuevoRecord = updateRecord('blur', blurState.streak); 
+        document.getElementById('blur-max').innerText = nuevoRecord; 
+        
+        // SISTEMA DE RECOMPENSAS POR VIDAS
+        let wonCoins = 0;
+        if (blurState.lives === 5) wonCoins = 10;
+        else if (blurState.lives === 4) wonCoins = 7;
+        else if (blurState.lives === 3) wonCoins = 5;
+        else if (blurState.lives === 2) wonCoins = 3;
+        else if (blurState.lives === 1) wonCoins = 2;
 
-        addCoins(wonCoins); 
-        document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`, () => initBlurGame()), 300);
-    } else {
-        blurState.lives--;
-        blurState.blur -= 6;
-        if (blurState.lives <= 0) {
-            updateRecord('blur', blurState.streak); 
-            blurState.streak = 0;
-            document.getElementById('playerImg').style.filter = "blur(0px)";
-            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
-        } else {
-            document.getElementById('blur-lives').innerText = blurState.lives;
-            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
-            input.value = "";
-        }
-    }
+        addCoins(wonCoins); 
+        document.getElementById('playerImg').style.filter = "blur(0px)";
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`, () => initBlurGame()), 300);
+    } else {
+        blurState.lives--;
+        blurState.blur -= 6;
+        if (blurState.lives <= 0) {
+            updateRecord('blur', blurState.streak); 
+            blurState.streak = 0;
+            document.getElementById('playerImg').style.filter = "blur(0px)";
+            setTimeout(() => mostrarMensajePro("🧤 ¡PARADÓN!", "Era " + blurState.player, () => initBlurGame()), 300);
+        } else {
+            document.getElementById('blur-lives').innerText = blurState.lives;
+            document.getElementById('playerImg').style.filter = `blur(${blurState.blur}px)`;
+            input.value = "";
+        }
+    }
 }
 
 // --- TIME MACHINE ---
@@ -1824,7 +1827,7 @@ setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
 setupAutocomplete('zoomInput', 'zoom-suggestions'); 
 setupAutocomplete('top10Input', 'top10-suggestions');
-setupAutocomplete('marketBuyInput', 'market-buy-suggestions'); // <--- NUEVO
+setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
 
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
@@ -1858,6 +1861,7 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'tmInput') checkTimeMachineGuess();
         if (document.activeElement.id === 'zoomInput') checkZoomGuess(); 
         if (document.activeElement.id === 'top10Input') checkTop10Guess();
+        if (document.activeElement.id === 'marketBuyInput') buySpecificPlayer();
     }
 });
 
@@ -1947,49 +1951,49 @@ function openPack(event, type) {
 }
 
 function revealPackCards(type) {
-    const data = getAlbumData();
-    const pool = packsDB[type].players;
-    
-    const p1 = pool[Math.floor(Math.random() * pool.length)];
-    let p2 = pool[Math.floor(Math.random() * pool.length)];
-    
-    // Evitar que salgan dos repetidos en el mismo sobre
-    while (p1 === p2) {
-        p2 = pool[Math.floor(Math.random() * pool.length)];
-    }
+    const data = getAlbumData();
+    const pool = packsDB[type].players;
+    
+    const p1 = pool[Math.floor(Math.random() * pool.length)];
+    let p2 = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Evitar que salgan dos repetidos en el mismo sobre
+    while (p1 === p2) {
+        p2 = pool[Math.floor(Math.random() * pool.length)];
+    }
 
-    [p1, p2].forEach(p => {
-        if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
-        } else {
-            data.unlocked.push(p);
-        }
-    });
-    
-    saveAlbumData(data);
+    [p1, p2].forEach(p => {
+        if(data.unlocked.includes(p)) {
+            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
+        } else {
+            data.unlocked.push(p);
+        }
+    });
+    
+    saveAlbumData(data);
 
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const revealContainer = document.getElementById('reveal-cards-container');
+    
+    revealContainer.innerHTML = `
+        <div class="f10-card">
+            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p1}</div>
+        </div>
+        <div class="f10-card">
+            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p2}</div>
+        </div>
+    `;
+    
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+    isOpeningPack = false;
 }
 
 function closePackReveal() {
-    document.getElementById('pack-reveal').classList.add('hidden');
-    document.getElementById('pack-container').classList.remove('hidden');
+    document.getElementById('pack-reveal').classList.add('hidden');
+    document.getElementById('pack-container').classList.remove('hidden');
 }
 
 function renderAlbum() {
@@ -2071,6 +2075,7 @@ function sellDuplicate(playerName) {
         mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por 25🪙.`);
     }
 }
+
 function buySpecificPlayer() {
     const val = document.getElementById('marketBuyInput').value.toUpperCase().trim();
     if (!val) return;
@@ -2110,18 +2115,4 @@ function buySpecificPlayer() {
     document.getElementById('album-coins').innerText = getCoins();
     
     mostrarMensajePro("🤝 ¡FICHAJE ESTRELLA!", `¡Has fichado a ${playerFound} por 750🪙!\nYa está en tu colección.`);
-}
-// -------------------------------------------------------------
-// *ACTUALIZACIÓN*: Añadir el router showGame para el álbum
-// Busca la función original showGame(gameId) y modifícala o añade esto:
-// -------------------------------------------------------------
-const originalShowGame = showGame;
-showGame = function(gameId) {
-    // Ejecutar lógica original para otros juegos
-    originalShowGame(gameId);
-    
-    // Añadir lógica extra para el álbum
-    if(gameId === 'album') {
-        initAlbum();
-    }
 }
