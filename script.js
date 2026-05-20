@@ -1824,6 +1824,7 @@ setupAutocomplete('wordInput', 'hangman-suggestions');
 setupAutocomplete('blurInput', 'blur-suggestions');
 setupAutocomplete('zoomInput', 'zoom-suggestions'); 
 setupAutocomplete('top10Input', 'top10-suggestions');
+setupAutocomplete('marketBuyInput', 'market-buy-suggestions'); // <--- NUEVO
 
 document.getElementById('solveButton').onclick = solveFullWord;
 document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
@@ -2070,7 +2071,46 @@ function sellDuplicate(playerName) {
         mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por 25🪙.`);
     }
 }
+function buySpecificPlayer() {
+    const val = document.getElementById('marketBuyInput').value.toUpperCase().trim();
+    if (!val) return;
 
+    // Normalizar la búsqueda por si ponen tildes
+    const nVal = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    // Buscar si el jugador existe en la base de datos (array players)
+    const playerFound = players.find(p => p.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === nVal);
+
+    if (!playerFound) {
+        mostrarMensajePro("❌ JUGADOR NO ENCONTRADO", "Asegúrate de escribir el nombre exactamente como aparece en el juego.");
+        return;
+    }
+
+    const data = getAlbumData();
+
+    // Comprobar si ya lo tiene en el álbum
+    if (data.unlocked.includes(playerFound)) {
+        mostrarMensajePro("⚠️ YA LO TIENES", `El jugador ${playerFound} ya está en tu álbum. No tires el dinero.`);
+        return;
+    }
+
+    // Comprobar si tiene el dinero suficiente
+    if (getCoins() < 750) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 750 FutCoins para fichar a la carta. ¡Toca jugar más minijuegos!");
+        return;
+    }
+
+    // Cobrar y añadir al álbum
+    addCoins(-750);
+    data.unlocked.push(playerFound);
+    saveAlbumData(data);
+
+    // Limpiar input y actualizar UI
+    document.getElementById('marketBuyInput').value = "";
+    document.getElementById('album-coins').innerText = getCoins();
+    
+    mostrarMensajePro("🤝 ¡FICHAJE ESTRELLA!", `¡Has fichado a ${playerFound} por 750🪙!\nYa está en tu colección.`);
+}
 // -------------------------------------------------------------
 // *ACTUALIZACIÓN*: Añadir el router showGame para el álbum
 // Busca la función original showGame(gameId) y modifícala o añade esto:
