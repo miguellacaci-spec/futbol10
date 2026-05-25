@@ -10,7 +10,6 @@
 <body>
     <div id="app">
         
-        <!-- PANTALLA: MENÚ PRINCIPAL -->
         <div id="menu-screen" class="screen">
             <div class="user-bar">
                 <button onclick="showProfile()" class="back-btn">👤 PERFIL</button>
@@ -26,7 +25,6 @@
             </div>
             
             <div class="menu-grid">
-                <!-- TARJETA ÁLBUM F10 -->
                 <div class="menu-card sobres-card" onclick="showGame('album')">
                     <div class="card-bg bg-sobres"></div>
                     <div class="card-info">
@@ -75,7 +73,6 @@
                     </div>
                 </div>
                 
-                <!-- TARJETA TOP 10 -->
                 <div class="menu-card top10-card" onclick="showGame('top10')">
                     <div class="card-bg bg-top10"></div>
                     <div class="card-info">
@@ -86,7 +83,6 @@
             </div>
         </div>
 
-        <!-- PANTALLA: SELECCIÓN DE CATEGORÍA -->
         <div id="category-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
@@ -95,7 +91,6 @@
             <div class="menu-grid" id="category-games-grid"></div>
         </div>
 
-        <!-- PANTALLA: MENÚ DEL ROSCO -->
         <div id="rosco-menu-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← ATRÁS</button>
@@ -119,9 +114,6 @@
             </div>
         </div>
 
-        <!-- ================= MINIJUEGOS ================= -->
-
-        <!-- ÁLBUM Y SOBRES -->
         <div id="album-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
@@ -136,7 +128,6 @@
                 <button class="album-tab" id="tab-btn-market" onclick="switchAlbumTab('market')">MERCADO</button>
             </div>
 
-            <!-- TAB: ABRIR SOBRES -->
             <div id="tab-pack" class="album-tab-content">
                 <div id="pack-container" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; padding: 10px;">
                     
@@ -145,6 +136,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">BRONCE</div>
                             <div class="pack-price">25 🪙</div>
+                            <div class="pack-progress" id="prog-bronce" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">0/0</div>
                         </div>
                     </div>
 
@@ -153,6 +145,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">PLATA</div>
                             <div class="pack-price">50 🪙</div>
+                            <div class="pack-progress" id="prog-plata" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">0/0</div>
                         </div>
                     </div>
 
@@ -161,6 +154,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">ORO</div>
                             <div class="pack-price">100 🪙</div>
+                            <div class="pack-progress" id="prog-oro" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">0/0</div>
                         </div>
                     </div>
 
@@ -169,6 +163,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">DIAMANTE</div>
                             <div class="pack-price">200 🪙</div>
+                            <div class="pack-progress" id="prog-diamante" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">0/0</div>
                         </div>
                     </div>
 
@@ -177,6 +172,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title" style="font-size: 1.1rem; color: #fff;">PLATINO</div>
                             <div class="pack-price">400 🪙</div>
+                            <div class="pack-progress" id="prog-platino" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">0/0</div>
                         </div>
                     </div>
 
@@ -187,13 +183,11 @@
                 </div>
             </div>
 
-            <!-- TAB: MI ÁLBUM -->
             <div id="tab-collection" class="album-tab-content hidden">
                 <div class="album-progress">Colección: <span id="album-progress-text">0</span> completada</div>
                 <div class="album-grid" id="album-grid"></div>
             </div>
 
-            <!-- TAB: MERCADO (REPETIDOS Y FICHAJES) -->
             <div id="tab-market" class="album-tab-content hidden">
                 <div class="market-buy-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--primary);">
                     <h3 style="color: var(--primary); font-family: 'Orbitron'; margin-top: 0; font-size: 1.2rem;">FICHAR JUGADOR ESTRELLA</h3>
@@ -213,7 +207,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: AHORCADO -->
         <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -241,7 +234,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: BLUR GUESS -->
         <div id="blur-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -264,7 +256,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: TIME MACHINE -->
         <div id="timemachine-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -289,7 +280,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: XI HISTÓRICO EUROPEO -->
         <div id="eleven-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -305,7 +295,6 @@
             </div>
         </div>
         
-        <!-- JUEGO: KNOWBALL (PIRÁMIDE) -->
         <div id="knowball-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -343,15 +332,13 @@
                 <div class="kb-cards-area">
                     <p style="color: var(--text-dim); font-family: 'Orbitron'; font-size: 0.8rem; margin-bottom: 10px;">Arrastra las tarjetas a la pirámide</p>
                     <div class="kb-cards kb-dropzone" id="kb-cards-container">
-                        <!-- Las tarjetas se generan aquí con JS -->
-                    </div>
+                        </div>
                 </div>
 
                 <button class="secondary-btn" style="margin-top: 20px; width: 100%; max-width: 300px;" onclick="checkKnowball()">COMPROBAR</button>
             </div>
         </div>
 
-        <!-- JUEGO: EL ROSCO -->
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
@@ -377,7 +364,6 @@
             </div>
         </div> 
 
-        <!-- JUEGO: HIGHER OR LOWER (PREMIER) -->
         <div id="higherlower-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -411,7 +397,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: GUERRA DE AFOROS (LALIGA) -->
         <div id="aforos-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -445,7 +430,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: TOP 10 RANKING -->
         <div id="top10-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
@@ -458,8 +442,7 @@
                 </div>
                 
                 <div class="top10-list" id="top10-list">
-                    <!-- Los 10 recuadros se generarán aquí con JS -->
-                </div>
+                    </div>
 
                 <div class="input-container top10-input-area">
                     <div class="input-group">
@@ -472,7 +455,6 @@
             </div>
         </div>
 
-        <!-- JUEGO: ZOOM ESCUDOS (PREMIER) -->
         <div id="zoom-screen" class="screen hidden">
             <nav class="game-nav">
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
@@ -500,7 +482,6 @@
 
     </div> 
     
-    <!-- MODALES GLOBALES -->
     <div id="custom-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2 id="modal-title">TÍTULO</h2>
@@ -521,7 +502,6 @@
         </div>
     </div>
 
-    <!-- MODAL PERFIL JUGADOR -->
     <div id="profile-modal" class="modal-overlay hidden" style="z-index: 10000;">
         <div class="modal-content" style="max-width: 400px; padding: 2rem;">
             <h2 class="logo" style="font-size: 1.8rem; margin: 0;">TU <span>PERFIL</span></h2>
@@ -529,8 +509,7 @@
                 🪙 FutCoins: <span id="profile-coins">0</span>
             </div>
             <div class="stats-grid" id="profile-stats">
-                <!-- Se llena con JS -->
-            </div>
+                </div>
             <button class="secondary-btn" style="margin-top: 25px; width: 100%;" onclick="closeProfile()">VOLVER</button>
         </div>
     </div>
