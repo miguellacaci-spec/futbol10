@@ -1640,13 +1640,29 @@ function checkHigherLower(guess) {
             document.getElementById('hl-score').innerText = hlState.score;
             let nuevoRecord = updateRecord('hl', hlState.score); 
             document.getElementById('hl-max').innerText = nuevoRecord; 
-            addCoins(2); 
+            
+            // ELIMINADO: addCoins(2) ya no está aquí para no frenar la partida
+            
             hlState.p1 = hlState.p2;
             pickNewPlayer2();
             renderHL();
         } else {
             updateRecord('hl', hlState.score); 
-            mostrarMensajePro("❌ ¡FIN DE LA RACHA!", `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.`, () => initHigherLower());
+
+            // NUEVO: Calculamos las monedas (2 por cada acierto en la racha)
+            let monedasGanadas = hlState.score * 2;
+            if (monedasGanadas > 0) {
+                addCoins(monedasGanadas);
+            }
+
+            // NUEVO: Preparamos un texto extra si ha ganado monedas
+            let textoMonedas = monedasGanadas > 0 ? `\n¡Te llevas el bote de +${monedasGanadas} FutCoins 🪙!` : "";
+            
+            mostrarMensajePro(
+                "❌ ¡FIN DE LA RACHA!", 
+                `El valor de ${hlState.p2.name} es de ${v2} M€.\nHas conseguido ${hlState.score} puntos.${textoMonedas}`, 
+                () => initHigherLower()
+            );
         }
     }, 1500);
 }
