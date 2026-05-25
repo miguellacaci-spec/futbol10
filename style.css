@@ -651,8 +651,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 }
 
 .f10-card .card-name {
-    background: linear-gradient(180deg, #ffd700, #b8860b);
-    color: #000; 
+    color: #fff; 
     text-align: center; 
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(0.6rem, 2vw, 0.8rem); 
@@ -667,12 +666,21 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
     border-top: none; 
 }
 
-/* CLASES DE TIERS PARA BORDES Y BRILLOS */
+/* CLASES DE TIERS PARA BORDES Y BRILLOS (AHORA CON FONDOS DINÁMICOS) */
 .tier-bronce { border-color: #cd7f32; box-shadow: 0 0 10px #cd7f32; }
+.tier-bronce .card-name { background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%); color: white; }
+
 .tier-plata { border-color: #c0c0c0; box-shadow: 0 0 10px #c0c0c0; }
+.tier-plata .card-name { background: linear-gradient(135deg, #e6e8fa 0%, #a9a9a9 100%); color: #111; }
+
 .tier-oro { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
-.tier-diamante { border-color: #00bfff; box-shadow: 0 0 20px #00bfff; }
-.tier-platino { border-color: #e5e4e2; box-shadow: 0 0 20px #e5e4e2; background: linear-gradient(45deg, #111, #333); }
+.tier-oro .card-name { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); color: #111; }
+
+.tier-diamante { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
+.tier-diamante .card-name { background: linear-gradient(135deg, #00ffff 0%, #0088cc 100%); color: #111; }
+
+.tier-platino { border-color: #a200ff; box-shadow: 0 0 20px #a200ff; }
+.tier-platino .card-name { background: linear-gradient(135deg, #a200ff 0%, #4b0082 100%); color: white; }
 
 /* ÁLBUM GRID */
 .album-progress { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; background: rgba(0, 255, 255, 0.1); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--primary); }
