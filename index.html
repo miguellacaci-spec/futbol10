@@ -524,11 +524,24 @@
     </div>
 
     <div id="match-simulation-modal" class="modal-overlay hidden" style="z-index: 10002;">
-        <div class="modal-content" style="max-width: 400px; padding: 2rem; text-align: center;">
-            <h2 class="logo" style="font-size: 1.8rem; margin: 0;">PARTIDO <span>VS CPU</span></h2>
-            <div id="match-events" style="margin: 20px 0; font-family: 'Orbitron'; font-size: 1.1rem; min-height: 60px; color: #00ff87;">Calculando estadísticas...</div>
-            <div id="match-score" style="font-size: 3.5rem; font-weight: bold; color: white; text-shadow: 0 0 20px #00ff87; margin-bottom: 20px; display: none;">0 - 0</div>
-            <button id="match-close-btn" class="secondary-btn hidden" style="width: 100%;" onclick="closeMatchModal()">CONTINUAR</button>
+        <div class="modal-content" style="max-width: 500px; padding: 1.5rem; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 class="logo" style="font-size: 1.5rem; margin: 0;">PARTIDO <span>VS CPU</span></h2>
+                <div class="score-board" style="padding: 5px 15px; font-size: 1.5rem;">
+                    <span id="match-score-my" style="color: #00ff87;">0</span> - <span id="match-score-cpu" style="color: #ff4d4d;">0</span>
+                </div>
+            </div>
+
+            <div id="match-minute" style="font-family: 'Orbitron'; font-size: 1rem; color: #ffd700; margin-bottom: 10px;">⏱️ Min 15' - ¡Atacas!</div>
+            
+            <div id="match-narrative" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; font-size: 0.95rem; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                Tienes el balón en la frontal del área. ¿Qué vas a hacer?
+            </div>
+
+            <div id="match-actions" style="display: flex; flex-direction: column; gap: 10px;">
+                </div>
+
+            <button id="match-close-btn" class="secondary-btn hidden" style="width: 100%; margin-top: 15px;" onclick="closeMatchModal()">FINALIZAR PARTIDO</button>
         </div>
     </div>
 
