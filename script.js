@@ -600,6 +600,8 @@ let roscoState = {
     p2: { currentIndex: 0, results: {}, timeLeft: 300, questions: [], done: false }
 };
 
+let currentLineupSlot = -1;
+
 // ==========================================
 // 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
@@ -927,8 +929,16 @@ function updateDisplay() {
         else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
         else if (livesLeft === 1) wonCoins = 2;
 
+        const lineup = getLineup();
+        const isFavorite = lineup.includes(gameState.word);
+        if (isFavorite) wonCoins *= 10;
+
         addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡LOKUURA!", `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+        let msg = isFavorite 
+            ? `¡Adivinaste a tu jugador favorito ${gameState.word}!\nBONUS x10 aplicado: +${wonCoins} FutCoins 🪙`
+            : `¡Adivinaste: ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`;
+            
+        mostrarMensajePro("🔥 ¡LOKUURA!", msg, () => initHangman());
     }
 }
 
@@ -951,8 +961,16 @@ function solveFullWord() {
         else if (livesLeft === 3 || livesLeft === 2) wonCoins = 3;
         else if (livesLeft === 1) wonCoins = 2;
 
+        const lineup = getLineup();
+        const isFavorite = lineup.includes(gameState.word);
+        if (isFavorite) wonCoins *= 10;
+
         addCoins(wonCoins);
-        mostrarMensajePro("🔥 ¡BRUTAL!", `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`, () => initHangman());
+        let msg = isFavorite 
+            ? `¡Exacto, era tu jugador favorito ${gameState.word}!\nBONUS x10 aplicado: +${wonCoins} FutCoins 🪙`
+            : `¡Exacto, era ${gameState.word}!\nHas ganado +${wonCoins} FutCoins 🪙`;
+            
+        mostrarMensajePro("🔥 ¡BRUTAL!", msg, () => initHangman());
     } else {
         localStorage.removeItem('f10_hangman_save'); 
         updateRecord('hangman', gameState.streak);
@@ -1015,9 +1033,18 @@ function checkBlurGuess() {
         else if (blurState.lives === 2) wonCoins = 3;
         else if (blurState.lives === 1) wonCoins = 2;
 
+        const lineup = getLineup();
+        const isFavorite = lineup.includes(blurState.player);
+        if (isFavorite) wonCoins *= 10;
+
         addCoins(wonCoins); 
         document.getElementById('playerImg').style.filter = "blur(0px)";
-        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`, () => initBlurGame()), 300);
+        
+        let msg = isFavorite 
+            ? `¡Es tu favorito ${blurState.player}!\nBONUS x10 aplicado: +${wonCoins} FutCoins 🪙`
+            : `Es ${blurState.player}\n¡Has ganado +${wonCoins} FutCoins 🪙!`;
+
+        setTimeout(() => mostrarMensajePro("🔥 ¡BRUTAL!", msg, () => initBlurGame()), 300);
     } else {
         blurState.lives--;
         blurState.blur -= 6;
@@ -1899,7 +1926,6 @@ document.addEventListener('keydown', (e) => {
 let isOpeningPack = false;
 
 // BASE DE DATOS DE SOBRES POR CATEGORÍA
-// BASE DE DATOS DE SOBRES POR CATEGORÍA
 const packsDB = {
     bronce: {
         cost: 25,
@@ -1940,7 +1966,7 @@ function getPlayerTier(playerName) {
             return tier;
         }
     }
-    return 'bronce'; // Fallback
+    return 'bronce'; 
 }
 
 function getAlbumData() {
@@ -1951,9 +1977,18 @@ function saveAlbumData(data) {
     localStorage.setItem('f10_album', JSON.stringify(data));
 }
 
+function getLineup() {
+    return JSON.parse(localStorage.getItem('f10_lineup') || '[]');
+}
+
+function saveLineup(arr) {
+    localStorage.setItem('f10_lineup', JSON.stringify(arr));
+}
+
 function initAlbum() {
     document.getElementById('album-coins').innerText = getCoins();
     updatePacksProgress();
+    checkFreePackStatus();
     switchAlbumTab('pack');
 }
 
@@ -1966,13 +2001,114 @@ function switchAlbumTab(tab) {
 
     if(tab === 'collection') renderAlbum();
     if(tab === 'market') renderDuplicates();
+    if(tab === 'play') renderLineupPitch();
     
     if(tab === 'pack' && !isOpeningPack) {
         document.getElementById('pack-reveal').classList.add('hidden');
         document.getElementById('pack-container').classList.remove('hidden');
         updatePacksProgress();
+        checkFreePackStatus();
     }
 }
+
+// ================= SOBRE GRATIS DIARIO =================
+function checkFreePackStatus() {
+    const lastDate = localStorage.getItem('f10_free_pack_date');
+    const today = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    
+    const btn = document.getElementById('free-pack-btn');
+    const status = document.getElementById('free-pack-status');
+
+    if (lastDate === today) {
+        btn.classList.add('locked-pack');
+        status.innerText = "VUELVE MAÑANA";
+        status.style.color = "#ff4d4d";
+    } else {
+        btn.classList.remove('locked-pack');
+        status.innerText = "DISPONIBLE";
+        status.style.color = "#a8ff78";
+    }
+}
+
+function openFreePack(event) {
+    if(isOpeningPack) return;
+    
+    const lastDate = localStorage.getItem('f10_free_pack_date');
+    const today = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    
+    if (lastDate === today) {
+        mostrarMensajePro("⏳ SOBRE NO DISPONIBLE", "Ya has abierto tu sobre gratis hoy. Vuelve mañana a partir de las 00:00 (hora española).");
+        return;
+    }
+
+    localStorage.setItem('f10_free_pack_date', today);
+    checkFreePackStatus();
+
+    isOpeningPack = true;
+    
+    const packVisual = event.currentTarget.querySelector('.pack-visual');
+    if(packVisual) packVisual.classList.add('pack-opening-anim');
+
+    setTimeout(() => {
+        if(packVisual) packVisual.classList.remove('pack-opening-anim');
+        revealFreePackCards();
+    }, 800);
+}
+
+function revealFreePackCards() {
+    const data = getAlbumData();
+    
+    function getRandTier() {
+        const r = Math.random() * 100;
+        if(r <= 35) return 'bronce';
+        if(r <= 60) return 'plata'; // +25
+        if(r <= 80) return 'oro';   // +20
+        if(r <= 95) return 'diamante'; // +15
+        return 'platino'; // +5
+    }
+    
+    let type1 = getRandTier();
+    let type2 = getRandTier();
+
+    const p1 = packsDB[type1].players[Math.floor(Math.random() * packsDB[type1].players.length)];
+    let p2 = packsDB[type2].players[Math.floor(Math.random() * packsDB[type2].players.length)];
+    
+    while (p1 === p2) {
+        // En caso remoto de que caiga mismo tier y mismo jugador
+        p2 = packsDB[type2].players[Math.floor(Math.random() * packsDB[type2].players.length)];
+    }
+
+    [p1, p2].forEach(p => {
+        if(data.unlocked.includes(p)) {
+            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
+        } else {
+            data.unlocked.push(p);
+        }
+    });
+    
+    saveAlbumData(data);
+    updatePacksProgress();
+
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const revealContainer = document.getElementById('reveal-cards-container');
+    
+    revealContainer.innerHTML = `
+        <div class="f10-card tier-${type1}">
+            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p1}</div>
+        </div>
+        <div class="f10-card tier-${type2}">
+            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name">${p2}</div>
+        </div>
+    `;
+    
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+    isOpeningPack = false;
+}
+// =======================================================
+
 
 function openPack(event, type) {
     if(isOpeningPack) return;
@@ -2235,4 +2371,169 @@ function updatePacksProgress() {
             }
         }
     }
+}
+
+// ==========================================
+// 11. ALINEACIÓN (11 IDEAL) Y PARTIDO VS CPU
+// ==========================================
+
+function renderLineupPitch() {
+    const pitch = document.getElementById('lineup-pitch');
+    let lineup = getLineup();
+    while (lineup.length < 11) lineup.push(null);
+    
+    pitch.innerHTML = "";
+    // Formación 4-3-3 (Índices: FWD: 8,9,10. MID: 5,6,7. DEF: 1,2,3,4. GK: 0)
+    const rows = [
+        [8, 9, 10],   
+        [5, 6, 7],    
+        [1, 2, 3, 4], 
+        [0]           
+    ];
+
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+
+    rows.forEach(rowIndices => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'pitch-row';
+        
+        rowIndices.forEach(idx => {
+            const pName = lineup[idx];
+            const slot = document.createElement('div');
+            slot.className = 'player-slot clickable';
+            
+            if (pName) {
+                const tier = getPlayerTier(pName);
+                slot.innerHTML = `
+                    <div class="f10-card tier-${tier}" style="width: clamp(35px, 12vw, 60px); aspect-ratio: 2.5/3.5; margin-bottom: 3px;">
+                        <img src="players/${pName}.jpg" style="height: 100%; border-bottom: 1px solid rgba(255,255,255,0.5);" onerror="this.src='${fallbackImg}'">
+                    </div>
+                    <div class="name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem); background: rgba(0,0,0,0.8);">${pName}</div>
+                `;
+            } else {
+                slot.innerHTML = `<div class="shirt empty">➕</div><div class="name hidden-name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem);">FICHAR</div>`;
+            }
+            
+            slot.onclick = () => openLineupSelector(idx);
+            rowDiv.appendChild(slot);
+        });
+        pitch.appendChild(rowDiv);
+    });
+}
+
+function openLineupSelector(slotIdx) {
+    currentLineupSlot = slotIdx;
+    const data = getAlbumData();
+    const currentLineup = getLineup();
+    
+    const grid = document.getElementById('lineup-selector-grid');
+    grid.innerHTML = "";
+
+    if (data.unlocked.length === 0) {
+        grid.innerHTML = "<p style='color: white; text-align: center; width: 100%;'>Aún no tienes jugadores desbloqueados.</p>";
+    }
+
+    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    
+    [...data.unlocked].sort().forEach(p => {
+        const isSelected = currentLineup.includes(p);
+        const tier = getPlayerTier(p);
+        const card = document.createElement('div');
+        card.className = `f10-card tier-${tier} ${isSelected ? 'selected-in-lineup' : 'clickable'}`;
+        card.style.width = "100px"; // Size slightly smaller for the modal
+        card.innerHTML = `
+            <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
+            <div class="card-name" style="font-size: 0.6rem;">${p}</div>
+        `;
+        if (!isSelected) {
+            card.onclick = () => selectPlayerForLineup(p);
+        }
+        grid.appendChild(card);
+    });
+
+    document.getElementById('lineup-selector-modal').classList.remove('hidden');
+}
+
+function selectPlayerForLineup(pName) {
+    let lineup = getLineup();
+    while(lineup.length < 11) lineup.push(null);
+    lineup[currentLineupSlot] = pName;
+    saveLineup(lineup);
+    closeLineupSelector();
+    renderLineupPitch();
+}
+
+function closeLineupSelector() {
+    document.getElementById('lineup-selector-modal').classList.add('hidden');
+}
+
+function playMatchVsCPU() {
+    const lineup = getLineup();
+    const validPlayers = lineup.filter(p => p !== null);
+    
+    if (validPlayers.length < 11) {
+        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas rellenar los 11 huecos de tu alineación para jugar el partido.");
+        return;
+    }
+
+    let myStrength = 0;
+    const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
+    
+    lineup.forEach(p => {
+        myStrength += tierPoints[getPlayerTier(p)];
+    });
+
+    let cpuStrength = Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7));
+
+    document.getElementById('match-simulation-modal').classList.remove('hidden');
+    const eventsEl = document.getElementById('match-events');
+    const scoreEl = document.getElementById('match-score');
+    const btnClose = document.getElementById('match-close-btn');
+
+    eventsEl.innerText = "Rodando la pelota...";
+    eventsEl.style.color = "white";
+    scoreEl.style.display = "none";
+    btnClose.classList.add('hidden');
+
+    setTimeout(() => {
+        let myGoals = 0;
+        let cpuGoals = 0;
+
+        for(let i=0; i<5; i++) { 
+            if (Math.random() * (myStrength + 10) > Math.random() * cpuStrength) myGoals++;
+            if (Math.random() * (cpuStrength + 10) > Math.random() * myStrength) cpuGoals++;
+        }
+
+        scoreEl.innerText = `${myGoals} - ${cpuGoals}`;
+        scoreEl.style.display = "block";
+
+        let resultMsg = "";
+        let coinsWon = 0;
+        
+        if (myGoals > cpuGoals) {
+            resultMsg = "¡VICTORIA ÉPICA!";
+            coinsWon = 50;
+            scoreEl.style.color = "#00ff87";
+            eventsEl.style.color = "#00ff87";
+        } else if (myGoals === cpuGoals) {
+            resultMsg = "¡EMPATE MUY DISPUTADO!";
+            coinsWon = 15;
+            scoreEl.style.color = "#ffd700";
+            eventsEl.style.color = "#ffd700";
+        } else {
+            resultMsg = "DERROTA...";
+            coinsWon = 5;
+            scoreEl.style.color = "#ff4d4d";
+            eventsEl.style.color = "#ff4d4d";
+        }
+
+        eventsEl.innerHTML = `${resultMsg}<br><span style="color:white; font-size: 0.9rem;">+${coinsWon} FutCoins</span>`;
+        addCoins(coinsWon);
+        btnClose.classList.remove('hidden');
+        
+    }, 2500);
+}
+
+function closeMatchModal() {
+    document.getElementById('match-simulation-modal').classList.add('hidden');
 }
