@@ -1640,22 +1640,17 @@ function checkHigherLower(guess) {
             document.getElementById('hl-score').innerText = hlState.score;
             let nuevoRecord = updateRecord('hl', hlState.score); 
             document.getElementById('hl-max').innerText = nuevoRecord; 
-            
-            // ELIMINADO: addCoins(2) ya no está aquí para no frenar la partida
-            
             hlState.p1 = hlState.p2;
             pickNewPlayer2();
             renderHL();
         } else {
             updateRecord('hl', hlState.score); 
 
-            // NUEVO: Calculamos las monedas (2 por cada acierto en la racha)
             let monedasGanadas = hlState.score * 2;
             if (monedasGanadas > 0) {
                 addCoins(monedasGanadas);
             }
 
-            // NUEVO: Preparamos un texto extra si ha ganado monedas
             let textoMonedas = monedasGanadas > 0 ? `\n¡Te llevas el bote de +${monedasGanadas} FutCoins 🪙!` : "";
             
             mostrarMensajePro(
@@ -1948,6 +1943,7 @@ function saveAlbumData(data) {
 
 function initAlbum() {
     document.getElementById('album-coins').innerText = getCoins();
+    updatePacksProgress();
     switchAlbumTab('pack');
 }
 
@@ -1964,6 +1960,7 @@ function switchAlbumTab(tab) {
     if(tab === 'pack' && !isOpeningPack) {
         document.getElementById('pack-reveal').classList.add('hidden');
         document.getElementById('pack-container').classList.remove('hidden');
+        updatePacksProgress();
     }
 }
 
@@ -2011,6 +2008,7 @@ function revealPackCards(type) {
     });
     
     saveAlbumData(data);
+    updatePacksProgress();
 
     const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
     const revealContainer = document.getElementById('reveal-cards-container');
@@ -2203,4 +2201,28 @@ function loadHangmanProgress() {
         return true;
     }
     return false;
+}
+
+function updatePacksProgress() {
+    const data = getAlbumData();
+    
+    for (const tier in packsDB) {
+        const tierPlayers = packsDB[tier].players;
+        const total = tierPlayers.length;
+        const unlocked = tierPlayers.filter(p => data.unlocked.includes(p)).length;
+        
+        const progressEl = document.getElementById(`prog-${tier}`);
+        if (progressEl) {
+            progressEl.innerText = `${unlocked}/${total}`;
+            
+            if (unlocked === total) {
+                progressEl.style.color = "#00ff87";
+                progressEl.style.borderColor = "#00ff87";
+                progressEl.innerText = "¡COMPLETADO!";
+            } else {
+                progressEl.style.color = "white";
+                progressEl.style.borderColor = "rgba(255,255,255,0.2)";
+            }
+        }
+    }
 }
