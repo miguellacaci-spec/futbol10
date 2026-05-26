@@ -602,6 +602,16 @@ let roscoState = {
 
 let currentLineupSlot = -1;
 
+// ESTADO DEL PARTIDO TÁCTICO
+let matchState = {
+    turn: 0, 
+    myGoals: 0,
+    cpuGoals: 0,
+    myStrength: 0,
+    cpuStrength: 0,
+    minutes: [15, 35, 60, 75, 89]
+};
+
 // ==========================================
 // 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
@@ -1763,6 +1773,7 @@ function initZoomGame() {
     const randomY = Math.floor(Math.random() * 60) + 20;
     img.style.transformOrigin = `${randomX}% ${randomY}%`;
 }
+
 function checkZoomGuess() {
     const val = document.getElementById('zoomInput').value.toUpperCase().trim();
     if (val === zoomState.team) {
@@ -1920,461 +1931,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ==========================================
-// 10. LÓGICA DEL ÁLBUM Y SOBRES F10
-// ==========================================
-
-let isOpeningPack = false;
-
-// BASE DE DATOS DE SOBRES POR CATEGORÍA
-const packsDB = {
-    bronce: {
-        cost: 25,
-        players: [
-            "ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER", "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS",
-            "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI",
-            "SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA", "JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR"
-        ]
-    },
-    plata: {
-        cost: 50,
-        players: [
-            "RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES",
-            "VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY",
-            "SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ",
-            "IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST", "HECTOR FORT", "SANGARE", "ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA"
-        ]
-    },
-    oro: {
-        cost: 100,
-        players: ["UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA","DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA","REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON","JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ"]
-    },
-    diamante: {
-        cost: 200,
-        players: ["BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO","DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO","RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI","ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL"]
-    },
-    platino: {
-        cost: 400,
-        players: ["COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA","OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH","JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI","DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE"]
-    }
-};
-
-const tierValues = { bronce: 10, plata: 20, oro: 40, diamante: 80, platino: 160 };
-
-function getPlayerTier(playerName) {
-    for (const tier in packsDB) {
-        if (packsDB[tier].players.includes(playerName)) {
-            return tier;
-        }
-    }
-    return 'bronce'; 
-}
-
-function getAlbumData() {
-    return JSON.parse(localStorage.getItem('f10_album') || '{"unlocked":[], "duplicates":{}}');
-}
-
-function saveAlbumData(data) {
-    localStorage.setItem('f10_album', JSON.stringify(data));
-}
-
-function getLineup() {
-    return JSON.parse(localStorage.getItem('f10_lineup') || '[]');
-}
-
-function saveLineup(arr) {
-    localStorage.setItem('f10_lineup', JSON.stringify(arr));
-}
-
-function initAlbum() {
-    document.getElementById('album-coins').innerText = getCoins();
-    updatePacksProgress();
-    checkFreePackStatus();
-    switchAlbumTab('pack');
-}
-
-function switchAlbumTab(tab) {
-    document.querySelectorAll('.album-tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.album-tab').forEach(el => el.classList.remove('active'));
-    
-    document.getElementById(`tab-${tab}`).classList.remove('hidden');
-    document.getElementById(`tab-btn-${tab}`).classList.add('active');
-
-    if(tab === 'collection') renderAlbum();
-    if(tab === 'market') renderDuplicates();
-    if(tab === 'play') renderLineupPitch();
-    
-    if(tab === 'pack' && !isOpeningPack) {
-        document.getElementById('pack-reveal').classList.add('hidden');
-        document.getElementById('pack-container').classList.remove('hidden');
-        updatePacksProgress();
-        checkFreePackStatus();
-    }
-}
-
-// ================= SOBRE GRATIS DIARIO =================
-function checkFreePackStatus() {
-    const lastDate = localStorage.getItem('f10_free_pack_date');
-    const today = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-    
-    const btn = document.getElementById('free-pack-btn');
-    const status = document.getElementById('free-pack-status');
-
-    if (lastDate === today) {
-        btn.classList.add('locked-pack');
-        status.innerText = "VUELVE MAÑANA";
-        status.style.color = "#ff4d4d";
-    } else {
-        btn.classList.remove('locked-pack');
-        status.innerText = "DISPONIBLE";
-        status.style.color = "#a8ff78";
-    }
-}
-
-function openFreePack(event) {
-    if(isOpeningPack) return;
-    
-    const lastDate = localStorage.getItem('f10_free_pack_date');
-    const today = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-    
-    if (lastDate === today) {
-        mostrarMensajePro("⏳ SOBRE NO DISPONIBLE", "Ya has abierto tu sobre gratis hoy. Vuelve mañana a partir de las 00:00 (hora española).");
-        return;
-    }
-
-    localStorage.setItem('f10_free_pack_date', today);
-    checkFreePackStatus();
-
-    isOpeningPack = true;
-    
-    const packVisual = event.currentTarget.querySelector('.pack-visual');
-    if(packVisual) packVisual.classList.add('pack-opening-anim');
-
-    setTimeout(() => {
-        if(packVisual) packVisual.classList.remove('pack-opening-anim');
-        revealFreePackCards();
-    }, 800);
-}
-
-function revealFreePackCards() {
-    const data = getAlbumData();
-    
-    function getRandTier() {
-        const r = Math.random() * 100;
-        if(r <= 35) return 'bronce';
-        if(r <= 60) return 'plata'; // +25
-        if(r <= 80) return 'oro';   // +20
-        if(r <= 95) return 'diamante'; // +15
-        return 'platino'; // +5
-    }
-    
-    let type1 = getRandTier();
-    let type2 = getRandTier();
-
-    const p1 = packsDB[type1].players[Math.floor(Math.random() * packsDB[type1].players.length)];
-    let p2 = packsDB[type2].players[Math.floor(Math.random() * packsDB[type2].players.length)];
-    
-    while (p1 === p2) {
-        // En caso remoto de que caiga mismo tier y mismo jugador
-        p2 = packsDB[type2].players[Math.floor(Math.random() * packsDB[type2].players.length)];
-    }
-
-    [p1, p2].forEach(p => {
-        if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
-        } else {
-            data.unlocked.push(p);
-        }
-    });
-    
-    saveAlbumData(data);
-    updatePacksProgress();
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card tier-${type1}">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card tier-${type2}">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
-}
-// =======================================================
-
-
-function openPack(event, type) {
-    if(isOpeningPack) return;
-    
-    const packInfo = packsDB[type];
-    
-    if(getCoins() < packInfo.cost) {
-        mostrarMensajePro("⚠️ SIN FONDOS", `Necesitas ${packInfo.cost} FutCoins para abrir este sobre.`);
-        return;
-    }
-    
-    addCoins(-packInfo.cost);
-    document.getElementById('album-coins').innerText = getCoins();
-    
-    isOpeningPack = true;
-    
-    const packVisual = event.currentTarget.querySelector('.pack-visual');
-    if(packVisual) packVisual.classList.add('pack-opening-anim');
-
-    setTimeout(() => {
-        if(packVisual) packVisual.classList.remove('pack-opening-anim');
-        revealPackCards(type);
-    }, 800);
-}
-
-function revealPackCards(type) {
-    const data = getAlbumData();
-    const pool = packsDB[type].players;
-    
-    const p1 = pool[Math.floor(Math.random() * pool.length)];
-    let p2 = pool[Math.floor(Math.random() * pool.length)];
-    
-    while (p1 === p2) {
-        p2 = pool[Math.floor(Math.random() * pool.length)];
-    }
-
-    [p1, p2].forEach(p => {
-        if(data.unlocked.includes(p)) {
-            data.duplicates[p] = (data.duplicates[p] || 0) + 1;
-        } else {
-            data.unlocked.push(p);
-        }
-    });
-    
-    saveAlbumData(data);
-    updatePacksProgress();
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const revealContainer = document.getElementById('reveal-cards-container');
-    const tierClass = `tier-${type}`;
-    
-    revealContainer.innerHTML = `
-        <div class="f10-card ${tierClass}">
-            <img src="players/${p1}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p1}</div>
-        </div>
-        <div class="f10-card ${tierClass}">
-            <img src="players/${p2}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p2}</div>
-        </div>
-    `;
-    
-    document.getElementById('pack-container').classList.add('hidden');
-    document.getElementById('pack-reveal').classList.remove('hidden');
-    isOpeningPack = false;
-}
-
-function closePackReveal() {
-    document.getElementById('pack-reveal').classList.add('hidden');
-    document.getElementById('pack-container').classList.remove('hidden');
-}
-
-function renderAlbum() {
-    const data = getAlbumData();
-    const grid = document.getElementById('album-grid');
-    grid.innerHTML = "";
-    
-    const percentage = ((data.unlocked.length / players.length) * 100).toFixed(1);
-    document.getElementById('album-progress-text').innerText = `${percentage}%`;
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    const sortedPlayers = [...players].sort();
-
-    sortedPlayers.forEach(p => {
-        const isUnlocked = data.unlocked.includes(p);
-        const tier = getPlayerTier(p);
-        const tierClass = isUnlocked ? `tier-${tier}` : '';
-        
-        const card = document.createElement('div');
-        card.className = `f10-card ${tierClass} ${isUnlocked ? '' : 'locked'}`;
-        
-        card.innerHTML = `
-            <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name">${p}</div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function renderDuplicates() {
-    const data = getAlbumData();
-    const grid = document.getElementById('market-grid');
-    grid.innerHTML = "";
-
-    const duplicates = Object.entries(data.duplicates).filter(([_, count]) => count > 0);
-    
-    if(duplicates.length === 0) {
-        grid.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:white; padding: 20px;'>No tienes cartas repetidas actualmente.</p>";
-        return;
-    }
-
-    let totalAllValue = 0;
-    duplicates.forEach(([p, count]) => {
-        const tier = getPlayerTier(p);
-        totalAllValue += tierValues[tier] * count;
-    });
-
-    const sellAllDiv = document.createElement('div');
-    sellAllDiv.style.gridColumn = "1 / -1";
-    sellAllDiv.style.textAlign = "center";
-    sellAllDiv.style.marginBottom = "20px";
-    sellAllDiv.innerHTML = `<button class="sell-btn" style="background-color: #e63946; padding: 12px 24px; font-size: 1.1em; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; color: white;" onclick="sellAllDuplicates()">VENDER TODAS (+${totalAllValue}🪙)</button>`;
-    grid.appendChild(sellAllDiv);
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-
-    duplicates.forEach(([p, count]) => {
-        const tier = getPlayerTier(p);
-        const value = tierValues[tier];
-        const tierClass = `tier-${tier}`;
-
-        const item = document.createElement('div');
-        item.className = 'market-item';
-        item.innerHTML = `
-            <div class="f10-card ${tierClass}">
-                <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
-                <div class="card-name">${p}</div>
-            </div>
-            <div style="color:var(--primary); font-family:'Orbitron'; font-weight:bold; margin-top:5px;">x${count} Repetida(s)</div>
-            <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (${value}🪙)</button>
-        `;
-        grid.appendChild(item);
-    });
-}
-
-function sellDuplicate(playerName) {
-    const data = getAlbumData();
-    
-    if(data.duplicates[playerName] > 0) {
-        data.duplicates[playerName]--;
-        
-        if(data.duplicates[playerName] === 0) {
-            delete data.duplicates[playerName];
-        }
-        
-        saveAlbumData(data);
-        
-        const tier = getPlayerTier(playerName);
-        const value = tierValues[tier];
-        
-        addCoins(value); 
-        document.getElementById('album-coins').innerText = getCoins();
-        renderDuplicates(); 
-        
-        mostrarMensajePro("✅ VENTA COMPLETADA", `Has vendido a ${playerName} por ${value}🪙.`);
-    }
-}
-
-function sellAllDuplicates() {
-    const data = getAlbumData();
-    let totalValue = 0;
-    let countSold = 0;
-
-    for (const [p, count] of Object.entries(data.duplicates)) {
-        if (count > 0) {
-            const tier = getPlayerTier(p);
-            totalValue += tierValues[tier] * count;
-            countSold += count;
-        }
-    }
-
-    if (countSold === 0) return;
-
-    data.duplicates = {};
-    saveAlbumData(data);
-    addCoins(totalValue);
-
-    document.getElementById('album-coins').innerText = getCoins();
-    renderDuplicates();
-
-    mostrarMensajePro("💸 VENTA MASIVA", `Has vendido ${countSold} cartas repetidas por un total de ${totalValue}🪙.`);
-}
-
-function buySpecificPlayer() {
-    const val = document.getElementById('marketBuyInput').value.toUpperCase().trim();
-    if (!val) return;
-
-    const nVal = removeAccents(val);
-    const playerFound = players.find(p => removeAccents(p) === nVal);
-
-    if (!playerFound) {
-        mostrarMensajePro("❌ JUGADOR NO ENCONTRADO", "Asegúrate de escribir el nombre exactamente como aparece en el juego.");
-        return;
-    }
-
-    const data = getAlbumData();
-
-    if (data.unlocked.includes(playerFound)) {
-        mostrarMensajePro("⚠️ YA LO TIENES", `El jugador ${playerFound} ya está en tu álbum. No tires el dinero.`);
-        return;
-    }
-
-    if (getCoins() < 750) {
-        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 750 FutCoins para fichar a la carta. ¡Toca jugar más minijuegos!");
-        return;
-    }
-
-    addCoins(-750);
-    data.unlocked.push(playerFound);
-    saveAlbumData(data);
-
-    document.getElementById('marketBuyInput').value = "";
-    document.getElementById('album-coins').innerText = getCoins();
-    
-    mostrarMensajePro("🤝 ¡FICHAJE ESTRELLA!", `¡Has fichado a ${playerFound} por 750🪙!\nYa está en tu colección.`);
-}
-
-function saveHangmanProgress() {
-    localStorage.setItem('f10_hangman_save', JSON.stringify(gameState));
-}
-
-function loadHangmanProgress() {
-    const saved = localStorage.getItem('f10_hangman_save');
-    if (saved) {
-        gameState = JSON.parse(saved);
-        return true;
-    }
-    return false;
-}
-
-function updatePacksProgress() {
-    const data = getAlbumData();
-    
-    for (const tier in packsDB) {
-        const tierPlayers = packsDB[tier].players;
-        const total = tierPlayers.length;
-        const unlocked = tierPlayers.filter(p => data.unlocked.includes(p)).length;
-        
-        const progressEl = document.getElementById(`prog-${tier}`);
-        if (progressEl) {
-            progressEl.innerText = `${unlocked}/${total}`;
-            
-            if (unlocked === total) {
-                progressEl.style.color = "#00ff87";
-                progressEl.style.borderColor = "#00ff87";
-                progressEl.innerText = "¡COMPLETADO!";
-            } else {
-                progressEl.style.color = "white";
-                progressEl.style.borderColor = "rgba(255,255,255,0.2)";
-            }
-        }
-    }
-}
-
-// ==========================================
-// 11. ALINEACIÓN (11 IDEAL) Y PARTIDO VS CPU
+// 11. ALINEACIÓN (11 IDEAL) Y PARTIDO TÁCTICO
 // ==========================================
 
 function renderLineupPitch() {
@@ -2383,7 +1940,7 @@ function renderLineupPitch() {
     while (lineup.length < 11) lineup.push(null);
     
     pitch.innerHTML = "";
-    // Formación 4-3-3 (Índices: FWD: 8,9,10. MID: 5,6,7. DEF: 1,2,3,4. GK: 0)
+    // Formación 4-3-3
     const rows = [
         [8, 9, 10],   
         [5, 6, 7],    
@@ -2440,7 +1997,7 @@ function openLineupSelector(slotIdx) {
         const tier = getPlayerTier(p);
         const card = document.createElement('div');
         card.className = `f10-card tier-${tier} ${isSelected ? 'selected-in-lineup' : 'clickable'}`;
-        card.style.width = "100px"; // Size slightly smaller for the modal
+        card.style.width = "100px"; 
         card.innerHTML = `
             <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
             <div class="card-name" style="font-size: 0.6rem;">${p}</div>
@@ -2451,7 +2008,8 @@ function openLineupSelector(slotIdx) {
         grid.appendChild(card);
     });
 
-    document.getElementById('lineup-selector-modal').classList.remove('hidden');
+
+document.getElementById('lineup-selector-modal').classList.remove('hidden');
 }
 
 function selectPlayerForLineup(pName) {
@@ -2467,6 +2025,7 @@ function closeLineupSelector() {
     document.getElementById('lineup-selector-modal').classList.add('hidden');
 }
 
+// === MOTOR DEL PARTIDO TÁCTICO ===
 function playMatchVsCPU() {
     const lineup = getLineup();
     const validPlayers = lineup.filter(p => p !== null);
@@ -2480,58 +2039,173 @@ function playMatchVsCPU() {
     const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
     
     lineup.forEach(p => {
-        myStrength += tierPoints[getPlayerTier(p)];
+        const tier = getPlayerTier(p);
+        myStrength += tierPoints[tier] || 1; // Si por algún error no tiene tier, vale 1
     });
 
+    // La CPU ajusta su nivel al tuyo (puede ser un poco peor o un poco mejor)
     let cpuStrength = Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7));
 
+    // Reiniciamos el estado del partido
+    matchState = {
+        turn: 0,
+        myGoals: 0,
+        cpuGoals: 0,
+        myStrength: myStrength,
+        cpuStrength: cpuStrength,
+        minutes: [15, 35, 60, 75, 89]
+    };
+
+    // Preparamos el Modal
+    document.getElementById('match-score-my').innerText = '0';
+    document.getElementById('match-score-cpu').innerText = '0';
+    document.getElementById('match-close-btn').classList.add('hidden');
     document.getElementById('match-simulation-modal').classList.remove('hidden');
-    const eventsEl = document.getElementById('match-events');
-    const scoreEl = document.getElementById('match-score');
-    const btnClose = document.getElementById('match-close-btn');
 
-    eventsEl.innerText = "Rodando la pelota...";
-    eventsEl.style.color = "white";
-    scoreEl.style.display = "none";
-    btnClose.classList.add('hidden');
+    // Arrancamos el primer turno
+    playMatchTurn();
+}
 
-    setTimeout(() => {
-        let myGoals = 0;
-        let cpuGoals = 0;
+function playMatchTurn() {
+    if (matchState.turn >= 5) {
+        endMatch();
+        return;
+    }
 
-        for(let i=0; i<5; i++) { 
-            if (Math.random() * (myStrength + 10) > Math.random() * cpuStrength) myGoals++;
-            if (Math.random() * (cpuStrength + 10) > Math.random() * myStrength) cpuGoals++;
-        }
+    // Turnos pares atacas tú (0, 2, 4), turnos impares defiendes (1, 3)
+    const isAttacking = matchState.turn % 2 === 0;
+    const currentMin = matchState.minutes[matchState.turn];
+    
+    const minEl = document.getElementById('match-minute');
+    minEl.innerText = `⏱️ Min ${currentMin}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
+    minEl.style.color = isAttacking ? '#00ff87' : '#ff4d4d';
 
-        scoreEl.innerText = `${myGoals} - ${cpuGoals}`;
-        scoreEl.style.display = "block";
+    const narrative = document.getElementById('match-narrative');
+    const actions = document.getElementById('match-actions');
+    actions.innerHTML = "";
 
-        let resultMsg = "";
-        let coinsWon = 0;
-        
-        if (myGoals > cpuGoals) {
-            resultMsg = "¡VICTORIA ÉPICA!";
-            coinsWon = 50;
-            scoreEl.style.color = "#00ff87";
-            eventsEl.style.color = "#00ff87";
-        } else if (myGoals === cpuGoals) {
-            resultMsg = "¡EMPATE MUY DISPUTADO!";
-            coinsWon = 15;
-            scoreEl.style.color = "#ffd700";
-            eventsEl.style.color = "#ffd700";
+    if (isAttacking) {
+        narrative.innerHTML = "Tienes el balón en la frontal del área rival. ¿Qué decides hacer?";
+        actions.innerHTML = `
+            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar a puerta</button>
+            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase al hueco</button>
+            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regatear</button>
+        `;
+    } else {
+        narrative.innerHTML = "El rival se acerca con peligro a tu área. ¿Cómo defiendes?";
+        actions.innerHTML = `
+            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear tiro</button>
+            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar línea de pase</button>
+            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada dura</button>
+        `;
+    }
+}
+
+function resolveMatchTurn(playerAction, phase) {
+    const cpuOptions = ['tiro', 'pase', 'regate'];
+    const cpuAction = cpuOptions[Math.floor(Math.random() * 3)];
+    
+    let goalScored = false;
+    let msg = "";
+
+    // Lógica Piedra-Papel-Tijera + Fuerza de equipo
+    const isMatch = playerAction === cpuAction;
+    
+    if (phase === 'ataque') {
+        if (!isMatch) {
+            // Si la CPU no adivina tu jugada, tienes muchísima ventaja
+            if ((Math.random() * 100) + matchState.myStrength > 35) {
+                goalScored = true;
+                matchState.myGoals++;
+                msg = "¡GOLAZO! Engañaste a la defensa a la perfección.";
+            } else {
+                msg = "¡Al palo! Buena jugada, pero faltó puntería.";
+            }
         } else {
-            resultMsg = "DERROTA...";
-            coinsWon = 5;
-            scoreEl.style.color = "#ff4d4d";
-            eventsEl.style.color = "#ff4d4d";
+            // Si la CPU adivina, tu única salvación es que tus cartas sean muy superiores
+            if ((Math.random() * 100) + matchState.myStrength > 85 + matchState.cpuStrength) {
+                goalScored = true;
+                matchState.myGoals++;
+                msg = "¡GOL! Te adivinaron la intención, pero la calidad individual de tu equipo se impuso.";
+            } else {
+                msg = "¡Te leyeron la jugada! La defensa rival desbarata la ocasión.";
+            }
         }
+    } else {
+        // Fase de defensa
+        if (isMatch) {
+            // Adivinas lo que hace la CPU
+            if ((Math.random() * 100) + matchState.myStrength > 25) {
+                msg = "¡PARADÓN / CORTE PROVIDENCIAL! Has leído sus intenciones perfectamente.";
+            } else {
+                goalScored = true;
+                matchState.cpuGoals++;
+                msg = "¡Gol en contra! Adivinaste la jugada, pero su delantero era imparable.";
+            }
+        } else {
+            // No adivinas su ataque
+            if ((Math.random() * 100) + matchState.cpuStrength > 50 + matchState.myStrength) {
+                goalScored = true;
+                matchState.cpuGoals++;
+                msg = "¡Gol del rival! Te equivocaste de estrategia y te dejaron atrás.";
+            } else {
+                msg = "¡Fuera! Te equivocaste al defender, pero el rival falló su ocasión.";
+            }
+        }
+    }
 
-        eventsEl.innerHTML = `${resultMsg}<br><span style="color:white; font-size: 0.9rem;">+${coinsWon} FutCoins</span>`;
-        addCoins(coinsWon);
-        btnClose.classList.remove('hidden');
-        
-    }, 2500);
+    // Actualizamos el marcador en vivo
+    document.getElementById('match-score-my').innerText = matchState.myGoals;
+    document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
+    
+    // Mostramos el resultado de la jugada
+    const narrative = document.getElementById('match-narrative');
+    narrative.innerHTML = `<strong style="color:${goalScored ? '#ffd700' : '#fff'}; font-size: 1.1rem;">${msg}</strong>`;
+    
+    // Botón para avanzar el tiempo
+    const actions = document.getElementById('match-actions');
+    actions.innerHTML = `<button class="secondary-btn" style="background: var(--card); border: 1px solid white;" onclick="nextMatchTurn()">Siguiente Jugada ⏱️</button>`;
+}
+
+function nextMatchTurn() {
+    matchState.turn++;
+    playMatchTurn();
+}
+
+function endMatch() {
+    document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
+    document.getElementById('match-minute').style.color = "#ffd700";
+    
+    const narrative = document.getElementById('match-narrative');
+    const actions = document.getElementById('match-actions');
+    actions.innerHTML = ""; // Limpiamos los botones de acción
+
+    let resultMsg = "";
+    let coinsWon = 0;
+    let titleColor = "";
+    
+    if (matchState.myGoals > matchState.cpuGoals) {
+        resultMsg = "¡VICTORIA ÉPICA!";
+        coinsWon = 50;
+        titleColor = "#00ff87";
+    } else if (matchState.myGoals === matchState.cpuGoals) {
+        resultMsg = "¡EMPATE MUY DISPUTADO!";
+        coinsWon = 15;
+        titleColor = "#ffd700";
+    } else {
+        resultMsg = "DERROTA...";
+        coinsWon = 5;
+        titleColor = "#ff4d4d";
+    }
+
+    narrative.innerHTML = `
+        <strong style="font-size:1.4rem; color:${titleColor}; text-shadow: 0 0 10px rgba(255,255,255,0.3);">${resultMsg}</strong><br><br>
+        <span style="color: var(--text-dim);">Fuerza de tu 11 Ideal: ${matchState.myStrength} pts</span><br>
+        <span style="color:#ffd700; font-size: 1.2rem; font-family: 'Orbitron'; margin-top:15px; display:inline-block; border: 1px solid #ffd700; padding: 5px 15px; border-radius: 10px; background: rgba(255,215,0,0.1);">+${coinsWon} FutCoins 🪙</span>
+    `;
+    
+    addCoins(coinsWon);
+    document.getElementById('match-close-btn').classList.remove('hidden');
 }
 
 function closeMatchModal() {
