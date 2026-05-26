@@ -2050,9 +2050,37 @@ function resolveMatchTurn(action, phase) {
 
 function nextMatchTurn() { matchState.turn++; playMatchTurn(); }
 
+// ... [Tu código anterior de la sección 11]
+
 function endMatch() {
-    let result = matchState.myGoals > matchState.cpuGoals ? [50, "¡VICTORIA!"] : matchState.myGoals === matchState.cpuGoals ? [15, "EMPATE"] : [5, "DERROTA"];
-    document.getElementById('match-narrative').innerHTML = `<strong>${result[1]}</strong><br>+${result[0]} FutCoins`;
-    addCoins(result[0]);
+    document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
+    document.getElementById('match-minute').style.color = "#ffd700";
+    const narrative = document.getElementById('match-narrative');
+    document.getElementById('match-actions').innerHTML = "";
+
+    let resultMsg = "";
+    let coinsWon = 0;
+    let titleColor = "";
+    
+    if (matchState.myGoals > matchState.cpuGoals) {
+        resultMsg = "¡VICTORIA ÉPICA!";
+        coinsWon = 50;
+        titleColor = "#00ff87";
+    } else if (matchState.myGoals === matchState.cpuGoals) {
+        resultMsg = "¡EMPATE MUY DISPUTADO!";
+        coinsWon = 15;
+        titleColor = "#ffd700";
+    } else {
+        resultMsg = "DERROTA...";
+        coinsWon = 5;
+        titleColor = "#ff4d4d";
+    }
+
+    narrative.innerHTML = `<strong style="font-size:1.4rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700;">+${coinsWon} FutCoins 🪙</span>`;
+    addCoins(coinsWon);
     document.getElementById('match-close-btn').classList.remove('hidden');
+}
+
+function closeMatchModal() {
+    document.getElementById('match-simulation-modal').classList.add('hidden');
 }
