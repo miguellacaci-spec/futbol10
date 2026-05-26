@@ -1929,7 +1929,6 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'marketBuyInput') buySpecificPlayer();
     }
 });
-
 // ==========================================
 // 11. ALINEACIÓN (11 IDEAL) Y PARTIDO TÁCTICO
 // ==========================================
@@ -1940,25 +1939,16 @@ function renderLineupPitch() {
     while (lineup.length < 11) lineup.push(null);
     
     pitch.innerHTML = "";
-    // Formación 4-3-3
-    const rows = [
-        [8, 9, 10],   
-        [5, 6, 7],    
-        [1, 2, 3, 4], 
-        [0]           
-    ];
-
+    const rows = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]];
     const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
 
     rows.forEach(rowIndices => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'pitch-row';
-        
         rowIndices.forEach(idx => {
             const pName = lineup[idx];
             const slot = document.createElement('div');
             slot.className = 'player-slot clickable';
-            
             if (pName) {
                 const tier = getPlayerTier(pName);
                 slot.innerHTML = `
@@ -1970,7 +1960,6 @@ function renderLineupPitch() {
             } else {
                 slot.innerHTML = `<div class="shirt empty">➕</div><div class="name hidden-name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem);">FICHAR</div>`;
             }
-            
             slot.onclick = () => openLineupSelector(idx);
             rowDiv.appendChild(slot);
         });
@@ -1982,34 +1971,20 @@ function openLineupSelector(slotIdx) {
     currentLineupSlot = slotIdx;
     const data = getAlbumData();
     const currentLineup = getLineup();
-    
     const grid = document.getElementById('lineup-selector-grid');
     grid.innerHTML = "";
 
-    if (data.unlocked.length === 0) {
-        grid.innerHTML = "<p style='color: white; text-align: center; width: 100%;'>Aún no tienes jugadores desbloqueados.</p>";
-    }
-
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
-    
     [...data.unlocked].sort().forEach(p => {
         const isSelected = currentLineup.includes(p);
         const tier = getPlayerTier(p);
         const card = document.createElement('div');
         card.className = `f10-card tier-${tier} ${isSelected ? 'selected-in-lineup' : 'clickable'}`;
         card.style.width = "100px"; 
-        card.innerHTML = `
-            <img src="players/${p}.jpg" onerror="this.src='${fallbackImg}'">
-            <div class="card-name" style="font-size: 0.6rem;">${p}</div>
-        `;
-        if (!isSelected) {
-            card.onclick = () => selectPlayerForLineup(p);
-        }
+        card.innerHTML = `<img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.6rem;">${p}</div>`;
+        if (!isSelected) card.onclick = () => selectPlayerForLineup(p);
         grid.appendChild(card);
     });
-
-
-document.getElementById('lineup-selector-modal').classList.remove('hidden');
+    document.getElementById('lineup-selector-modal').classList.remove('hidden');
 }
 
 function selectPlayerForLineup(pName) {
@@ -2025,163 +2000,59 @@ function closeLineupSelector() {
     document.getElementById('lineup-selector-modal').classList.add('hidden');
 }
 
-// === MOTOR DEL PARTIDO TÁCTICO ===
 function playMatchVsCPU() {
     const lineup = getLineup();
-    const validPlayers = lineup.filter(p => p !== null);
-    
-    if (validPlayers.length < 11) {
-        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas rellenar los 11 huecos de tu alineación para jugar el partido.");
+    if (lineup.filter(p => p !== null).length < 11) {
+        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas 11 jugadores.");
         return;
     }
 
     let myStrength = 0;
     const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
-    
-    lineup.forEach(p => {
-        const tier = getPlayerTier(p);
-        myStrength += tierPoints[tier] || 1; 
-    });
+    lineup.forEach(p => myStrength += tierPoints[getPlayerTier(p)] || 1);
 
-    let cpuStrength = Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7));
-
-    matchState = {
-        turn: 0,
-        myGoals: 0,
-        cpuGoals: 0,
-        myStrength: myStrength,
-        cpuStrength: cpuStrength,
-        minutes: [15, 35, 60, 75, 89]
-    };
+    matchState = { turn: 0, myGoals: 0, cpuGoals: 0, myStrength: myStrength, cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), minutes: [15, 35, 60, 75, 89] };
 
     document.getElementById('match-score-my').innerText = '0';
     document.getElementById('match-score-cpu').innerText = '0';
     document.getElementById('match-close-btn').classList.add('hidden');
     document.getElementById('match-simulation-modal').classList.remove('hidden');
-
     playMatchTurn();
 }
 
 function playMatchTurn() {
-    if (matchState.turn >= 5) {
-        endMatch();
-        return;
-    }
-
+    if (matchState.turn >= 5) return endMatch();
     const isAttacking = matchState.turn % 2 === 0;
-    const currentMin = matchState.minutes[matchState.turn];
-    
-    const minEl = document.getElementById('match-minute');
-    minEl.innerText = `⏱️ Min ${currentMin}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
-    minEl.style.color = isAttacking ? '#00ff87' : '#ff4d4d';
-
+    document.getElementById('match-minute').innerText = `⏱️ Min ${matchState.minutes[matchState.turn]}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
     const narrative = document.getElementById('match-narrative');
     const actions = document.getElementById('match-actions');
-    actions.innerHTML = "";
-
-    if (isAttacking) {
-        narrative.innerHTML = "Tienes el balón en la frontal del área rival. ¿Qué decides hacer?";
-        actions.innerHTML = `
-            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar a puerta</button>
-            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase al hueco</button>
-            <button class="secondary-btn" style="background:#0044cc;" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regatear</button>
-        `;
-    } else {
-        narrative.innerHTML = "El rival se acerca con peligro a tu área. ¿Cómo defiendes?";
-        actions.innerHTML = `
-            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear tiro</button>
-            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar línea de pase</button>
-            <button class="secondary-btn" style="background:#cc0000;" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada dura</button>
-        `;
-    }
+    actions.innerHTML = isAttacking 
+        ? `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar</button><button class="secondary-btn" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase</button><button class="secondary-btn" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regate</button>`
+        : `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear</button><button class="secondary-btn" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar</button><button class="secondary-btn" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada</button>`;
 }
 
-function resolveMatchTurn(playerAction, phase) {
-    const cpuOptions = ['tiro', 'pase', 'regate'];
-    const cpuAction = cpuOptions[Math.floor(Math.random() * 3)];
-    let goalScored = false;
-    let msg = "";
-    const isMatch = playerAction === cpuAction;
-    
+function resolveMatchTurn(action, phase) {
+    const options = ['tiro', 'pase', 'regate'];
+    const cpuAction = options[Math.floor(Math.random() * 3)];
+    let goal = false;
     if (phase === 'ataque') {
-        if (!isMatch) {
-            if ((Math.random() * 100) + matchState.myStrength > 35) {
-                goalScored = true;
-                matchState.myGoals++;
-                msg = "¡GOLAZO! Engañaste a la defensa a la perfección.";
-            } else {
-                msg = "¡Al palo! Buena jugada, pero faltó puntería.";
-            }
-        } else {
-            if ((Math.random() * 100) + matchState.myStrength > 85 + matchState.cpuStrength) {
-                goalScored = true;
-                matchState.myGoals++;
-                msg = "¡GOL! Te adivinaron la intención, pero la calidad individual de tu equipo se impuso.";
-            } else {
-                msg = "¡Te leyeron la jugada! La defensa rival desbarata la ocasión.";
-            }
-        }
+        goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 35) || (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
+        if (goal) matchState.myGoals++;
     } else {
-        if (isMatch) {
-            if ((Math.random() * 100) + matchState.myStrength > 25) {
-                msg = "¡PARADÓN / CORTE PROVIDENCIAL! Has leído sus intenciones perfectamente.";
-            } else {
-                goalScored = true;
-                matchState.cpuGoals++;
-                msg = "¡Gol en contra! Adivinaste la jugada, pero su delantero era imparable.";
-            }
-        } else {
-            if ((Math.random() * 100) + matchState.cpuStrength > 50 + matchState.myStrength) {
-                goalScored = true;
-                matchState.cpuGoals++;
-                msg = "¡Gol del rival! Te equivocaste de estrategia y te dejaron atrás.";
-            } else {
-                msg = "¡Fuera! Te equivocaste al defender, pero el rival falló su ocasión.";
-            }
-        }
+        if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {} 
+        else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { goal = true; matchState.cpuGoals++; }
     }
-
     document.getElementById('match-score-my').innerText = matchState.myGoals;
     document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-    const narrative = document.getElementById('match-narrative');
-    narrative.innerHTML = `<strong style="color:${goalScored ? '#ffd700' : '#fff'}; font-size: 1.1rem;">${msg}</strong>`;
-    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" style="background: var(--card); border: 1px solid white;" onclick="nextMatchTurn()">Siguiente Jugada ⏱️</button>`;
+    document.getElementById('match-narrative').innerHTML = goal ? "¡GOL!" : "Jugada sin peligro.";
+    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Siguiente</button>`;
 }
 
-function nextMatchTurn() {
-    matchState.turn++;
-    playMatchTurn();
-}
+function nextMatchTurn() { matchState.turn++; playMatchTurn(); }
 
 function endMatch() {
-    document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
-    document.getElementById('match-minute').style.color = "#ffd700";
-    const narrative = document.getElementById('match-narrative');
-    document.getElementById('match-actions').innerHTML = "";
-
-    let resultMsg = "";
-    let coinsWon = 0;
-    let titleColor = "";
-    
-    if (matchState.myGoals > matchState.cpuGoals) {
-        resultMsg = "¡VICTORIA ÉPICA!";
-        coinsWon = 50;
-        titleColor = "#00ff87";
-    } else if (matchState.myGoals === matchState.cpuGoals) {
-        resultMsg = "¡EMPATE MUY DISPUTADO!";
-        coinsWon = 15;
-        titleColor = "#ffd700";
-    } else {
-        resultMsg = "DERROTA...";
-        coinsWon = 5;
-        titleColor = "#ff4d4d";
-    }
-
-    narrative.innerHTML = `<strong style="font-size:1.4rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700;">+${coinsWon} FutCoins 🪙</span>`;
-    addCoins(coinsWon);
+    let result = matchState.myGoals > matchState.cpuGoals ? [50, "¡VICTORIA!"] : matchState.myGoals === matchState.cpuGoals ? [15, "EMPATE"] : [5, "DERROTA"];
+    document.getElementById('match-narrative').innerHTML = `<strong>${result[1]}</strong><br>+${result[0]} FutCoins`;
+    addCoins(result[0]);
     document.getElementById('match-close-btn').classList.remove('hidden');
-}
-
-function closeMatchModal() {
-    document.getElementById('match-simulation-modal').classList.add('hidden');
 }
