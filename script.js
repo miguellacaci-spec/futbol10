@@ -2040,13 +2040,11 @@ function playMatchVsCPU() {
     
     lineup.forEach(p => {
         const tier = getPlayerTier(p);
-        myStrength += tierPoints[tier] || 1; // Si por algún error no tiene tier, vale 1
+        myStrength += tierPoints[tier] || 1; 
     });
 
-    // La CPU ajusta su nivel al tuyo (puede ser un poco peor o un poco mejor)
     let cpuStrength = Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7));
 
-    // Reiniciamos el estado del partido
     matchState = {
         turn: 0,
         myGoals: 0,
@@ -2056,13 +2054,11 @@ function playMatchVsCPU() {
         minutes: [15, 35, 60, 75, 89]
     };
 
-    // Preparamos el Modal
     document.getElementById('match-score-my').innerText = '0';
     document.getElementById('match-score-cpu').innerText = '0';
     document.getElementById('match-close-btn').classList.add('hidden');
     document.getElementById('match-simulation-modal').classList.remove('hidden');
 
-    // Arrancamos el primer turno
     playMatchTurn();
 }
 
@@ -2072,7 +2068,6 @@ function playMatchTurn() {
         return;
     }
 
-    // Turnos pares atacas tú (0, 2, 4), turnos impares defiendes (1, 3)
     const isAttacking = matchState.turn % 2 === 0;
     const currentMin = matchState.minutes[matchState.turn];
     
@@ -2104,16 +2099,12 @@ function playMatchTurn() {
 function resolveMatchTurn(playerAction, phase) {
     const cpuOptions = ['tiro', 'pase', 'regate'];
     const cpuAction = cpuOptions[Math.floor(Math.random() * 3)];
-    
     let goalScored = false;
     let msg = "";
-
-    // Lógica Piedra-Papel-Tijera + Fuerza de equipo
     const isMatch = playerAction === cpuAction;
     
     if (phase === 'ataque') {
         if (!isMatch) {
-            // Si la CPU no adivina tu jugada, tienes muchísima ventaja
             if ((Math.random() * 100) + matchState.myStrength > 35) {
                 goalScored = true;
                 matchState.myGoals++;
@@ -2122,7 +2113,6 @@ function resolveMatchTurn(playerAction, phase) {
                 msg = "¡Al palo! Buena jugada, pero faltó puntería.";
             }
         } else {
-            // Si la CPU adivina, tu única salvación es que tus cartas sean muy superiores
             if ((Math.random() * 100) + matchState.myStrength > 85 + matchState.cpuStrength) {
                 goalScored = true;
                 matchState.myGoals++;
@@ -2132,9 +2122,7 @@ function resolveMatchTurn(playerAction, phase) {
             }
         }
     } else {
-        // Fase de defensa
         if (isMatch) {
-            // Adivinas lo que hace la CPU
             if ((Math.random() * 100) + matchState.myStrength > 25) {
                 msg = "¡PARADÓN / CORTE PROVIDENCIAL! Has leído sus intenciones perfectamente.";
             } else {
@@ -2143,7 +2131,6 @@ function resolveMatchTurn(playerAction, phase) {
                 msg = "¡Gol en contra! Adivinaste la jugada, pero su delantero era imparable.";
             }
         } else {
-            // No adivinas su ataque
             if ((Math.random() * 100) + matchState.cpuStrength > 50 + matchState.myStrength) {
                 goalScored = true;
                 matchState.cpuGoals++;
@@ -2154,17 +2141,11 @@ function resolveMatchTurn(playerAction, phase) {
         }
     }
 
-    // Actualizamos el marcador en vivo
     document.getElementById('match-score-my').innerText = matchState.myGoals;
     document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-    
-    // Mostramos el resultado de la jugada
     const narrative = document.getElementById('match-narrative');
     narrative.innerHTML = `<strong style="color:${goalScored ? '#ffd700' : '#fff'}; font-size: 1.1rem;">${msg}</strong>`;
-    
-    // Botón para avanzar el tiempo
-    const actions = document.getElementById('match-actions');
-    actions.innerHTML = `<button class="secondary-btn" style="background: var(--card); border: 1px solid white;" onclick="nextMatchTurn()">Siguiente Jugada ⏱️</button>`;
+    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" style="background: var(--card); border: 1px solid white;" onclick="nextMatchTurn()">Siguiente Jugada ⏱️</button>`;
 }
 
 function nextMatchTurn() {
@@ -2175,10 +2156,8 @@ function nextMatchTurn() {
 function endMatch() {
     document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
     document.getElementById('match-minute').style.color = "#ffd700";
-    
     const narrative = document.getElementById('match-narrative');
-    const actions = document.getElementById('match-actions');
-    actions.innerHTML = ""; // Limpiamos los botones de acción
+    document.getElementById('match-actions').innerHTML = "";
 
     let resultMsg = "";
     let coinsWon = 0;
@@ -2198,12 +2177,7 @@ function endMatch() {
         titleColor = "#ff4d4d";
     }
 
-    narrative.innerHTML = `
-        <strong style="font-size:1.4rem; color:${titleColor}; text-shadow: 0 0 10px rgba(255,255,255,0.3);">${resultMsg}</strong><br><br>
-        <span style="color: var(--text-dim);">Fuerza de tu 11 Ideal: ${matchState.myStrength} pts</span><br>
-        <span style="color:#ffd700; font-size: 1.2rem; font-family: 'Orbitron'; margin-top:15px; display:inline-block; border: 1px solid #ffd700; padding: 5px 15px; border-radius: 10px; background: rgba(255,215,0,0.1);">+${coinsWon} FutCoins 🪙</span>
-    `;
-    
+    narrative.innerHTML = `<strong style="font-size:1.4rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700;">+${coinsWon} FutCoins 🪙</span>`;
     addCoins(coinsWon);
     document.getElementById('match-close-btn').classList.remove('hidden');
 }
