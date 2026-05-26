@@ -126,11 +126,21 @@
                 <button class="album-tab active" id="tab-btn-pack" onclick="switchAlbumTab('pack')">SOBRES</button>
                 <button class="album-tab" id="tab-btn-collection" onclick="switchAlbumTab('collection')">ÁLBUM</button>
                 <button class="album-tab" id="tab-btn-market" onclick="switchAlbumTab('market')">MERCADO</button>
+                <button class="album-tab" id="tab-btn-play" onclick="switchAlbumTab('play')" style="color: #00ff87; border-color: rgba(0,255,135,0.3);">PARTIDO</button>
             </div>
 
             <div id="tab-pack" class="album-tab-content">
                 <div id="pack-container" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; padding: 10px;">
                     
+                    <div class="pack-container" id="free-pack-btn" onclick="openFreePack(event)">
+                        <div class="pack-visual bg-free-pack">
+                            <div class="pack-logo" style="color: #0b0e14;">F10</div>
+                            <div class="pack-title" style="background: #0b0e14; color: #a8ff78;">GRATIS</div>
+                            <div class="pack-price" style="background: #0b0e14; color: #fff;">0 🪙</div>
+                            <div class="pack-progress" id="free-pack-status" style="margin-top: 10px; font-family: 'Orbitron'; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 12px; border-radius: 12px; font-weight: bold;">DISPONIBLE</div>
+                        </div>
+                    </div>
+
                     <div class="pack-container" onclick="openPack(event, 'bronce')">
                         <div class="pack-visual" style="background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);">
                             <div class="pack-logo">F10</div>
@@ -204,6 +214,18 @@
                 <h3 style="color: white; font-family: 'Orbitron'; margin-bottom: 5px; width: 100%; text-align: center;">TUS REPETIDOS</h3>
                 <p style="text-align:center; color:var(--text-dim); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 0.85rem;">Vende tus cartas repetidas según su rareza.</p>
                 <div class="album-grid" id="market-grid"></div>
+            </div>
+
+            <div id="tab-play" class="album-tab-content hidden">
+                <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #00ff87; font-family: 'Orbitron'; margin-top: 0;">TU 11 FAVORITO</h3>
+                    <p style="color: var(--text-dim); font-size: 0.85rem; max-width: 500px; margin: 0 auto;">Crea tu alineación con las cartas de tu álbum. Los jugadores elegidos <b>multiplicarán x10</b> las monedas que ganes si te tocan en los juegos de LaLiga.</p>
+                </div>
+                
+                <div class="pitch-container" id="lineup-pitch" style="margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,255,135,0.2);">
+                    </div>
+                
+                <button id="btn-play-match" class="secondary-btn" style="width: 100%; max-width: 300px; background: #00ff87; color: black; margin-bottom: 30px;" onclick="playMatchVsCPU()">⚽ JUGAR PARTIDO VS CPU</button>
             </div>
         </div>
 
@@ -482,11 +504,31 @@
 
     </div> 
     
-    <div id="custom-modal" class="modal-overlay hidden">
+    <div id="custom-modal" class="modal-overlay hidden" style="z-index: 9999;">
         <div class="modal-content">
             <h2 id="modal-title">TÍTULO</h2>
             <p id="modal-message" style="white-space: pre-line;">Mensaje del juego...</p>
             <button id="modal-btn">CONTINUAR</button>
+        </div>
+    </div>
+
+    <div id="lineup-selector-modal" class="modal-overlay hidden" style="z-index: 10001;">
+        <div class="modal-content" style="max-width: 500px; padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 class="logo" style="font-size: 1.5rem; margin: 0;">FICHAR <span>JUGADOR</span></h2>
+                <button onclick="closeLineupSelector()" class="back-btn" style="padding: 5px 15px;">✕</button>
+            </div>
+            <p style="color: var(--text-dim); margin-bottom: 15px; font-size: 0.85rem;">Elige un jugador de tu álbum para esta posición.</p>
+            <div class="album-grid" id="lineup-selector-grid" style="max-height: 50vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="match-simulation-modal" class="modal-overlay hidden" style="z-index: 10002;">
+        <div class="modal-content" style="max-width: 400px; padding: 2rem; text-align: center;">
+            <h2 class="logo" style="font-size: 1.8rem; margin: 0;">PARTIDO <span>VS CPU</span></h2>
+            <div id="match-events" style="margin: 20px 0; font-family: 'Orbitron'; font-size: 1.1rem; min-height: 60px; color: #00ff87;">Calculando estadísticas...</div>
+            <div id="match-score" style="font-size: 3.5rem; font-weight: bold; color: white; text-shadow: 0 0 20px #00ff87; margin-bottom: 20px; display: none;">0 - 0</div>
+            <button id="match-close-btn" class="secondary-btn hidden" style="width: 100%;" onclick="closeMatchModal()">CONTINUAR</button>
         </div>
     </div>
 
