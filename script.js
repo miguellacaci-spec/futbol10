@@ -601,8 +601,6 @@ let roscoState = {
 };
 
 let currentLineupSlot = -1;
-
-// ESTADO DEL PARTIDO TÁCTICO
 let matchState = {
     turn: 0, 
     myGoals: 0,
@@ -615,7 +613,6 @@ let matchState = {
 // ==========================================
 // 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
-
 function getCoins() { return parseInt(localStorage.getItem('f10_coins'), 10) || 0; }
 function addCoins(amount) {
     let current = getCoins() + amount;
@@ -651,11 +648,6 @@ function showProfile() {
 function closeProfile() {
     document.getElementById('profile-modal').classList.add('hidden');
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    const menuCoins = document.getElementById('menu-coins');
-    if(menuCoins) menuCoins.innerText = getCoins();
-});
 
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
@@ -1887,20 +1879,34 @@ function giveUpTop10() {
 // ==========================================
 // 6. EVENT LISTENERS GENERALES
 // ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    setupAutocomplete('wordInput', 'hangman-suggestions');
+    setupAutocomplete('blurInput', 'blur-suggestions');
+    setupAutocomplete('zoomInput', 'zoom-suggestions'); 
+    setupAutocomplete('top10Input', 'top10-suggestions');
+    setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
 
-setupAutocomplete('wordInput', 'hangman-suggestions');
-setupAutocomplete('blurInput', 'blur-suggestions');
-setupAutocomplete('zoomInput', 'zoom-suggestions'); 
-setupAutocomplete('top10Input', 'top10-suggestions');
-setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
-
-document.getElementById('solveButton').onclick = solveFullWord;
-document.getElementById('btnBlurCheck').onclick = checkBlurGuess;
-document.getElementById('btnTmCheck').onclick = checkTimeMachineGuess;
-document.getElementById('btnRoscoCheck').onclick = checkRosco;
-document.getElementById('btnPasapalabra').onclick = pasapalabra;
-document.getElementById('btnZoomCheck').onclick = checkZoomGuess; 
-document.getElementById('btnTop10Check').onclick = checkTop10Guess;
+    const solveBtn = document.getElementById('solveButton');
+    if(solveBtn) solveBtn.onclick = solveFullWord;
+    
+    const blurBtn = document.getElementById('btnBlurCheck');
+    if(blurBtn) blurBtn.onclick = checkBlurGuess;
+    
+    const tmBtn = document.getElementById('btnTmCheck');
+    if(tmBtn) tmBtn.onclick = checkTimeMachineGuess;
+    
+    const roscoBtn = document.getElementById('btnRoscoCheck');
+    if(roscoBtn) roscoBtn.onclick = checkRosco;
+    
+    const pasaBtn = document.getElementById('btnPasapalabra');
+    if(pasaBtn) pasaBtn.onclick = pasapalabra;
+    
+    const zoomBtn = document.getElementById('btnZoomCheck');
+    if(zoomBtn) zoomBtn.onclick = checkZoomGuess; 
+    
+    const top10Btn = document.getElementById('btnTop10Check');
+    if(top10Btn) top10Btn.onclick = checkTop10Guess;
+});
 
 document.addEventListener('keydown', (e) => {
     const isTyping = document.activeElement.tagName === 'INPUT';
@@ -1929,10 +1935,225 @@ document.addEventListener('keydown', (e) => {
         if (document.activeElement.id === 'marketBuyInput') buySpecificPlayer();
     }
 });
+
+// ==========================================
+// 7. LOCAL STORAGE PARA EL AHORCADO (NUEVO)
+// ==========================================
+function saveHangmanProgress() {
+    localStorage.setItem('f10_hangman_save', JSON.stringify(gameState));
+}
+
+function loadHangmanProgress() {
+    const saved = localStorage.getItem('f10_hangman_save');
+    if (saved) {
+        gameState = JSON.parse(saved);
+        return true;
+    }
+    return false;
+}
+
+// ==========================================
+// 8. DATOS DEL ÁLBUM Y ALINEACIÓN (NUEVO)
+// ==========================================
+function getAlbumData() {
+    return JSON.parse(localStorage.getItem('f10_album')) || { unlocked: [], duplicates: {} };
+}
+
+function saveAlbumData(data) {
+    localStorage.setItem('f10_album', JSON.stringify(data));
+}
+
+function getLineup() {
+    return JSON.parse(localStorage.getItem('f10_lineup')) || [];
+}
+
+function saveLineup(lineup) {
+    localStorage.setItem('f10_lineup', JSON.stringify(lineup));
+}
+
+function getPlayerTier(playerName) {
+    const tiers = ['bronce', 'plata', 'oro', 'diamante', 'platino'];
+    let hash = 0;
+    for (let i = 0; i < playerName.length; i++) {
+        hash += playerName.charCodeAt(i);
+    }
+    return tiers[hash % tiers.length];
+}
+
+// ==========================================
+// 9. LÓGICA DE SOBRES Y MERCADO (NUEVO)
+// ==========================================
+function initAlbum() {
+    document.getElementById('album-coins').innerText = getCoins();
+    switchAlbumTab('pack');
+}
+
+function switchAlbumTab(tabId) {
+    document.querySelectorAll('.album-tab-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.album-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+    document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+
+    if (tabId === 'collection') renderAlbum();
+    if (tabId === 'market') renderMarket();
+    if (tabId === 'play') renderLineupPitch();
+}
+
+function openPack(event, type) {
+    const prices = { bronce: 25, plata: 50, oro: 100, diamante: 200, platino: 400 };
+    const cost = prices[type];
+    
+    if (getCoins() < cost) {
+        mostrarMensajePro("⚠️ SIN MONEDAS", `Necesitas ${cost} 🪙 para abrir este sobre.`);
+        return;
+    }
+    
+    addCoins(-cost);
+    document.getElementById('album-coins').innerText = getCoins();
+    generatePackCards(3); 
+}
+
+function openFreePack(event) {
+    generatePackCards(2);
+}
+
+function generatePackCards(amount) {
+    const revealContainer = document.getElementById('reveal-cards-container');
+    revealContainer.innerHTML = "";
+    let data = getAlbumData();
+    
+    for(let i=0; i<amount; i++) {
+        let randomPlayer = players[Math.floor(Math.random() * players.length)];
+        let tier = getPlayerTier(randomPlayer);
+        
+        if (!data.unlocked.includes(randomPlayer)) {
+            data.unlocked.push(randomPlayer);
+        } else {
+            data.duplicates[randomPlayer] = (data.duplicates[randomPlayer] || 0) + 1;
+        }
+
+        const card = document.createElement('div');
+        card.className = `f10-card tier-${tier}`;
+        card.innerHTML = `<img src="players/${randomPlayer}.jpg"><div class="card-name">${randomPlayer}</div>`;
+        revealContainer.appendChild(card);
+    }
+    
+    saveAlbumData(data);
+    document.getElementById('pack-container').classList.add('hidden');
+    document.getElementById('pack-reveal').classList.remove('hidden');
+}
+
+function closePackReveal() {
+    document.getElementById('pack-reveal').classList.add('hidden');
+    document.getElementById('pack-container').classList.remove('hidden');
+}
+
+function buySpecificPlayer() {
+    const input = document.getElementById('marketBuyInput');
+    const name = input.value.toUpperCase().trim();
+    
+    if (!players.includes(name)) {
+        mostrarMensajePro("❌ ERROR", "Ese jugador no existe en la base de datos.");
+        return;
+    }
+    
+    if (getCoins() < 750) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 750 FutCoins para comprar a la carta.");
+        return;
+    }
+    
+    let data = getAlbumData();
+    if (data.unlocked.includes(name)) {
+        mostrarMensajePro("ℹ️ YA LO TIENES", "Este jugador ya está en tu álbum.");
+        return;
+    }
+    
+    addCoins(-750);
+    data.unlocked.push(name);
+    saveAlbumData(data);
+    
+    input.value = "";
+    mostrarMensajePro("🤝 ¡FICHAJE CERRADO!", `¡Has fichado a ${name} con éxito!`);
+    renderMarket();
+}
+
+// ==========================================
+// 10. RENDERIZADO DE ÁLBUM Y MERCADO (NUEVO)
+// ==========================================
+function renderAlbum() {
+    const data = getAlbumData();
+    const grid = document.getElementById('album-grid');
+    grid.innerHTML = "";
+    
+    let unlockedCount = 0;
+    
+    players.forEach(p => {
+        const isUnlocked = data.unlocked.includes(p);
+        const tier = getPlayerTier(p);
+        const card = document.createElement('div');
+        
+        if (isUnlocked) {
+            unlockedCount++;
+            card.className = `f10-card tier-${tier}`;
+            card.innerHTML = `<img src="players/${p}.jpg"><div class="card-name">${p}</div>`;
+        } else {
+            card.className = `f10-card locked`;
+            card.innerHTML = `<div style="flex:1; display:flex; align-items:center; justify-content:center; font-size:2rem;">🔒</div><div class="card-name">?????</div>`;
+        }
+        grid.appendChild(card);
+    });
+
+    const progressText = document.getElementById('album-progress-text');
+    if(progressText) {
+        progressText.innerText = `${unlockedCount}/${players.length}`;
+    }
+}
+
+function renderMarket() {
+    const data = getAlbumData();
+    const grid = document.getElementById('market-grid');
+    grid.innerHTML = "";
+    
+    let hasDuplicates = false;
+    
+    Object.keys(data.duplicates).forEach(p => {
+        if (data.duplicates[p] > 0) {
+            hasDuplicates = true;
+            const tier = getPlayerTier(p);
+            const cardItem = document.createElement('div');
+            cardItem.className = 'market-item';
+            
+            cardItem.innerHTML = `
+                <div class="f10-card tier-${tier}" style="width: 100px;">
+                    <img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.6rem;">${p}</div>
+                </div>
+                <div style="color:white; font-size:0.8rem; font-family:'Orbitron', sans-serif;">Repetidos: ${data.duplicates[p]}</div>
+                <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (+15🪙)</button>
+            `;
+            grid.appendChild(cardItem);
+        }
+    });
+
+    if(!hasDuplicates) {
+        grid.innerHTML = `<p style="color:var(--text-dim); grid-column: 1 / -1; font-family:'Orbitron', sans-serif;">No tienes cartas repetidas para vender.</p>`;
+    }
+}
+
+function sellDuplicate(playerName) {
+    let data = getAlbumData();
+    if (data.duplicates[playerName] > 0) {
+        data.duplicates[playerName]--;
+        if (data.duplicates[playerName] === 0) delete data.duplicates[playerName];
+        saveAlbumData(data);
+        addCoins(15);
+        document.getElementById('album-coins').innerText = getCoins();
+        renderMarket();
+    }
+}
+
 // ==========================================
 // 11. ALINEACIÓN (11 IDEAL) Y PARTIDO TÁCTICO
 // ==========================================
-
 function renderLineupPitch() {
     const pitch = document.getElementById('lineup-pitch');
     let lineup = getLineup();
@@ -1984,6 +2205,11 @@ function openLineupSelector(slotIdx) {
         if (!isSelected) card.onclick = () => selectPlayerForLineup(p);
         grid.appendChild(card);
     });
+
+    if(data.unlocked.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-dim); font-family:'Orbitron', sans-serif;">Aún no tienes jugadores en tu álbum.</p>`;
+    }
+
     document.getElementById('lineup-selector-modal').classList.remove('hidden');
 }
 
@@ -2003,7 +2229,7 @@ function closeLineupSelector() {
 function playMatchVsCPU() {
     const lineup = getLineup();
     if (lineup.filter(p => p !== null).length < 11) {
-        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas 11 jugadores.");
+        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores alineados antes de jugar.");
         return;
     }
 
@@ -2011,7 +2237,14 @@ function playMatchVsCPU() {
     const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
     lineup.forEach(p => myStrength += tierPoints[getPlayerTier(p)] || 1);
 
-    matchState = { turn: 0, myGoals: 0, cpuGoals: 0, myStrength: myStrength, cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), minutes: [15, 35, 60, 75, 89] };
+    matchState = { 
+        turn: 0, 
+        myGoals: 0, 
+        cpuGoals: 0, 
+        myStrength: myStrength, 
+        cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), 
+        minutes: [15, 35, 60, 75, 89] 
+    };
 
     document.getElementById('match-score-my').innerText = '0';
     document.getElementById('match-score-cpu').innerText = '0';
@@ -2022,35 +2255,64 @@ function playMatchVsCPU() {
 
 function playMatchTurn() {
     if (matchState.turn >= 5) return endMatch();
+    
     const isAttacking = matchState.turn % 2 === 0;
     document.getElementById('match-minute').innerText = `⏱️ Min ${matchState.minutes[matchState.turn]}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
-    const narrative = document.getElementById('match-narrative');
+    
     const actions = document.getElementById('match-actions');
+    const narrative = document.getElementById('match-narrative');
+    
+    narrative.innerHTML = isAttacking 
+        ? "Tienes el balón en la frontal del área. ¿Qué vas a hacer?"
+        : "El rival se acerca peligrosamente a tu portería. ¡Reacciona!";
+        
     actions.innerHTML = isAttacking 
-        ? `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar</button><button class="secondary-btn" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase</button><button class="secondary-btn" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regate</button>`
-        : `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear</button><button class="secondary-btn" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar</button><button class="secondary-btn" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada</button>`;
+        ? `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar</button>
+           <button class="secondary-btn" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase</button>
+           <button class="secondary-btn" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regate</button>`
+        : `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear</button>
+           <button class="secondary-btn" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar</button>
+           <button class="secondary-btn" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada</button>`;
 }
 
 function resolveMatchTurn(action, phase) {
     const options = ['tiro', 'pase', 'regate'];
     const cpuAction = options[Math.floor(Math.random() * 3)];
     let goal = false;
+    let desc = "";
+    
     if (phase === 'ataque') {
-        goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 35) || (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
-        if (goal) matchState.myGoals++;
+        goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 35) || 
+               (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
+        
+        if (goal) {
+            matchState.myGoals++;
+            desc = "¡GOLAZOOO! Excelente definición.";
+        } else {
+            desc = "¡Uy! El portero la paró o se fue fuera.";
+        }
     } else {
-        if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {} 
-        else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { goal = true; matchState.cpuGoals++; }
+        if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {
+            desc = "¡Gran acción defensiva! Robaste el balón.";
+        } else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { 
+            goal = true; 
+            matchState.cpuGoals++; 
+            desc = "Gol del rival... La defensa no pudo hacer nada.";
+        } else {
+            desc = "Salvada providencial. Despejaste el peligro.";
+        }
     }
+    
     document.getElementById('match-score-my').innerText = matchState.myGoals;
     document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-    document.getElementById('match-narrative').innerHTML = goal ? "¡GOL!" : "Jugada sin peligro.";
+    document.getElementById('match-narrative').innerHTML = `<span style="font-weight:bold; color:white;">${desc}</span>`;
     document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Siguiente</button>`;
 }
 
-function nextMatchTurn() { matchState.turn++; playMatchTurn(); }
-
-// ... [Tu código anterior de la sección 11]
+function nextMatchTurn() { 
+    matchState.turn++; 
+    playMatchTurn(); 
+}
 
 function endMatch() {
     document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
