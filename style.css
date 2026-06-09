@@ -1745,25 +1745,27 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* CLASES DE TIERS PARA BORDES Y BRILLOS */
-.tier-bronce { border-color: #cd7f32; box-shadow: 0 0 10px #cd7f32; }
+/* CLASES DE TIERS PARA BORDES Y BRILLOS */
+.tier-bronce { border-color: #cd7f32; box-shadow: 0 0 10px rgba(205, 127, 50, 0.8); }
 .tier-bronce .card-name { background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%); color: white; }
 
-.tier-plata { border-color: #c0c0c0; box-shadow: 0 0 10px #c0c0c0; }
+.tier-plata { border-color: #c0c0c0; box-shadow: 0 0 10px rgba(192, 192, 192, 0.8); }
 .tier-plata .card-name { background: linear-gradient(135deg, #e6e8fa 0%, #a9a9a9 100%); color: #111; }
 
-.tier-oro { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+.tier-oro { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
 .tier-oro .card-name { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); color: #111; }
 
-.tier-diamante { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
-.tier-diamante .card-name { background: linear-gradient(135deg, #00ffff 0%, #0088cc 100%); color: #111; }
+/* Diamante = Azul clarito */
+.tier-diamante { border-color: #00d2ff; box-shadow: 0 0 20px rgba(0, 210, 255, 0.8); }
+.tier-diamante .card-name { background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); color: white; }
 
-.tier-platino { border-color: #a200ff; box-shadow: 0 0 20px #a200ff; }
+/* Platino = Morado */
+.tier-platino { border-color: #a200ff; box-shadow: 0 0 20px rgba(162, 0, 255, 0.8); }
 .tier-platino .card-name { background: linear-gradient(135deg, #a200ff 0%, #4b0082 100%); color: white; }
 
 .bg-free-pack { background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%); }
 .tier-gratis { border-color: #a8ff78; box-shadow: 0 0 15px #a8ff78; }
 .tier-gratis .card-name { background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%); color: #111; }
-.locked-pack { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
 
 /* ÁLBUM GRID */
 .album-progress { 
