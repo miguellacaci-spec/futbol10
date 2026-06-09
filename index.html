@@ -38,7 +38,7 @@
                         <p>Sobres y Colección</p>
                     </div>
                 </div>
-                <div class="menu-card rosco-game-card" onclick="showRoscoMenu()">
+                <div class="menu-card rosco-game-card" onclick="showRoscoInfo()">
                     <div class="card-bg bg-rosco"></div>
                     <div class="card-info">
                         <h3 style="color: #0044cc; text-shadow: 0 0 10px rgba(0, 68, 204, 0.4);">El Rosco</h3>
@@ -89,29 +89,6 @@
                 <h2 id="category-title" class="logo" style="font-size: 1.5rem; margin: 0;"></h2>
             </nav>
             <div class="menu-grid" id="category-games-grid"></div>
-        </div>
-
-        <div id="rosco-menu-screen" class="screen hidden">
-            <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← ATRÁS</button>
-                <h2 class="logo" style="font-size: 1.5rem; margin: 0; color: #0044cc;">EL <span style="color: white;">ROSCO</span></h2>
-            </nav>
-            <div class="menu-grid">
-                <div class="menu-card rosco-game-card" onclick="initRosco('individual')">
-                    <div class="card-bg bg-rosco"></div>
-                    <div class="card-info">
-                        <h3 style="color: #0044cc;">Individual</h3>
-                        <p>Modo Clásico (300s)</p>
-                    </div>
-                </div>
-                <div class="menu-card rosco-game-card" onclick="initRosco('multiplayer')">
-                    <div class="card-bg bg-rosco"></div>
-                    <div class="card-info">
-                        <h3 style="color: #0044cc;">Multijugador</h3>
-                        <p>1 vs 1 Local (150s)</p>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div id="album-screen" class="screen hidden">
@@ -495,7 +472,30 @@
             <button class="secondary-btn" style="margin-top: 25px; width: 100%;" onclick="closeProfile()">VOLVER</button>
         </div>
     </div>
-    
+    <div id="rosco-info-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 450px; border-color: #0044cc; box-shadow: 0 0 30px rgba(0,68,204,0.4); text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 class="logo" style="margin: 0; font-size: 1.8rem; color: #0044cc;">EL <span style="color: white;">ROSCO</span></h2>
+                <button onclick="closeRoscoInfo()" class="back-btn" style="border-color: #0044cc; color: #0044cc;">✕</button>
+            </div>
+            
+            <div style="margin-bottom: 25px; color: var(--text-dim); font-size: 0.95rem; line-height: 1.6;">
+                <p>Completa la mítica ruleta de la <strong>A a la Z</strong> adivinando todos los conceptos, jugadores y equipos futbolísticos.</p>
+                <div style="background: rgba(0, 68, 204, 0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(0,68,204,0.3); margin-top: 15px;">
+                    <h4 style="color: white; margin: 0 0 10px 0; font-family: 'Orbitron';">👤 INDIVIDUAL</h4>
+                    <p style="margin: 0 0 15px 0;">Dispones de <strong>300 segundos</strong> para ti solo. ¡Demuestra que eres el GOAT del conocimiento!</p>
+                    
+                    <h4 style="color: white; margin: 0 0 10px 0; font-family: 'Orbitron';">👥 MULTIJUGADOR (LOCAL)</h4>
+                    <p style="margin: 0;"><strong>150 segundos</strong> por jugador. Pásale el dispositivo a tu colega en el cambio de turno.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="secondary-btn" style="background: #0044cc; color: white;" onclick="startRoscoFromInfo('individual')">JUGAR INDIVIDUAL</button>
+                <button class="secondary-btn" style="background: transparent; border: 2px solid #0044cc; color: #0044cc;" onclick="startRoscoFromInfo('multiplayer')">JUGAR MULTIJUGADOR</button>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
     <div id="info-modal" class="modal-overlay hidden">
         <div class="modal-content" style="max-width: 600px; text-align: left;">
