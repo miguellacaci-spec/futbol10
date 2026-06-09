@@ -677,12 +677,19 @@ function showMenu() {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById('menu-screen').classList.remove('hidden');
 }
-
-function showRoscoMenu() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById('rosco-menu-screen').classList.remove('hidden');
+// --- LÓGICA DE LA TARJETA PRE-JUEGO DEL ROSCO ---
+function showRoscoInfo() {
+    document.getElementById('rosco-info-modal').classList.remove('hidden');
 }
 
+function closeRoscoInfo() {
+    document.getElementById('rosco-info-modal').classList.add('hidden');
+}
+
+function startRoscoFromInfo(mode) {
+    closeRoscoInfo();
+    initRosco(mode); // Llama a la inicialización que ya tenías programada
+}
 function showCategory(category) {
     if (elevenState.timer) clearInterval(elevenState.timer);
     currentCategory = category;
