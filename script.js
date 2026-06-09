@@ -660,6 +660,14 @@ function closeProfile() {
     document.getElementById('profile-modal').classList.add('hidden');
 }
 
+function showInfo() {
+    document.getElementById('info-modal').classList.remove('hidden');
+}
+
+function closeInfo() {
+    document.getElementById('info-modal').classList.add('hidden');
+}
+
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
