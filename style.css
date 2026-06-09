@@ -251,8 +251,9 @@ input[type="number"]::-webkit-outer-spin-button {
    ========================================== */
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    /* ¡AQUÍ ESTÁ LA MAGIA! Bajamos de 260px a 130px para que quepan más por fila */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px; /* Reducimos un poco el hueco entre cartas */
     width: 100%;
     max-width: 1000px;
     padding: 10px;
@@ -281,26 +282,25 @@ input[type="number"]::-webkit-outer-spin-button {
     box-shadow: 0 10px 30px var(--primary-glow);
 }
 
-.card-info { 
-    position: relative; 
-    z-index: 2; 
-    text-align: center; 
-    pointer-events: none; 
-    padding: 10px; 
+/* Degradado oscuro para que el texto resalte sobre la foto en las cartas verticales */
+.menu-card:not(.sobres-card) .card-info {
+    background: linear-gradient(to top, rgba(11, 14, 20, 1) 10%, rgba(11, 14, 20, 0.8) 60%, transparent 100%);
+    width: 100%;
+    padding: 30px 10px 10px 10px; /* Menos relleno para que no ahogue la carta */
+    box-sizing: border-box;
 }
 
-.card-info h3 { 
-    font-family: 'Orbitron', sans-serif; 
-    margin: 10px 0; 
-    font-size: clamp(1.2rem, 4vw, 1.4rem); 
+/* Ajuste del título en las cartas verticales para que quepa bien */
+.menu-card:not(.sobres-card) .card-info h3 {
+    font-size: clamp(0.8rem, 3.5vw, 1rem); /* Letra más pequeña */
+    margin-bottom: 2px;
 }
 
-.card-info p { 
-    color: var(--text-dim); 
-    font-size: 0.95rem; 
-    margin: 0; 
+/* Ajuste de la descripción en las cartas verticales */
+.menu-card:not(.sobres-card) .card-info p {
+    font-size: 0.7rem; /* Letra más pequeña */
+    margin: 0;
 }
-
 .coming-soon { 
     opacity: 0.6; 
     cursor: not-allowed; 
