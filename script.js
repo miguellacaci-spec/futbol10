@@ -578,6 +578,17 @@ const knowballDB = [
 ];
 
 // ==========================================
+// 1.5. LISTAS DE JUGADORES POR TIER (NUEVO)
+// ==========================================
+const tierLists = {
+    bronce: ["ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER", "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI","LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS","SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR"],
+    plata: ["RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES","IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA","SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ","VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY"],
+    oro: ["UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA","DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA","REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON","JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ"],
+    diamante: ["BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO","DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO", "RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO", "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI", "ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL"],
+    platino: ["COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA", "OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH", "JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI", "DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE"]
+};
+
+// ==========================================
 // 2. ESTADOS GLOBALES DE LOS JUEGOS
 // ==========================================
 let currentCategory = "";
@@ -1972,12 +1983,12 @@ function saveLineup(lineup) {
 }
 
 function getPlayerTier(playerName) {
-    const tiers = ['bronce', 'plata', 'oro', 'diamante', 'platino'];
-    let hash = 0;
-    for (let i = 0; i < playerName.length; i++) {
-        hash += playerName.charCodeAt(i);
-    }
-    return tiers[hash % tiers.length];
+    if (tierLists.bronce.includes(playerName)) return 'bronce';
+    if (tierLists.plata.includes(playerName)) return 'plata';
+    if (tierLists.oro.includes(playerName)) return 'oro';
+    if (tierLists.diamante.includes(playerName)) return 'diamante';
+    if (tierLists.platino.includes(playerName)) return 'platino';
+    return 'bronce'; // Por si hay algún jugador sin registrar, que sea bronce por defecto.
 }
 
 // ==========================================
@@ -1999,6 +2010,27 @@ function switchAlbumTab(tabId) {
     if (tabId === 'play') renderLineupPitch();
 }
 
+function getSpanishDateString() {
+    return new Intl.DateTimeFormat('es-ES', {
+        timeZone: 'Europe/Madrid',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date());
+}
+
+function openFreePack(event) {
+    const today = getSpanishDateString();
+    const lastOpened = localStorage.getItem('f10_last_free_pack');
+    
+    if (lastOpened === today) {
+        mostrarMensajePro("⏳ PACIENCIA", "Ya abriste tu sobre gratis de hoy. Vuelve mañana a partir de las 00:00 (hora de España).");
+        return;
+    }
+
+    localStorage.setItem('f10_last_free_pack', today);
+    // El sobre gratis da 2 jugadores aleatorios de cualquier nivel (o cámbialo a 'bronce' si quieres que sea solo bronce)
+    generatePackCards(2, 'gratis'); 
+}
+
 function openPack(event, type) {
     const prices = { bronce: 25, plata: 50, oro: 100, diamante: 200, platino: 400 };
     const cost = prices[type];
@@ -2010,20 +2042,27 @@ function openPack(event, type) {
     
     addCoins(-cost);
     document.getElementById('album-coins').innerText = getCoins();
-    generatePackCards(3); 
+    generatePackCards(3, type); // Le pasamos el 'type' para que sepa qué sobre abres
 }
 
-function openFreePack(event) {
-    generatePackCards(2);
-}
-
-function generatePackCards(amount) {
+function generatePackCards(amount, packType) {
     const revealContainer = document.getElementById('reveal-cards-container');
     revealContainer.innerHTML = "";
     let data = getAlbumData();
     
+    // Seleccionamos la piscina de jugadores según el sobre
+    let pool = [];
+    if (packType === 'gratis') {
+        pool = players; // El sobre gratis saca de todos los jugadores
+    } else {
+        pool = tierLists[packType]; // El sobre específico saca solo de su tier
+    }
+
+    // Por seguridad, si el sobre está vacío, salimos
+    if (!pool || pool.length === 0) return;
+    
     for(let i=0; i<amount; i++) {
-        let randomPlayer = players[Math.floor(Math.random() * players.length)];
+        let randomPlayer = pool[Math.floor(Math.random() * pool.length)];
         let tier = getPlayerTier(randomPlayer);
         
         if (!data.unlocked.includes(randomPlayer)) {
