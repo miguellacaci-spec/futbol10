@@ -11,9 +11,15 @@
     <div id="app">
         
         <div id="menu-screen" class="screen">
-            <div class="user-bar">
+            <div class="user-bar" style="max-width: 600px;">
+                <button onclick="showInfo()" class="icon-btn" title="Cómo Jugar">ℹ️</button>
+                
                 <button onclick="showProfile()" class="back-btn">👤 PERFIL</button>
                 <div class="coin-badge">🪙 <span id="menu-coins">0</span></div>
+                
+                <a href="https://instagram.com/TU_USUARIO" target="_blank" class="icon-btn ig-btn" title="Sígueme en Instagram">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG" style="width: 20px; filter: drop-shadow(0px 0px 2px rgba(255,255,255,0.8));">
+                </a>
             </div>
 
             <div class="logo-f10-container">
