@@ -1940,3 +1940,37 @@ input[type="number"]::-webkit-outer-spin-button {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
+
+
+
+/* ==========================================
+   14. REDISEÑO DEL MENÚ PRINCIPAL (CARTAS VERTICALES)
+   ========================================== */
+/* Mantener el Álbum F10 horizontal y ocupando todo el ancho */
+.sobres-card {
+    grid-column: 1 / -1; 
+    min-height: 220px;
+}
+
+/* Convertir las demás cartas en Verticales (Estilo Carta FUT) */
+.menu-card:not(.sobres-card) {
+    aspect-ratio: 3 / 4; /* Proporción de carta vertical */
+    min-height: auto;
+    flex-direction: column;
+    justify-content: flex-end; /* Obliga al texto a ir abajo */
+    padding: 0 !important;
+}
+
+/* Degradado oscuro para que el texto resalte sobre la foto en las cartas verticales */
+.menu-card:not(.sobres-card) .card-info {
+    background: linear-gradient(to top, rgba(11, 14, 20, 1) 10%, rgba(11, 14, 20, 0.8) 60%, transparent 100%);
+    width: 100%;
+    padding: 40px 15px 15px 15px; 
+    box-sizing: border-box;
+}
+
+/* Ajuste del título en las cartas verticales para que quepa bien */
+.menu-card:not(.sobres-card) .card-info h3 {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    margin-bottom: 5px;
+}
