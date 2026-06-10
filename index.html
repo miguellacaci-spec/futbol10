@@ -29,59 +29,64 @@
                 </div>
                 <h1 class="logo-texto-inferior">FUTBOL<span>10</span></h1>
             </div>
-            
             <div class="menu-grid">
-                <div class="menu-card sobres-card" onclick="showGame('album')">
-                    <div class="card-bg bg-sobres"></div>
-                    <div class="card-info">
-                        <h3 style="color: #00ffff; text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);">Álbum F10</h3>
-                        <p>Sobres y Colección</p>
-                    </div>
-                </div>
-                <div class="menu-card rosco-game-card" onclick="showRoscoInfo()">
-                    <div class="card-bg bg-rosco"></div>
-                    <div class="card-info">
-                        <h3 style="color: #0044cc; text-shadow: 0 0 10px rgba(0, 68, 204, 0.4);">El Rosco</h3>
-                        <p>Desafío Futbol10</p>
-                    </div>
-                </div>
-                <div class="menu-card laliga-card" onclick="showCategory('laliga')">
-                    <div class="card-bg bg-laliga"></div>
-                    <div class="card-info">
-                        <h3 style="color: #ff4d4d; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4);">LaLiga</h3>
-                        <p>Minijuegos EA Sports</p>
-                    </div>
-                </div>
-                <div class="menu-card premier-card" onclick="showCategory('premier')">
-                    <div class="card-bg bg-premier"></div>
-                    <div class="card-info">
-                        <h3 style="color: #9b59b6; text-shadow: 0 0 10px rgba(155, 89, 182, 0.4);">Premier</h3>
-                        <p>Minijuegos League</p>
-                    </div>
-                </div>
-                <div class="menu-card europeos-card" onclick="showCategory('europeos')">
-                    <div class="card-bg bg-europeos"></div>
-                    <div class="card-info">
-                        <h3 style="color: #00ff87; text-shadow: 0 0 10px rgba(0, 255, 135, 0.4);">Juegos Europeos</h3>
-                        <p>Noches Mágicas</p>
-                    </div>
-                </div>
-                <div class="menu-card leyendas-card" onclick="showCategory('leyendas')">
-                    <div class="card-bg bg-leyendas"></div>
-                    <div class="card-info">
-                        <h3 style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">Leyendas</h3>
-                        <p>Minijuegos de Iconos</p>
-                    </div>
-                </div>
-                <div class="menu-card top10-card" onclick="showGame('top10')">
-                    <div class="card-bg bg-top10"></div>
-                    <div class="card-info">
-                        <h3 style="color: #f5cf8e; text-shadow: 0 0 10px rgba(245, 207, 142, 0.4);">El Top 10</h3>
-                        <p>Adivina el Ranking</p>
-                    </div>
-                </div>
-            </div>
+    <div class="menu-card sobres-card" onclick="showGame('album')">
+        <div class="card-bg bg-sobres"></div>
+        <div class="card-hub-badge">SISTEMA CENTRAL</div>
+        <div class="card-info">
+            <h3>Álbum F10</h3>
+            <p>Gestión de sobres, mercado y tu 11 ideal</p>
         </div>
+    </div>
+
+    <div class="menu-card rosco-game-card" onclick="showRoscoInfo()">
+        <div class="card-bg bg-rosco"></div>
+        <div class="card-info">
+            <h3>El Rosco</h3>
+            <p>Desafío de vocabulario</p>
+        </div>
+    </div>
+
+    <div class="menu-card laliga-card" onclick="showCategory('laliga')">
+        <div class="card-bg bg-laliga"></div>
+        <div class="card-info">
+            <h3>LaLiga</h3>
+            <p>Minijuegos EA Sports</p>
+        </div>
+    </div>
+
+    <div class="menu-card premier-card" onclick="showCategory('premier')">
+        <div class="card-bg bg-premier"></div>
+        <div class="card-info">
+            <h3>Premier League</h3>
+            <p>Retos del fútbol inglés</p>
+        </div>
+    </div>
+
+    <div class="menu-card europeos-card" onclick="showCategory('europeos')">
+        <div class="card-bg bg-europeos"></div>
+        <div class="card-info">
+            <h3>Juegos Europeos</h3>
+            <p>Noches mágicas de torneo</p>
+        </div>
+    </div>
+
+    <div class="menu-card leyendas-card" onclick="showCategory('leyendas')">
+        <div class="card-bg bg-leyendas"></div>
+        <div class="card-info">
+            <h3>Leyendas</h3>
+            <p>Desafíos de iconos históricos</p>
+        </div>
+    </div>
+
+    <div class="menu-card top10-card" onclick="showGame('top10')">
+        <div class="card-bg bg-top10"></div>
+        <div class="card-info">
+            <h3>El Top 10</h3>
+            <p>Adivina los rankings oficiales</p>
+        </div>
+    </div>
+</div>
 
         <div id="category-screen" class="screen hidden">
             <nav class="game-nav">
