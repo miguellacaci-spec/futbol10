@@ -11,71 +11,19 @@
 }
  
 /* ==========================================
-   1. TEMAS DINÁMICOS POR CATEGORÍA
+   1. VARIABLES Y CONFIGURACIÓN DE PANTALLAS
    ========================================== */
-.rosco-game-card, #rosco-menu-screen .menu-card { 
-    border-color: #0044cc !important; 
-}
-#rosco-screen {
-    --primary: #0044cc;
-    --primary-glow: rgba(0, 68, 204, 0.3);
-    --secondary: #002288;
-}
-
-.laliga-card, .hangman-game-card, .blur-game-card, .aforos-game-card { 
-    border-color: #ff4d4d !important; 
-}
-#hangman-screen, #blur-screen, #aforos-screen {
-    --primary: #ff4d4d;
-    --primary-glow: rgba(255, 77, 77, 0.3);
-    --secondary: #cc0000;
-}
-
-.premier-card, .hl-game-card, .zoom-game-card { 
-    border-color: #9b59b6 !important; 
-}
-#higherlower-screen, #zoom-screen {
-    --primary: #9b59b6;
-    --primary-glow: rgba(155, 89, 182, 0.3);
-    --secondary: #8e44ad;
-}
-
-.europeos-card, .eleven-game-card, .knowball-game-card { 
-    border-color: #00ff87 !important; 
-}
-#eleven-screen, #knowball-screen {
-    --primary: #00ff87;
-    --primary-glow: rgba(0, 255, 135, 0.3);
-    --secondary: #00cc66;
-}
-
-.leyendas-card, .timemachine-game-card { 
-    border-color: #ffd700 !important; 
-}
-#timemachine-screen {
-    --primary: #ffd700;
-    --primary-glow: rgba(255, 215, 0, 0.3);
-    --secondary: #ccaa00;
-}
-
-.top10-card { 
-    border-color: #f5cf8e !important; 
-}
-#top10-screen {
-    --primary: #f5cf8e;
-    --primary-glow: rgba(245, 207, 142, 0.3);
-    --secondary: #d4a353;
-}
-
-.sobres-card { 
-    border-color: #00ffff !important; 
-}
-#album-screen {
-    --primary: #00ffff;
-    --primary-glow: rgba(0, 255, 255, 0.3);
-    --secondary: #008888;
-}
-
+#rosco-screen      { --primary: #0044cc; --primary-glow: rgba(0, 68, 204, 0.3); --secondary: #002288; }
+#hangman-screen, 
+#blur-screen, 
+#aforos-screen      { --primary: #ff4d4d; --primary-glow: rgba(255, 77, 77, 0.3); --secondary: #cc0000; }
+#higherlower-screen, 
+#zoom-screen       { --primary: #9b59b6; --primary-glow: rgba(155, 89, 182, 0.3); --secondary: #8e44ad; }
+#eleven-screen, 
+#knowball-screen   { --primary: #00ff87; --primary-glow: rgba(0, 255, 135, 0.3); --secondary: #00cc66; }
+#timemachine-screen { --primary: #ffd700; --primary-glow: rgba(255, 215, 0, 0.3); --secondary: #ccaa00; }
+#top10-screen      { --primary: #f5cf8e; --primary-glow: rgba(245, 207, 142, 0.3); --secondary: #d4a353; }
+#album-screen      { --primary: #00ffff; --primary-glow: rgba(0, 255, 255, 0.3); --secondary: #008888; }
 /* ==========================================
    2. BASE Y LAYOUT GENERAL
    ========================================== */
