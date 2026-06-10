@@ -9,21 +9,21 @@
     --text-dim: #9096a2;
     --error: #ff4d4d;
 }
- 
+
 /* ==========================================
    1. VARIABLES Y CONFIGURACIÓN DE PANTALLAS
    ========================================== */
-#rosco-screen      { --primary: #0044cc; --primary-glow: rgba(0, 68, 204, 0.3); --secondary: #002288; }
+#rosco-screen       { --primary: #0044cc; --primary-glow: rgba(0, 68, 204, 0.3); --secondary: #002288; }
 #hangman-screen, 
 #blur-screen, 
 #aforos-screen      { --primary: #ff4d4d; --primary-glow: rgba(255, 77, 77, 0.3); --secondary: #cc0000; }
 #higherlower-screen, 
-#zoom-screen       { --primary: #9b59b6; --primary-glow: rgba(155, 89, 182, 0.3); --secondary: #8e44ad; }
+#zoom-screen        { --primary: #9b59b6; --primary-glow: rgba(155, 89, 182, 0.3); --secondary: #8e44ad; }
 #eleven-screen, 
-#knowball-screen   { --primary: #00ff87; --primary-glow: rgba(0, 255, 135, 0.3); --secondary: #00cc66; }
+#knowball-screen    { --primary: #00ff87; --primary-glow: rgba(0, 255, 135, 0.3); --secondary: #00cc66; }
 #timemachine-screen { --primary: #ffd700; --primary-glow: rgba(255, 215, 0, 0.3); --secondary: #ccaa00; }
-#top10-screen      { --primary: #f5cf8e; --primary-glow: rgba(245, 207, 142, 0.3); --secondary: #d4a353; }
-#album-screen      { --primary: #00ffff; --primary-glow: rgba(0, 255, 255, 0.3); --secondary: #008888; }
+#top10-screen       { --primary: #f5cf8e; --primary-glow: rgba(245, 207, 142, 0.3); --secondary: #d4a353; }
+#album-screen       { --primary: #00ffff; --primary-glow: rgba(0, 255, 255, 0.3); --secondary: #008888; }
 
 /* ==========================================
    2. BASE Y LAYOUT GENERAL
