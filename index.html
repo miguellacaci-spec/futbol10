@@ -116,6 +116,7 @@
                             <div class="pack-logo" style="color: #0b0e14;">F10</div>
                             <div class="pack-title" style="background: #0b0e14; color: #a8ff78;">GRATIS</div>
                             <div class="pack-price" style="background: #0b0e14; color: #fff;">0 🪙</div>
+                            <div id="prog-gratis" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">?/?</div>
                         </div>
                     </div>
                     <div class="pack-container" onclick="openPack(event, 'bronce')">
@@ -123,6 +124,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">BRONCE</div>
                             <div class="pack-price">25 🪙</div>
+                            <div id="prog-bronce" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
                         </div>
                     </div>
                     <div class="pack-container" onclick="openPack(event, 'plata')">
@@ -130,6 +132,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">PLATA</div>
                             <div class="pack-price">50 🪙</div>
+                            <div id="prog-plata" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
                         </div>
                     </div>
                     <div class="pack-container" onclick="openPack(event, 'oro')">
@@ -137,6 +140,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title">ORO</div>
                             <div class="pack-price">100 🪙</div>
+                            <div id="prog-oro" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
                         </div>
                     </div>
                     <div class="pack-container" onclick="openPack(event, 'diamante')">
@@ -144,6 +148,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title" style="color: #fff; background: rgba(0,0,0,0.4);">DIAMANTE</div>
                             <div class="pack-price">200 🪙</div>
+                            <div id="prog-diamante" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
                         </div>
                     </div>
                     <div class="pack-container" onclick="openPack(event, 'platino')">
@@ -151,6 +156,7 @@
                             <div class="pack-logo">F10</div>
                             <div class="pack-title" style="color: #fff; background: rgba(0,0,0,0.4);">PLATINO</div>
                             <div class="pack-price">400 🪙</div>
+                            <div id="prog-platino" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
                         </div>
                     </div>
                 </div>
@@ -161,7 +167,7 @@
             </div>
 
             <div id="tab-collection" class="album-tab-content hidden">
-                <div class="album-progress">Colección completada</div>
+                <div class="album-progress">Progreso: <span id="album-progress-text">0/0</span></div>
                 <div class="album-grid" id="album-grid"></div>
             </div>
 
@@ -178,6 +184,7 @@
                     </div>
                 </div>
                 <h3 style="color: white; font-family: 'Orbitron';">TUS REPETIDOS</h3>
+                <button class="secondary-btn hidden" id="btn-sell-all" onclick="sellAllDuplicates()" style="margin-bottom: 15px; background: #ff4d4d; color: white; border: none;">VENDER TODOS</button>
                 <div class="album-grid" id="market-grid"></div>
             </div>
 
