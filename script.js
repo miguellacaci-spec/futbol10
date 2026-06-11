@@ -2020,6 +2020,7 @@ function switchAlbumTab(tabId) {
     document.getElementById(`tab-${tabId}`).classList.remove('hidden');
     document.getElementById(`tab-btn-${tabId}`).classList.add('active');
 
+    if (tabId === 'pack') updatePacksProgress(); // <--- LÍNEA NUEVA
     if (tabId === 'collection') renderAlbum();
     if (tabId === 'market') renderMarket();
     if (tabId === 'play') renderLineupPitch();
@@ -2100,6 +2101,7 @@ function generatePackCards(amount, packType) {
 function closePackReveal() {
     document.getElementById('pack-reveal').classList.add('hidden');
     document.getElementById('pack-container').classList.remove('hidden');
+    updatePacksProgress(); // <--- LÍNEA NUEVA
 }
 
 function buySpecificPlayer() {
@@ -2132,8 +2134,34 @@ function buySpecificPlayer() {
 }
 
 // ==========================================
-// 10. RENDERIZADO DE ÁLBUM Y MERCADO (NUEVO)
+// 10. RENDERIZADO DE ÁLBUM, MERCADO Y PROGRESO
 // ==========================================
+
+// Nuevos precios de venta por Tier
+const sellPrices = { bronce: 5, plata: 10, oro: 25, diamante: 50, platino: 100 };
+
+// Calcula y pinta cuántas cartas tienes de cada sobre
+function updatePacksProgress() {
+    const data = getAlbumData();
+    const tiers = ['bronce', 'plata', 'oro', 'diamante', 'platino'];
+    
+    tiers.forEach(tier => {
+        const totalInTier = tierLists[tier].length;
+        const unlockedInTier = tierLists[tier].filter(p => data.unlocked.includes(p)).length;
+        const progEl = document.getElementById(`prog-${tier}`);
+        if (progEl) {
+            progEl.innerText = `${unlockedInTier}/${totalInTier}`;
+            if (unlockedInTier === totalInTier) {
+                progEl.style.color = "#00ff87"; // En verde si completó ese tier
+            }
+        }
+    });
+
+    // Para el sobre gratis (progreso total)
+    const progGratis = document.getElementById('prog-gratis');
+    if(progGratis) progGratis.innerText = `${data.unlocked.length}/${players.length}`;
+}
+
 function renderAlbum() {
     const data = getAlbumData();
     const grid = document.getElementById('album-grid');
@@ -2141,7 +2169,8 @@ function renderAlbum() {
     
     let unlockedCount = 0;
     
-    players.forEach(p => {
+    // ORDEN ALFABÉTICO CLONANDO LA LISTA DE PLAYERS
+    [...players].sort().forEach(p => {
         const isUnlocked = data.unlocked.includes(p);
         const tier = getPlayerTier(p);
         const card = document.createElement('div');
@@ -2157,6 +2186,7 @@ function renderAlbum() {
         grid.appendChild(card);
     });
 
+    // Actualiza la barra de progreso correctamente
     const progressText = document.getElementById('album-progress-text');
     if(progressText) {
         progressText.innerText = `${unlockedCount}/${players.length}`;
@@ -2169,11 +2199,16 @@ function renderMarket() {
     grid.innerHTML = "";
     
     let hasDuplicates = false;
+    let totalValue = 0;
     
-    Object.keys(data.duplicates).forEach(p => {
+    Object.keys(data.duplicates).sort().forEach(p => {
         if (data.duplicates[p] > 0) {
             hasDuplicates = true;
             const tier = getPlayerTier(p);
+            const price = sellPrices[tier] || 5;
+            const amount = data.duplicates[p];
+            totalValue += price * amount; // Sumamos al bote total
+
             const cardItem = document.createElement('div');
             cardItem.className = 'market-item';
             
@@ -2181,12 +2216,23 @@ function renderMarket() {
                 <div class="f10-card tier-${tier}" style="width: 100px;">
                     <img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.6rem;">${p}</div>
                 </div>
-                <div style="color:white; font-size:0.8rem; font-family:'Orbitron', sans-serif;">Repetidos: ${data.duplicates[p]}</div>
-                <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (+15🪙)</button>
+                <div style="color:white; font-size:0.8rem; font-family:'Orbitron', sans-serif;">Repetidos: ${amount}</div>
+                <button class="sell-btn" onclick="sellDuplicate('${p}')">VENDER (+${price}🪙)</button>
             `;
             grid.appendChild(cardItem);
         }
     });
+
+    // Lógica para el botón Vender Todos
+    const sellAllBtn = document.getElementById('btn-sell-all');
+    if(sellAllBtn) {
+        if(hasDuplicates) {
+            sellAllBtn.classList.remove('hidden');
+            sellAllBtn.innerText = `VENDER TODOS (+${totalValue}🪙)`;
+        } else {
+            sellAllBtn.classList.add('hidden');
+        }
+    }
 
     if(!hasDuplicates) {
         grid.innerHTML = `<p style="color:var(--text-dim); grid-column: 1 / -1; font-family:'Orbitron', sans-serif;">No tienes cartas repetidas para vender.</p>`;
@@ -2199,9 +2245,39 @@ function sellDuplicate(playerName) {
         data.duplicates[playerName]--;
         if (data.duplicates[playerName] === 0) delete data.duplicates[playerName];
         saveAlbumData(data);
-        addCoins(15);
+        
+        // Coge el precio dinámico por su Tier
+        const tier = getPlayerTier(playerName);
+        const price = sellPrices[tier] || 5;
+        
+        addCoins(price);
         document.getElementById('album-coins').innerText = getCoins();
         renderMarket();
+    }
+}
+
+// Nueva función Vender Todo
+function sellAllDuplicates() {
+    let data = getAlbumData();
+    let totalCoins = 0;
+    let soldAny = false;
+    
+    Object.keys(data.duplicates).forEach(p => {
+        if (data.duplicates[p] > 0) {
+            const tier = getPlayerTier(p);
+            const price = sellPrices[tier] || 5;
+            totalCoins += price * data.duplicates[p];
+            delete data.duplicates[p]; // Borramos al repetido tras venderlo
+            soldAny = true;
+        }
+    });
+    
+    if(soldAny) {
+        saveAlbumData(data);
+        addCoins(totalCoins);
+        document.getElementById('album-coins').innerText = getCoins();
+        renderMarket();
+        mostrarMensajePro("💸 VENTA MASIVA", `Has vendido todos tus repetidos y has ganado +${totalCoins} FutCoins 🪙.`);
     }
 }
 
