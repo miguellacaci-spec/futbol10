@@ -707,22 +707,22 @@ function showCategory(category) {
     if (category === 'laliga') {
         title.innerHTML = "LALIGA <span>EA SPORTS</span>";
         grid.innerHTML = `
-            <div class="menu-card hangman-game-card" onclick="showGame('hangman')">
+            <div class="menu-card hangman-game-card" onclick="showGameInfo('hangman')">
                 <div class="card-bg bg-ahorcado"></div>
                 <div class="card-info"><h3>Ahorcado</h3><p>Nivel Clásico</p></div>
             </div>
-            <div class="menu-card blur-game-card" onclick="showGame('blur')">
+            <div class="menu-card blur-game-card" onclick="showGameInfo('blur')">
                 <div class="card-bg bg-blur"></div> 
                 <div class="card-info"><h3>Blur Guess</h3><p>Adivina el jugador</p></div>
             </div>
-            <div class="menu-card aforos-game-card" onclick="showGame('aforos')">
+            <div class="menu-card aforos-game-card" onclick="showGameInfo('aforos')">
                 <div class="card-bg bg-aforos"></div>
                 <div class="card-info"><h3>Guerra de Aforos</h3><p>Capacidad de Estadios</p></div>
             </div>`;
    } else if (category === 'leyendas') {
         title.innerHTML = "LEYENDAS <span>FÚTBOL</span>";
         grid.innerHTML = `
-            <div class="menu-card timemachine-game-card" onclick="showGame('timemachine')">
+            <div class="menu-card timemachine-game-card" onclick="showGameInfo('tm')">
                 <div class="card-bg bg-timemachine"></div>
                 <div class="card-info"><h3>Máquina del Tiempo</h3><p>¿En qué año fue?</p></div>
             </div>
@@ -733,22 +733,22 @@ function showCategory(category) {
     } else if (category === 'europeos') {
         title.innerHTML = "JUEGOS <span>EUROPEOS</span>";
         grid.innerHTML = `
-            <div class="menu-card eleven-game-card" onclick="showGame('eleven')">
+            <div class="menu-card eleven-game-card" onclick="showGameInfo('futdle')">
                 <div class="card-bg bg-europeos"></div>
                 <div class="card-info"><h3>XI Histórico</h3><p>Adivina con Futdle</p></div>
             </div>
-            <div class="menu-card knowball-game-card" onclick="showGame('knowball')">
+            <div class="menu-card knowball-game-card" onclick="showGameInfo('knowball')">
                 <div class="card-bg bg-knowball"></div>
                 <div class="card-info"><h3>Knowball</h3><p>Pirámide Top 5</p></div>
             </div>`;
     } else {
         title.innerHTML = "PREMIER <span>LEAGUE</span>";
         grid.innerHTML = `
-            <div class="menu-card hl-game-card" onclick="showGame('higherlower')">
+            <div class="menu-card hl-game-card" onclick="showGameInfo('hl')">
                 <div class="card-bg bg-higherlower"></div>
                 <div class="card-info"><h3>Higher / Lower</h3><p>Valor de Mercado</p></div>
             </div>
-            <div class="menu-card zoom-game-card" onclick="showGame('zoom')">
+            <div class="menu-card zoom-game-card" onclick="showGameInfo('zoom')">
                 <div class="card-bg bg-premier"></div>
                 <div class="card-info"><h3>Escudos Zoom</h3><p>Reconoce el detalle</p></div>
             </div>`;
@@ -2662,58 +2662,49 @@ function closeMatchModal() {
 // ==========================================
 const gamesDatabase = {
     'top10': {
-        title: 'EL TOP 10',
-        color: '#f5cf8e', // Crema
+        title: 'EL TOP 10', color: '#f5cf8e', 
         desc: 'Completa la lista de los 10 jugadores de la categoría sin rendirte. ¡Demuestra tu conocimiento futbolístico!',
-        initFn: () => initTop10()
+        initFn: () => showGame('top10')
     },
     'hangman': {
-        title: 'EL AHORCADO',
-        color: '#ff4d4d', // Rojo
+        title: 'EL AHORCADO', color: '#ff4d4d', 
         desc: 'Adivina el jugador misterioso letra por letra. Tienes un máximo de 6 fallos antes de recibir la tarjeta roja.',
-        initFn: () => initHangman()
+        initFn: () => showGame('hangman')
     },
     'blur': {
-        title: 'BLUR GUESS',
-        color: '#ff4d4d', // Rojo
+        title: 'BLUR GUESS', color: '#ff4d4d', 
         desc: 'Adivina quién es el jugador oculto tras el filtro borroso. Cada fallo aclarará un poco más la imagen.',
-        initFn: () => initBlurGame()
+        initFn: () => showGame('blur')
     },
     'aforos': {
-        title: 'GUERRA AFOROS',
-        color: '#ff4d4d', // Rojo
+        title: 'GUERRA AFOROS', color: '#ff4d4d', 
         desc: 'Compara dos estadios y elige el que tiene mayor capacidad. ¡Mantén la racha viva para multiplicar premios!',
-        initFn: () => initAforosGame()
+        initFn: () => showGame('aforos')
     },
     'tm': {
-        title: 'MÁQUINA TIEMPO',
-        color: '#ffd700', // Amarillo Oro
+        title: 'MÁQUINA TIEMPO', color: '#ffd700', 
         desc: 'Adivina en qué año ocurrió el evento histórico. Te diremos si necesitas ir más atrás o más adelante en el tiempo.',
-        initFn: () => initTimeMachine()
+        initFn: () => showGame('timemachine')
     },
     'hl': {
-        title: 'HIGHER LOWER',
-        color: '#9b59b6', // Morado
+        title: 'HIGHER LOWER', color: '#9b59b6', 
         desc: '¿Qué jugador tiene mayor valor de mercado en la actualidad? Adivina correctamente para sumar puntos.',
-        initFn: () => initHigherLower()
+        initFn: () => showGame('higherlower')
     },
     'zoom': {
-        title: 'ESCUDOS ZOOM',
-        color: '#9b59b6', // Morado
+        title: 'ESCUDOS ZOOM', color: '#9b59b6', 
         desc: 'Intenta reconocer el equipo a partir de un fragmento de su escudo ampliado al máximo.',
-        initFn: () => initZoomGame()
+        initFn: () => showGame('zoom')
     },
     'knowball': {
-        title: 'KNOWBALL',
-        color: '#00ff87', // Verde
+        title: 'KNOWBALL', color: '#00ff87', 
         desc: 'Ordena la pirámide de jugadores del 1 al 5 según la estadística indicada. ¡Demuestra que tienes Knowball!',
-        initFn: () => initKnowball()
+        initFn: () => showGame('knowball')
     },
     'futdle': {
-        title: 'XI HISTÓRICO',
-        color: '#00ff87', // Verde
+        title: 'XI HISTÓRICO', color: '#00ff87', 
         desc: 'Adivina los 11 jugadores de esta alineación histórica antes de que se agote el reloj.',
-        initFn: () => initElevenGame()
+        initFn: () => showGame('eleven')
     }
 };
 
