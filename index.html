@@ -587,5 +587,27 @@
     </div>
 
     <script src="script.js"></script>
+
+    <div id="game-info-modal" class="modal-wrapper hidden" style="z-index: 9999;">
+    <div id="game-info-card" class="f10-modal" style="border: 2px solid #f5cf8e; text-align: center; box-shadow: 0 0 30px rgba(245, 207, 142, 0.3); transition: 0.3s ease;">
+        
+        <h2 id="game-info-title" class="logo" style="font-size: 2.2rem; margin-bottom: 10px; color: #f5cf8e; transition: 0.3s ease;">EL TOP 10</h2>
+        <p id="game-info-desc" style="color: #ccc; margin-bottom: 25px; font-size: 1rem; padding: 0 10px;">
+            Descripción del juego
+        </p>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+            <button class="btn" id="btn-play-single" onclick="startGameFromInfo()" style="width: 100%; max-width: 250px; background: #1a1c23; border: 1px solid #f5cf8e; color: #f5cf8e; font-weight: bold; transition: 0.3s ease;">
+                👤 MODO INDIVIDUAL
+            </button>
+            <button class="btn" style="width: 100%; max-width: 250px; background: #0f1218; border: 1px solid #444; color: #666; cursor: not-allowed;" disabled>
+                👥 MULTIJUGADOR <span style="font-size: 0.7rem; color: #ff4d4d;">(Próximamente)</span>
+            </button>
+            <button class="btn btn-secondary" onclick="closeGameInfo()" style="width: 100%; max-width: 250px; margin-top: 10px;">
+                ❌ VOLVER AL MENÚ
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
