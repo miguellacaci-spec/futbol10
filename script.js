@@ -2383,60 +2383,238 @@ function playMatchVsCPU() {
     playMatchTurn();
 }
 
+// ==========================================
+// 11. PARTIDO TÁCTICO VS CPU (ACTUALIZADO)
+// ==========================================
+
+function playMatchVsCPU() {
+    const lineup = getLineup();
+    if (lineup.filter(p => p !== null).length < 11) {
+        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores alineados antes de jugar.");
+        return;
+    }
+
+    let myStrength = 0;
+    const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
+    lineup.forEach(p => myStrength += tierPoints[getPlayerTier(p)] || 1);
+
+    // Sistema de Tácticas
+    const tactic = document.getElementById('match-tactic').value;
+    let sequence = ['ataque', 'defensa', 'ataque', 'defensa', 'ataque']; // Equilibrada
+    
+    if (tactic === 'offensive') {
+        sequence = ['ataque', 'ataque', 'defensa', 'ataque', 'defensa'];
+        myStrength = Math.floor(myStrength * 0.9); // -10% Fuerza defensiva
+    } else if (tactic === 'defensive') {
+        sequence = ['defensa', 'defensa', 'ataque', 'defensa', 'ataque'];
+        myStrength = Math.floor(myStrength * 1.15); // +15% Contención
+    } else {
+        if (Math.random() > 0.5) sequence = ['defensa', 'ataque', 'defensa', 'ataque', 'defensa'];
+    }
+
+    matchState = { 
+        turn: 0, 
+        myGoals: 0, 
+        cpuGoals: 0, 
+        myStrength: myStrength, 
+        cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), 
+        minutes: [15, 35, 60, 75, 89],
+        sequence: sequence,
+        qteInterval: null,
+        subDone: false
+    };
+
+    document.getElementById('match-score-my').innerText = '0';
+    document.getElementById('match-score-cpu').innerText = '0';
+    document.getElementById('match-minute-progress').style.width = "0%";
+    document.getElementById('match-close-btn').classList.add('hidden');
+    document.getElementById('halftime-area').classList.add('hidden');
+    document.getElementById('qte-area').classList.add('hidden');
+    
+    document.getElementById('match-simulation-modal').classList.remove('hidden');
+    playMatchTurn();
+}
+
 function playMatchTurn() {
+    // Parada del descanso (Entre turno 2 y 3)
+    if (matchState.turn === 2 && !matchState.subDone) {
+        document.getElementById('match-minute').innerText = `⏱️ Min 45' - DESCANSO`;
+        document.getElementById('match-minute-progress').style.width = `50%`;
+        document.getElementById('match-narrative').innerHTML = "Los jugadores van a los vestuarios. ¡Prepara la segunda parte!";
+        document.getElementById('match-actions').innerHTML = "";
+        document.getElementById('halftime-area').classList.remove('hidden');
+        return;
+    }
+
     if (matchState.turn >= 5) return endMatch();
     
-    const isAttacking = matchState.turn % 2 === 0;
+    const phase = matchState.sequence[matchState.turn];
+    const isAttacking = phase === 'ataque';
+    
     document.getElementById('match-minute').innerText = `⏱️ Min ${matchState.minutes[matchState.turn]}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
+    document.getElementById('match-minute-progress').style.width = `${(matchState.minutes[matchState.turn] / 90) * 100}%`;
     
     const actions = document.getElementById('match-actions');
     const narrative = document.getElementById('match-narrative');
     
     narrative.innerHTML = isAttacking 
-        ? "Tienes el balón en la frontal del área. ¿Qué vas a hacer?"
-        : "El rival se acerca peligrosamente a tu portería. ¡Reacciona!";
+        ? "El equipo avanza líneas y pisa la frontal del área. ¿Qué vas a hacer?"
+        : "El rival lanza un contragolpe peligrosísimo. ¡Posiciona a la defensa!";
         
     actions.innerHTML = isAttacking 
-        ? `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'ataque')">👟 Tirar</button>
-           <button class="secondary-btn" onclick="resolveMatchTurn('pase', 'ataque')">🎯 Pase</button>
-           <button class="secondary-btn" onclick="resolveMatchTurn('regate', 'ataque')">🪄 Regate</button>`
-        : `<button class="secondary-btn" onclick="resolveMatchTurn('tiro', 'defensa')">🧱 Bloquear</button>
-           <button class="secondary-btn" onclick="resolveMatchTurn('pase', 'defensa')">✂️ Cortar</button>
-           <button class="secondary-btn" onclick="resolveMatchTurn('regate', 'defensa')">🪓 Entrada</button>`;
+        ? `<button class="secondary-btn" onclick="triggerPlay('tiro', 'ataque')">👟 Disparar a Puerta</button>
+           <button class="secondary-btn" onclick="triggerPlay('pase', 'ataque')">🎯 Pase Filtrado</button>
+           <button class="secondary-btn" onclick="triggerPlay('regate', 'ataque')">🪄 Regatear</button>`
+        : `<button class="secondary-btn" onclick="triggerPlay('tiro', 'defensa')">🧱 Bloquear Tiro</button>
+           <button class="secondary-btn" onclick="triggerPlay('pase', 'defensa')">✂️ Cortar Pase</button>
+           <button class="secondary-btn" onclick="triggerPlay('regate', 'defensa')">🪓 Entrada Fuerte</button>`;
 }
 
-function resolveMatchTurn(action, phase) {
-    const options = ['tiro', 'pase', 'regate'];
-    const cpuAction = options[Math.floor(Math.random() * 3)];
+// Intercepta para ver si salta QTE o Resuelve normal
+function triggerPlay(action, phase) {
+    document.getElementById('match-actions').innerHTML = ""; 
+    
+    // 25% de probabilidad de QTE (Evento de tiempo)
+    if (Math.random() < 0.25) {
+        startQTE(action, phase);
+    } else {
+        calculateTurnResult(action, phase, false); 
+    }
+}
+
+let qtePos = 0;
+let qteDir = 1;
+let currentQTE = {};
+
+function startQTE(action, phase) {
+    currentQTE = { action, phase };
+    const narrative = document.getElementById('match-narrative');
+    narrative.innerHTML = phase === 'ataque' 
+        ? "🚨 <strong style='color:#ffd700;'>¡PENALTI A FAVOR!</strong> Detén el marcador en la zona verde." 
+        : "🚨 <strong style='color:#ff4d4d;'>¡FALTA AL BORDE DEL ÁREA!</strong> ¡Atento al bloqueo!";
+    
+    document.getElementById('qte-area').classList.remove('hidden');
+    qtePos = 0;
+    qteDir = 1;
+    
+    matchState.qteInterval = setInterval(() => {
+        qtePos += qteDir * 3; // Velocidad de la barra
+        if (qtePos >= 95) qteDir = -1;
+        if (qtePos <= 0) qteDir = 1;
+        document.getElementById('qte-marker').style.left = qtePos + '%';
+    }, 25);
+}
+
+function stopQTE() {
+    clearInterval(matchState.qteInterval);
+    document.getElementById('qte-area').classList.add('hidden');
+    
+    // La zona verde está entre el 60% y el 85%
+    const isPerfect = qtePos >= 55 && qtePos <= 85;
+    calculateTurnResult(currentQTE.action, currentQTE.phase, isPerfect);
+}
+
+function calculateTurnResult(action, phase, isQTEPerfect) {
+    const lineup = getLineup();
+    const atacantes = [lineup[8], lineup[9], lineup[10]].filter(p => p); 
+    const defensasYPortero = [lineup[0], lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], lineup[6], lineup[7]].filter(p => p); 
+    
+    const cpuAction = ['tiro', 'pase', 'regate'][Math.floor(Math.random() * 3)];
     let goal = false;
     let desc = "";
     
+    // Narrativa con nombres reales
+    let actor = "";
     if (phase === 'ataque') {
-        goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 35) || 
-               (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
-        
-        if (goal) {
-            matchState.myGoals++;
-            desc = "¡GOLAZOOO! Excelente definición.";
+        actor = atacantes.length ? atacantes[Math.floor(Math.random() * atacantes.length)] : lineup[Math.floor(Math.random() * lineup.length)];
+    } else {
+        actor = defensasYPortero.length ? defensasYPortero[Math.floor(Math.random() * defensasYPortero.length)] : lineup[0];
+    }
+    
+    const tier = getPlayerTier(actor);
+    let extraNarrative = (tier === 'platino' || tier === 'diamante') ? `✨ ¡Destello de clase MUNDIAL! ` : "";
+
+    if (phase === 'ataque') {
+        if (isQTEPerfect) {
+            goal = true;
+            desc = extraNarrative + `¡Magia! <strong>${actor}</strong> engaña al portero y la clava en la escuadra.`;
         } else {
-            desc = "¡Uy! El portero la paró o se fue fuera.";
+            goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 40) || 
+                   (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
+            if (goal) {
+                desc = extraNarrative + `¡GOLAZOOO! Excelente definición de <strong>${actor}</strong>.`;
+            } else {
+                desc = `¡Uy! El disparo de <strong>${actor}</strong> se marcha rozando el palo...`;
+            }
         }
     } else {
-        if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {
-            desc = "¡Gran acción defensiva! Robaste el balón.";
-        } else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { 
-            goal = true; 
-            matchState.cpuGoals++; 
-            desc = "Gol del rival... La defensa no pudo hacer nada.";
+        if (isQTEPerfect) {
+            desc = extraNarrative + `🧤 ¡PARADÓN MILAGROSO! <strong>${actor}</strong> salva el gol bajo palos.`;
         } else {
-            desc = "Salvada providencial. Despejaste el peligro.";
+            if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {
+                desc = extraNarrative + `¡Muro infranqueable! <strong>${actor}</strong> roba el balón con contundencia.`;
+            } else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { 
+                goal = true; 
+                desc = `Gol del rival... <strong>${actor}</strong> y la defensa no pudieron hacer nada.`;
+            } else {
+                desc = `Despeje providencial de <strong>${actor}</strong> para alejar el peligro.`;
+            }
         }
+    }
+    
+    if (goal && phase === 'ataque') {
+        matchState.myGoals++;
+        // Animación de Glow y Temblor de cámara
+        const modalBox = document.getElementById('match-modal-box');
+        modalBox.classList.add('anim-goal-shake');
+        setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 600);
+    } else if (goal && phase === 'defensa') {
+        matchState.cpuGoals++;
     }
     
     document.getElementById('match-score-my').innerText = matchState.myGoals;
     document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
     document.getElementById('match-narrative').innerHTML = `<span style="font-weight:bold; color:white;">${desc}</span>`;
-    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Siguiente</button>`;
+    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Siguiente ⏭️</button>`;
+}
+
+// Cambios del descanso
+function openHalftimeSub() {
+    document.getElementById('halftime-area').classList.add('hidden');
+    document.getElementById('match-narrative').innerHTML = "Selecciona un revulsivo (Cualquier carta desbloqueada en tu álbum).";
+    
+    const data = getAlbumData();
+    const lineup = getLineup();
+    const available = data.unlocked.filter(p => !lineup.includes(p));
+    
+    let html = `<div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-height: 250px; overflow-y:auto; margin-bottom:15px; padding: 10px;">`;
+    available.forEach(p => {
+        const tier = getPlayerTier(p);
+        html += `<div class="f10-card tier-${tier} clickable" style="width: 70px;" onclick="doSubstitution('${p}')">
+                    <img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.5rem;">${p}</div>
+                 </div>`;
+    });
+    if(available.length === 0) html += "<p style='color:var(--text-dim);'>No tienes más jugadores en el álbum.</p>";
+    html += `</div>`;
+    
+    document.getElementById('match-actions').innerHTML = html + `<button class="back-btn" onclick="skipHalftime()">Cancelar Cambio</button>`;
+}
+
+function doSubstitution(playerIn) {
+    const bonusStr = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
+    const bonus = (bonusStr[getPlayerTier(playerIn)] || 1) + 2; // Plus por salir de fresco
+    
+    matchState.myStrength += bonus; 
+    matchState.subDone = true;
+    
+    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Comenzar 2ª Parte</button>`;
+    document.getElementById('match-narrative').innerHTML = `🔄 ¡Entra <strong>${playerIn}</strong> al campo como revulsivo!\nEl equipo gana energía (+${bonus} Fuerza).`;
+}
+
+function skipHalftime() {
+    matchState.subDone = true;
+    document.getElementById('halftime-area').classList.add('hidden');
+    nextMatchTurn();
 }
 
 function nextMatchTurn() { 
@@ -2446,7 +2624,7 @@ function nextMatchTurn() {
 
 function endMatch() {
     document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
-    document.getElementById('match-minute').style.color = "#ffd700";
+    document.getElementById('match-minute-progress').style.width = "100%";
     const narrative = document.getElementById('match-narrative');
     document.getElementById('match-actions').innerHTML = "";
 
@@ -2455,20 +2633,20 @@ function endMatch() {
     let titleColor = "";
     
     if (matchState.myGoals > matchState.cpuGoals) {
-        resultMsg = "¡VICTORIA ÉPICA!";
+        resultMsg = "🏆 ¡VICTORIA ÉPICA!";
         coinsWon = 50;
         titleColor = "#00ff87";
     } else if (matchState.myGoals === matchState.cpuGoals) {
-        resultMsg = "¡EMPATE MUY DISPUTADO!";
+        resultMsg = "🤝 ¡EMPATE MUY DISPUTADO!";
         coinsWon = 15;
         titleColor = "#ffd700";
     } else {
-        resultMsg = "DERROTA...";
+        resultMsg = "❌ DERROTA...";
         coinsWon = 5;
         titleColor = "#ff4d4d";
     }
 
-    narrative.innerHTML = `<strong style="font-size:1.4rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700;">+${coinsWon} FutCoins 🪙</span>`;
+    narrative.innerHTML = `<strong style="font-size:1.5rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700; font-size:1.2rem;">+${coinsWon} FutCoins 🪙</span>`;
     addCoins(coinsWon);
     document.getElementById('match-close-btn').classList.remove('hidden');
 }
