@@ -2654,3 +2654,102 @@ function endMatch() {
 function closeMatchModal() {
     document.getElementById('match-simulation-modal').classList.add('hidden');
 }
+
+
+
+// ==========================================
+// TARJETAS PRE-JUEGO (INFO Y MODO)
+// ==========================================
+const gamesDatabase = {
+    'top10': {
+        title: 'EL TOP 10',
+        color: '#f5cf8e', // Crema
+        desc: 'Completa la lista de los 10 jugadores de la categoría sin rendirte. ¡Demuestra tu conocimiento futbolístico!',
+        initFn: () => initTop10()
+    },
+    'hangman': {
+        title: 'EL AHORCADO',
+        color: '#ff4d4d', // Rojo
+        desc: 'Adivina el jugador misterioso letra por letra. Tienes un máximo de 6 fallos antes de recibir la tarjeta roja.',
+        initFn: () => initHangman()
+    },
+    'blur': {
+        title: 'BLUR GUESS',
+        color: '#ff4d4d', // Rojo
+        desc: 'Adivina quién es el jugador oculto tras el filtro borroso. Cada fallo aclarará un poco más la imagen.',
+        initFn: () => initBlurGame()
+    },
+    'aforos': {
+        title: 'GUERRA AFOROS',
+        color: '#ff4d4d', // Rojo
+        desc: 'Compara dos estadios y elige el que tiene mayor capacidad. ¡Mantén la racha viva para multiplicar premios!',
+        initFn: () => initAforosGame()
+    },
+    'tm': {
+        title: 'MÁQUINA TIEMPO',
+        color: '#ffd700', // Amarillo Oro
+        desc: 'Adivina en qué año ocurrió el evento histórico. Te diremos si necesitas ir más atrás o más adelante en el tiempo.',
+        initFn: () => initTimeMachine()
+    },
+    'hl': {
+        title: 'HIGHER LOWER',
+        color: '#9b59b6', // Morado
+        desc: '¿Qué jugador tiene mayor valor de mercado en la actualidad? Adivina correctamente para sumar puntos.',
+        initFn: () => initHigherLower()
+    },
+    'zoom': {
+        title: 'ESCUDOS ZOOM',
+        color: '#9b59b6', // Morado
+        desc: 'Intenta reconocer el equipo a partir de un fragmento de su escudo ampliado al máximo.',
+        initFn: () => initZoomGame()
+    },
+    'knowball': {
+        title: 'KNOWBALL',
+        color: '#00ff87', // Verde
+        desc: 'Ordena la pirámide de jugadores del 1 al 5 según la estadística indicada. ¡Demuestra que tienes Knowball!',
+        initFn: () => initKnowball()
+    },
+    'futdle': {
+        title: 'XI HISTÓRICO',
+        color: '#00ff87', // Verde
+        desc: 'Adivina los 11 jugadores de esta alineación histórica antes de que se agote el reloj.',
+        initFn: () => initElevenGame()
+    }
+};
+
+let pendingGameInit = null;
+
+function showGameInfo(gameId) {
+    const game = gamesDatabase[gameId];
+    if (!game) return;
+
+    // Cambiar textos
+    document.getElementById('game-info-title').innerText = game.title;
+    document.getElementById('game-info-title').style.color = game.color;
+    document.getElementById('game-info-desc').innerText = game.desc;
+    
+    // Cambiar colores dinámicos del modal y botones
+    const card = document.getElementById('game-info-card');
+    card.style.borderColor = game.color;
+    card.style.boxShadow = `0 0 30px ${game.color}40`; // Efecto Glow adaptativo
+    
+    const btnSingle = document.getElementById('btn-play-single');
+    btnSingle.style.borderColor = game.color;
+    btnSingle.style.color = game.color;
+
+    // Guardar la función de inicialización del juego seleccionado
+    pendingGameInit = game.initFn;
+
+    // Mostrar el modal por encima del menú
+    document.getElementById('game-info-modal').classList.remove('hidden');
+}
+
+function closeGameInfo() {
+    document.getElementById('game-info-modal').classList.add('hidden');
+}
+
+function startGameFromInfo() {
+    closeGameInfo();
+    // Ejecuta la función de cargar la pantalla del minijuego correspondiente
+    if (pendingGameInit) pendingGameInit();
+}
