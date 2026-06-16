@@ -2178,11 +2178,15 @@ function renderAlbum() {
         if (isUnlocked) { 
             unlockedCount++; 
             card.className = `f10-card tier-${tier}`; 
-            card.innerHTML = `${p}`; 
+            
+            // Pon aquí tu código original para las cartas desbloqueadas.
+            // Por ejemplo:
+            card.innerHTML = `<img src="players/${p}.jpg" class="player-img"> <div class="player-name">${p}</div>`; 
         } else { 
-            // Añadimos el candado y el nombre del jugador (${p}) en lugar de los interrogantes
+            // Esto se queda igual, que es lo que arreglamos de los candados
             card.className = `f10-card locked`; 
             card.innerHTML = `🔒 ${p}`; 
+        }
         } 
         
         grid.appendChild(card); 
