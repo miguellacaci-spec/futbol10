@@ -2162,35 +2162,36 @@ function updatePacksProgress() {
     if(progGratis) progGratis.innerText = `${data.unlocked.length}/${players.length}`;
 }
 
-function renderAlbum() {
+function renderAlbum() { 
     const data = getAlbumData();
-    const grid = document.getElementById('album-grid');
-    grid.innerHTML = "";
+    const grid = document.getElementById('album-grid'); 
+    grid.innerHTML = ""; 
     
-    let unlockedCount = 0;
+    let unlockedCount = 0; 
     
-    // ORDEN ALFABÉTICO CLONANDO LA LISTA DE PLAYERS
-    [...players].sort().forEach(p => {
-        const isUnlocked = data.unlocked.includes(p);
-        const tier = getPlayerTier(p);
-        const card = document.createElement('div');
+    // Al no usar .sort(), se respeta el orden original del array 'players' (agrupado por equipos)
+    players.forEach(p => { 
+        const isUnlocked = data.unlocked.includes(p); 
+        const tier = getPlayerTier(p); 
+        const card = document.createElement('div'); 
         
-        if (isUnlocked) {
-            unlockedCount++;
-            card.className = `f10-card tier-${tier}`;
-            card.innerHTML = `<img src="players/${p}.jpg"><div class="card-name">${p}</div>`;
-        } else {
-            card.className = `f10-card locked`;
-            card.innerHTML = `<div style="flex:1; display:flex; align-items:center; justify-content:center; font-size:2rem;">🔒</div><div class="card-name">?????</div>`;
-        }
-        grid.appendChild(card);
+        if (isUnlocked) { 
+            unlockedCount++; 
+            card.className = `f10-card tier-${tier}`; 
+            card.innerHTML = `${p}`; 
+        } else { 
+            // Añadimos el candado y el nombre del jugador (${p}) en lugar de los interrogantes
+            card.className = `f10-card locked`; 
+            card.innerHTML = `🔒 ${p}`; 
+        } 
+        
+        grid.appendChild(card); 
     });
 
-    // Actualiza la barra de progreso correctamente
-    const progressText = document.getElementById('album-progress-text');
-    if(progressText) {
+    const progressText = document.getElementById('album-progress-text'); 
+    if(progressText) { 
         progressText.innerText = `${unlockedCount}/${players.length}`;
-    }
+    } 
 }
 
 function renderMarket() {
