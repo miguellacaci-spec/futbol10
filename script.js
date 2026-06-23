@@ -2187,7 +2187,6 @@ function renderAlbum() {
             card.className = `f10-card locked`; 
             card.innerHTML = `🔒 ${p}`; 
         }
-        } 
         
         grid.appendChild(card); 
     });
