@@ -2464,277 +2464,182 @@ function playMatchVsCPU() {
 // ==========================================
 // 11. PARTIDO TÁCTICO VS CPU (ACTUALIZADO)
 // ==========================================
+let matchInterval;
 
 function playMatchVsCPU() {
     const lineup = getLineup();
     if (lineup.filter(p => p !== null).length < 11) {
-        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores alineados antes de jugar.");
+        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores en sus posiciones correctas.");
         return;
     }
 
-    let myStrength = 0;
-    const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
-    lineup.forEach(p => myStrength += tierPoints[getPlayerTier(p)] || 1);
+    // 1. CALCULAR MEDIA DE MI EQUIPO
+    let myTotalRating = 0;
+    lineup.forEach(p => myTotalRating += getPlayerRating(p));
+    let myRating = Math.floor(myTotalRating / 11);
 
-    // Sistema de Tácticas
-    const tactic = document.getElementById('match-tactic').value;
-    let sequence = ['ataque', 'defensa', 'ataque', 'defensa', 'ataque']; // Equilibrada
-    
-    if (tactic === 'offensive') {
-        sequence = ['ataque', 'ataque', 'defensa', 'ataque', 'defensa'];
-        myStrength = Math.floor(myStrength * 0.9); // -10% Fuerza defensiva
-    } else if (tactic === 'defensive') {
-        sequence = ['defensa', 'defensa', 'ataque', 'defensa', 'ataque'];
-        myStrength = Math.floor(myStrength * 1.15); // +15% Contención
-    } else {
-        if (Math.random() > 0.5) sequence = ['defensa', 'ataque', 'defensa', 'ataque', 'defensa'];
-    }
+    // 2. BUSCAR RIVAL ALEATORIO
+    const clubes = Object.keys(dbEquipos);
+    const rivalClub = clubes[Math.floor(Math.random() * clubes.length)];
+    let cpuTotalRating = 0;
+    // Simplificamos calculando la media de los 11 mejores de ese club
+    const cpuRoster = [...dbEquipos[rivalClub]].sort((a,b) => b.rating - a.rating).slice(0, 11);
+    cpuRoster.forEach(p => cpuTotalRating += p.rating);
+    let cpuRating = Math.floor(cpuTotalRating / 11);
 
+    // 3. INICIALIZAR ESTADO DEL PARTIDO
     matchState = { 
-        turn: 0, 
+        minute: 0,
+        addedTime: Math.floor(Math.random() * 4) + 2, // Añade entre 2 y 5 minutos
         myGoals: 0, 
         cpuGoals: 0, 
-        myStrength: myStrength, 
-        cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), 
-        minutes: [15, 35, 60, 75, 89],
-        sequence: sequence,
-        qteInterval: null,
-        subDone: false
+        myRating: myRating,
+        cpuRating: cpuRating,
+        cpuClub: rivalClub,
+        cpuPlayers: cpuRoster,
+        isFinished: false
     };
 
+    // 4. PREPARAR UI
+    document.getElementById('my-team-rating').innerText = `Media: ${myRating}`;
+    document.getElementById('cpu-team-name').innerText = rivalClub;
+    document.getElementById('cpu-team-rating').innerText = `Media: ${cpuRating}`;
     document.getElementById('match-score-my').innerText = '0';
     document.getElementById('match-score-cpu').innerText = '0';
+    document.getElementById('match-clock').innerText = "00";
     document.getElementById('match-minute-progress').style.width = "0%";
     document.getElementById('match-close-btn').classList.add('hidden');
-    document.getElementById('halftime-area').classList.add('hidden');
-    document.getElementById('qte-area').classList.add('hidden');
     
+    const logDiv = document.getElementById('match-live-log');
+    logDiv.innerHTML = `<div style="color: #00ff87; font-weight: bold; text-align: center;">🟢 ¡COMIENZA EL PARTIDO!</div>`;
+
     document.getElementById('match-simulation-modal').classList.remove('hidden');
-    playMatchTurn();
+
+    // 5. INICIAR CRONÓMETRO CONTINUO (100ms = 1 minuto del juego)
+    matchInterval = setInterval(simulateMinute, 100);
 }
 
-function playMatchTurn() {
-    // Parada del descanso (Entre turno 2 y 3)
-    if (matchState.turn === 2 && !matchState.subDone) {
-        document.getElementById('match-minute').innerText = `⏱️ Min 45' - DESCANSO`;
-        document.getElementById('match-minute-progress').style.width = `50%`;
-        document.getElementById('match-narrative').innerHTML = "Los jugadores van a los vestuarios. ¡Prepara la segunda parte!";
-        document.getElementById('match-actions').innerHTML = "";
-        document.getElementById('halftime-area').classList.remove('hidden');
-        return;
+function simulateMinute() {
+    if (matchState.isFinished) return;
+
+    matchState.minute++;
+    let totalMinutes = 90 + matchState.addedTime;
+    
+    document.getElementById('match-clock').innerText = matchState.minute;
+    document.getElementById('match-minute-progress').style.width = `${(matchState.minute / totalMinutes) * 100}%`;
+
+    // Descanso
+    if (matchState.minute === 45) {
+        logEvent("⏱️ Descanso. Los jugadores van al túnel de vestuarios.", "#ffd700");
     }
 
-    if (matchState.turn >= 5) return endMatch();
+    // Cálculo de Gol (Cada minuto se tira un dado)
+    // Probabilidad base de gol en un minuto: ~1.5%. Se ajusta por diferencia de media.
+    let randomRoll = Math.random();
     
-    const phase = matchState.sequence[matchState.turn];
-    const isAttacking = phase === 'ataque';
-    
-    document.getElementById('match-minute').innerText = `⏱️ Min ${matchState.minutes[matchState.turn]}' - ¡${isAttacking ? 'Atacas' : 'Defiendes'}!`;
-    document.getElementById('match-minute-progress').style.width = `${(matchState.minutes[matchState.turn] / 90) * 100}%`;
-    
-    const actions = document.getElementById('match-actions');
-    const narrative = document.getElementById('match-narrative');
-    
-    narrative.innerHTML = isAttacking 
-        ? "El equipo avanza líneas y pisa la frontal del área. ¿Qué vas a hacer?"
-        : "El rival lanza un contragolpe peligrosísimo. ¡Posiciona a la defensa!";
-        
-    actions.innerHTML = isAttacking 
-        ? `<button class="secondary-btn" onclick="triggerPlay('tiro', 'ataque')">👟 Disparar a Puerta</button>
-           <button class="secondary-btn" onclick="triggerPlay('pase', 'ataque')">🎯 Pase Filtrado</button>
-           <button class="secondary-btn" onclick="triggerPlay('regate', 'ataque')">🪄 Regatear</button>`
-        : `<button class="secondary-btn" onclick="triggerPlay('tiro', 'defensa')">🧱 Bloquear Tiro</button>
-           <button class="secondary-btn" onclick="triggerPlay('pase', 'defensa')">✂️ Cortar Pase</button>
-           <button class="secondary-btn" onclick="triggerPlay('regate', 'defensa')">🪓 Entrada Fuerte</button>`;
-}
+    // Calcula la diferencia de media (Ej: Si tengo 85 y rival 80, dif = 5)
+    let diff = matchState.myRating - matchState.cpuRating;
 
-// Intercepta para ver si salta QTE o Resuelve normal
-function triggerPlay(action, phase) {
-    document.getElementById('match-actions').innerHTML = ""; 
-    
-    // 25% de probabilidad de QTE (Evento de tiempo)
-    if (Math.random() < 0.25) {
-        startQTE(action, phase);
-    } else {
-        calculateTurnResult(action, phase, false); 
+    // Chance local (Yo) y Visitante (CPU)
+    let myChance = 0.012 + (diff * 0.001); 
+    let cpuChance = 0.012 - (diff * 0.001);
+
+    // Evitar chances negativas
+    if(myChance < 0.002) myChance = 0.002;
+    if(cpuChance < 0.002) cpuChance = 0.002;
+
+    if (randomRoll < myChance) {
+        scoreGoal('me');
+    } else if (randomRoll > 1 - cpuChance) {
+        scoreGoal('cpu');
+    }
+
+    // Final del partido
+    if (matchState.minute >= totalMinutes) {
+        matchState.isFinished = true;
+        clearInterval(matchInterval);
+        endSimulatedMatch();
     }
 }
 
-let qtePos = 0;
-let qteDir = 1;
-let currentQTE = {};
-
-function startQTE(action, phase) {
-    currentQTE = { action, phase };
-    const narrative = document.getElementById('match-narrative');
-    narrative.innerHTML = phase === 'ataque' 
-        ? "🚨 <strong style='color:#ffd700;'>¡PENALTI A FAVOR!</strong> Detén el marcador en la zona verde." 
-        : "🚨 <strong style='color:#ff4d4d;'>¡FALTA AL BORDE DEL ÁREA!</strong> ¡Atento al bloqueo!";
-    
-    document.getElementById('qte-area').classList.remove('hidden');
-    qtePos = 0;
-    qteDir = 1;
-    
-    matchState.qteInterval = setInterval(() => {
-        qtePos += qteDir * 3; // Velocidad de la barra
-        if (qtePos >= 95) qteDir = -1;
-        if (qtePos <= 0) qteDir = 1;
-        document.getElementById('qte-marker').style.left = qtePos + '%';
-    }, 25);
-}
-
-function stopQTE() {
-    clearInterval(matchState.qteInterval);
-    document.getElementById('qte-area').classList.add('hidden');
-    
-    // La zona verde está entre el 60% y el 85%
-    const isPerfect = qtePos >= 55 && qtePos <= 85;
-    calculateTurnResult(currentQTE.action, currentQTE.phase, isPerfect);
-}
-
-function calculateTurnResult(action, phase, isQTEPerfect) {
+function scoreGoal(team) {
     const lineup = getLineup();
-    const atacantes = [lineup[8], lineup[9], lineup[10]].filter(p => p); 
-    const defensasYPortero = [lineup[0], lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], lineup[6], lineup[7]].filter(p => p); 
+    let scorer = "Jugador";
+    let assister = null;
+    let color = "";
     
-    const cpuAction = ['tiro', 'pase', 'regate'][Math.floor(Math.random() * 3)];
-    let goal = false;
-    let desc = "";
-    
-    // Narrativa con nombres reales
-    let actor = "";
-    if (phase === 'ataque') {
-        actor = atacantes.length ? atacantes[Math.floor(Math.random() * atacantes.length)] : lineup[Math.floor(Math.random() * lineup.length)];
-    } else {
-        actor = defensasYPortero.length ? defensasYPortero[Math.floor(Math.random() * defensasYPortero.length)] : lineup[0];
-    }
-    
-    const tier = getPlayerTier(actor);
-    let extraNarrative = (tier === 'platino' || tier === 'diamante') ? `✨ ¡Destello de clase MUNDIAL! ` : "";
-
-    if (phase === 'ataque') {
-        if (isQTEPerfect) {
-            goal = true;
-            desc = extraNarrative + `¡Magia! <strong>${actor}</strong> engaña al portero y la clava en la escuadra.`;
-        } else {
-            goal = (action !== cpuAction && Math.random() * 100 + matchState.myStrength > 40) || 
-                   (action === cpuAction && Math.random() * 100 + matchState.myStrength > 85 + matchState.cpuStrength);
-            if (goal) {
-                desc = extraNarrative + `¡GOLAZOOO! Excelente definición de <strong>${actor}</strong>.`;
-            } else {
-                desc = `¡Uy! El disparo de <strong>${actor}</strong> se marcha rozando el palo...`;
-            }
-        }
-    } else {
-        if (isQTEPerfect) {
-            desc = extraNarrative + `🧤 ¡PARADÓN MILAGROSO! <strong>${actor}</strong> salva el gol bajo palos.`;
-        } else {
-            if (action === cpuAction && Math.random() * 100 + matchState.myStrength > 25) {
-                desc = extraNarrative + `¡Muro infranqueable! <strong>${actor}</strong> roba el balón con contundencia.`;
-            } else if (Math.random() * 100 + matchState.cpuStrength > 50 + matchState.myStrength) { 
-                goal = true; 
-                desc = `Gol del rival... <strong>${actor}</strong> y la defensa no pudieron hacer nada.`;
-            } else {
-                desc = `Despeje providencial de <strong>${actor}</strong> para alejar el peligro.`;
-            }
-        }
-    }
-    
-    if (goal && phase === 'ataque') {
+    if (team === 'me') {
         matchState.myGoals++;
-        // Animación de Glow y Temblor de cámara
-        const modalBox = document.getElementById('match-modal-box');
-        modalBox.classList.add('anim-goal-shake');
-        setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 600);
-    } else if (goal && phase === 'defensa') {
+        color = "#00ff87"; // Verde
+        document.getElementById('match-score-my').innerText = matchState.myGoals;
+        
+        // Quien marca (Prioridad a Delanteros 8,9,10, Medios 5,6,7)
+        const atacantes = [lineup[8], lineup[9], lineup[10], lineup[5], lineup[6], lineup[7]].filter(Boolean);
+        scorer = atacantes[Math.floor(Math.random() * atacantes.length)] || lineup[Math.floor(Math.random() * lineup.length)];
+        
+        // 50% de probabilidad de que haya asistencia
+        if (Math.random() > 0.5) {
+            let possibleAssisters = lineup.filter(p => p && p !== scorer);
+            if(possibleAssisters.length > 0) assister = possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
+        }
+        
+    } else {
         matchState.cpuGoals++;
+        color = "#ff4d4d"; // Rojo
+        document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
+        
+        const cpuP = matchState.cpuPlayers;
+        scorer = cpuP[Math.floor(Math.random() * cpuP.length)].name;
+        if (Math.random() > 0.5) assister = cpuP[Math.floor(Math.random() * cpuP.length)].name;
     }
+
+    // Temblores
+    const modalBox = document.getElementById('match-modal-box');
+    modalBox.classList.add('anim-goal-shake');
+    setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 400);
+
+    // Imprimir en el Log
+    let text = `⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`;
+    if (assister && assister !== scorer) text += ` Asistencia de ${assister}.`;
     
-    document.getElementById('match-score-my').innerText = matchState.myGoals;
-    document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-    document.getElementById('match-narrative').innerHTML = `<span style="font-weight:bold; color:white;">${desc}</span>`;
-    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Siguiente ⏭️</button>`;
+    logEvent(text, color);
 }
 
-// Cambios del descanso
-function openHalftimeSub() {
-    document.getElementById('halftime-area').classList.add('hidden');
-    document.getElementById('match-narrative').innerHTML = "Selecciona un revulsivo (Cualquier carta desbloqueada en tu álbum).";
+function logEvent(text, color) {
+    const logDiv = document.getElementById('match-live-log');
+    const entry = document.createElement('div');
+    entry.style.color = color || "white";
+    entry.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+    entry.style.paddingBottom = "5px";
+    entry.innerHTML = text;
+    logDiv.appendChild(entry);
     
-    const data = getAlbumData();
-    const lineup = getLineup();
-    const available = data.unlocked.filter(p => !lineup.includes(p));
-    
-    let html = `<div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-height: 250px; overflow-y:auto; margin-bottom:15px; padding: 10px;">`;
-    available.forEach(p => {
-        const tier = getPlayerTier(p);
-        html += `<div class="f10-card tier-${tier} clickable" style="width: 70px;" onclick="doSubstitution('${p}')">
-                    <img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.5rem;">${p}</div>
-                 </div>`;
-    });
-    if(available.length === 0) html += "<p style='color:var(--text-dim);'>No tienes más jugadores en el álbum.</p>";
-    html += `</div>`;
-    
-    document.getElementById('match-actions').innerHTML = html + `<button class="back-btn" onclick="skipHalftime()">Cancelar Cambio</button>`;
+    // Auto-scroll al fondo
+    logDiv.scrollTop = logDiv.scrollHeight;
 }
 
-function doSubstitution(playerIn) {
-    const bonusStr = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
-    const bonus = (bonusStr[getPlayerTier(playerIn)] || 1) + 2; // Plus por salir de fresco
-    
-    matchState.myStrength += bonus; 
-    matchState.subDone = true;
-    
-    document.getElementById('match-actions').innerHTML = `<button class="secondary-btn" onclick="nextMatchTurn()">Comenzar 2ª Parte</button>`;
-    document.getElementById('match-narrative').innerHTML = `🔄 ¡Entra <strong>${playerIn}</strong> al campo como revulsivo!\nEl equipo gana energía (+${bonus} Fuerza).`;
-}
-
-function skipHalftime() {
-    matchState.subDone = true;
-    document.getElementById('halftime-area').classList.add('hidden');
-    nextMatchTurn();
-}
-
-function nextMatchTurn() { 
-    matchState.turn++; 
-    playMatchTurn(); 
-}
-
-function endMatch() {
-    document.getElementById('match-minute').innerText = "⏱️ FINAL DEL PARTIDO";
-    document.getElementById('match-minute-progress').style.width = "100%";
-    const narrative = document.getElementById('match-narrative');
-    document.getElementById('match-actions').innerHTML = "";
+function endSimulatedMatch() {
+    logEvent("🏁 <strong>¡FINAL DEL PARTIDO!</strong>", "#ffd700");
 
     let resultMsg = "";
     let coinsWon = 0;
-    let titleColor = "";
     
     if (matchState.myGoals > matchState.cpuGoals) {
-        resultMsg = "🏆 ¡VICTORIA ÉPICA!";
+        resultMsg = "¡VICTORIA!";
         coinsWon = 50;
-        titleColor = "#00ff87";
     } else if (matchState.myGoals === matchState.cpuGoals) {
-        resultMsg = "🤝 ¡EMPATE MUY DISPUTADO!";
+        resultMsg = "¡EMPATE!";
         coinsWon = 15;
-        titleColor = "#ffd700";
     } else {
-        resultMsg = "❌ DERROTA...";
+        resultMsg = "DERROTA...";
         coinsWon = 5;
-        titleColor = "#ff4d4d";
     }
 
-    narrative.innerHTML = `<strong style="font-size:1.5rem; color:${titleColor};">${resultMsg}</strong><br><br><span style="color:#ffd700; font-size:1.2rem;">+${coinsWon} FutCoins 🪙</span>`;
+    logEvent(`🎟️ Resultado: ${resultMsg}. Ganaste +${coinsWon} FutCoins 🪙.`, "white");
     addCoins(coinsWon);
+    
     document.getElementById('match-close-btn').classList.remove('hidden');
 }
-
-function closeMatchModal() {
-    document.getElementById('match-simulation-modal').classList.add('hidden');
-}
-
-
-
 // ==========================================
 // TARJETAS PRE-JUEGO (INFO Y MODO)
 // ==========================================
