@@ -11,7 +11,7 @@ const dbEquipos = {
         { name: "COURTOIS", rating: 90, positions: ["POR"], tier: "platino" },
         { name: "LUNIN", rating: 80, positions: ["POR"], tier: "diamante" },
         { name: "FRAN GONZALEZ", rating: 65, positions: ["POR"], tier: "platino" },
-        { name: "MILTAO", rating: 84, positions: ["DFC"], tier: "platino" },
+        { name: "MILITAO", rating: 84, positions: ["DFC"], tier: "platino" },
         { name: "RUDIGER", rating: 84, positions: ["DFC"], tier: "diamante" },
         { name: "FRAN GARCIA", rating: 77, positions: ["LI"], tier: "platino" },
         { name: "MENDY", rating: 81, positions: ["LI"], tier: "diamante" },
