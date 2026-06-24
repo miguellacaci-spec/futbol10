@@ -104,7 +104,7 @@ const dbEquipos = {
         { name: "MIKAUTADZE", rating: 79, positions: ["DC", "MCO"], tier: "diamante" },
         { name: "OLUWASEYI", rating: 71, positions: ["DC"], tier: "platino" },
         { name: "LOGAN COSTA", rating: 77, positions: ["DFC"], tier: "diamante" }
-
+    ],
 };
 
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
