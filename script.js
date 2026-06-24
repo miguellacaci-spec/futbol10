@@ -22,6 +22,7 @@ const dbEquipos = {
         { name: "BELLINGHAM", rating: 89, positions: ["MCO", "MC"], tier: "platino" },
         { name: "CAMAVINGA", rating: 81, positions: ["MCD", "MC", "LI"], tier: "diamante" },
         { name: "VALVERDE", rating: 89, positions: ["MC", "LD", "ED", "MCD"], tier: "platino" },
+        { name: "THIAGO PITARCH", rating: 68, positions: ["MC", "MCD", "MCO"], tier: "platino" },
         { name: "TCHOUAMENI", rating: 84, positions: ["MCD", "MC", "DFC"], tier: "oro" },
         { name: "ARDA GULER", rating: 83, positions: ["MC", "MCO", "ED"], tier: "platino" },
         { name: "MASTANTUONO", rating: 77, positions: ["ED"], tier: "diamante" },
@@ -29,8 +30,7 @@ const dbEquipos = {
         { name: "MBAPPE", rating: 91, positions: ["DC", "EI"], tier: "platino" },
         { name: "RODRYGO", rating: 84, positions: ["EI", "DC", "ED"], tier: "diamante" },
         { name: "BRAHIM DIAZ", rating: 81, positions: ["ED"], tier: "platino" },
-        { name: "GONZALO GARCIA", rating: 81, positions: ["DC"], tier: "diamante" },
-        { name: "THIAGO PITARCH", rating: 68, positions: ["MC", "MCD", "MCO"], tier: "platino" }
+        { name: "GONZALO GARCIA", rating: 81, positions: ["DC"], tier: "diamante" }
 
     ],
     "BARCELONA": [
@@ -67,7 +67,20 @@ const dbEquipos = {
         { name: "LENGLET", rating: 77, positions: ["DFC"], tier: "oro" },
         { name: "RUGGERI", rating: 78, positions: ["LI"], tier: "platino" },
         { name: "MARCOS LLORENTE", rating: 85, positions: ["LD", "MC"], tier: "diamante" },
-        { name: "NAHUEL MOLINA", rating: 77, positions: ["LD"], tier: "oro" }
+        { name: "NAHUEL MOLINA", rating: 77, positions: ["LD"], tier: "oro" },
+        { name: "PABLO BARRIOS", rating: 83, positions: ["MC", "MCD"], tier: "oro" },
+        { name: "JOHNNY CARDOSO", rating: 80, positions: ["MCD", "MC"], tier: "diamante" },
+        { name: "KOKE", rating: 81, positions: ["MCD", "MC"], tier: "diamante" },
+        { name: "OBED VARGAS", rating: 72, positions: ["MCD", "MC"], tier: "diamante" },
+        { name: "RODRI MENDOZA", rating: 71, positions: ["MCD", "MC", "MCO"], tier: "diamante" },
+        { name: "ALEX BAENA", rating: 82, positions: ["MC", "EI"], tier: "platino" },
+        { name: "NICO GONZALEZ", rating: 79, positions: ["EI", "MCO"], tier: "diamante" },
+        { name: "THIAGO ALMADA", rating: 78, positions: ["MC", "EI", "MCO"], tier: "oro" },
+        { name: "GIULIANO SIMEONE", rating: 82, positions: ["ED"], tier: "platino" },
+        { name: "LOOKMAN", rating: 83, positions: ["DC"], tier: "diamante" },
+        { name: "JULIAN ALVAREZ", rating: 86, positions: ["DC"], tier: "oro" },
+        { name: "SORLOTH", rating: 83, positions: ["DC"], tier: "platino" }
+        
         
     ],
 
