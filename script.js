@@ -8,34 +8,85 @@ const removeAccents = (str) => {
               .replace(/[ÓÒÖÔ]/gi, 'O')
               .replace(/[ÚÙÜÛ]/gi, 'U');
 };
-
 // ==========================================
-// 1. BASES DE DATOS & CONSTANTES GLOBALES
+// 1. SÚPER BASE DE DATOS (CLUBES, MEDIAS Y POSICIONES)
 // ==========================================
 const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 
-const players = [
-    "COURTOIS", "LUNIN", "FRAN GONZALEZ", "MILITAO", "ALABA", "RUDIGER", "CARVAJAL", "FRAN GARCIA", "MENDY", "ALEXANDER-ARNOLD", "HUIJSEN", "ASENCIO", "CARRERAS", "BELLINGHAM", "CAMAVINGA", "VALVERDE", "TCHOUAMENI", "ARDA GULER", "CEBALLOS", "MASTANTUONO", "VINICIUS", "MBAPPE", "RODRYGO", "BRAHIM DIAZ", "GONZALO GARCIA",
-    "OBLAK", "MUSSO", "HANCKO", "PUBILL", "LE NORMAND", "GIMENEZ", "LENGLET", "RUGGERI", "MARCOS LLORENTE", "NAHUEL MOLINA", "PABLO BARRIOS", "JOHNNY CARDOSO", "KOKE", "ALEX BAENA", "NICO GONZALEZ", "THIAGO ALMADA","GIULIANO SIMEONE", "LOOKMAN","GRIEZMANN", "JULIAN ALVAREZ", "SORLOTH",
-    "JOAN GARCIA", "SZCZESNY", "CUBARSI", "ERIC GARCIA", "ARAUJO", "CHRISTENSEN", "BALDE", "GERARD MARTIN", "KOUNDE", "JOAO CANCELO", "MARC BERNAL", "CASADO", "PEDRI", "DE JONG", "GAVI", "FERMIN LOPEZ", "DANI OLMO", "RAPHINHA", "RASHFORD", "LAMINE YAMAL", "BARDGHJI", "FERRAN TORRES", "LEWANDOWSKI",
-    "DIEGO CONDE", "ARNAU TENAS", "RAFA MARIN", "RENATO VEIGA", "FOYTH", "SERGI CARDONA", "PAU NAVARRO", "THOMAS PARTEY", "DANI PAREJO", "SANTI COMESAÑA", "PAPE GUEYE", "SOLOMON", "BUCHANAN", "MOLEIRO", "GERARD MORENO", "AYOZE PEREZ", "NICOLAS PEPE", "MIKAUTADZE",
-    "ALVARO VALLES", "PAU LOPEZ", "BELLERIN", "LLORENTE", "NATAN", "BARTRA", "RICARDO RODRIGUEZ", "MARC ROCA", "FORNALS", "LO CELSO", "ANTONY", "CHIMY AVILA", "ABDE", "BAKAMBU", "CUCHO HERNANDEZ", "AITOR RUIBAL",
-    "RADU", "STARFELT", "MINGUEZA", "AIDOO", "ALVARO NUÑEZ", "MARCOS ALONSO",  "MORIBA", "WILLIOT SWEDBERG", "BORJA IGLESIAS", "JUTGLA", "IAGO ASPAS", "CERVI", 
-    "REMIRO", "ZUBELDIA", "CALETA CAR", "ELUSTONDO", "SERGIO GOMEZ", "JON ARAMBURU", "ODRIOZOLA", "BEÑAT TURRIENTES", "LUKA SUCIC", "YANGEL HERRERA", "CARLOS SOLER", "BRAIS MENDEZ", "ZAKHARYAN", "PABLO MARIN", "BARRENETXEA", "GUEDES", "KUBO", "OYARZABAL", "OSKARSSON",
-    "UNAI SIMON", "ALEX PADILLA", "VIVIAN", "PAREDES", "LAPORTE", "YERAY ALVAREZ", "ADAMA BOIRO", "YURI BERCHICHE", "JESUS ARESO", "GOROSABEL", "LEKUE", "VESGA", "JAUREGIZAR", "BEÑAT PRADOS", "RUIZ DE GALARRETA", "OIHAN SANCET", "UNAI GOMEZ", "NICO WILLIAMS", "BERENGUER", "IÑAKI WILLIAMS", "GURUZETA",
-    "JULEN AGIRREZABALA", "DIMITRIEVSKI", "DIAKHABY", "GAYA", "THIERRY CORREIA", "FOULQUIER", "PEPELU", "GUIDO RODRIGUEZ", "SANTAMARIA", "JAVI GUERRA", "RAMAZANI", "DANJUMA", "LUIS RIOJA", "HUGO DURO", "LUCAS BELTRAN", "UMAR SADIQ", 
-    "TER STEGEN", "GAZZANIGA", "VITOR REIS", "BLIND", "DAVID LOPEZ","ARNAU MARTINEZ", "AXEL WITSEL", "OUNAHI", "IVAN MARTIN", "FRAN BELTRAN", "VAN DE BEEK", "ECHEVERRI", "LEMAR", "BRYAN GIL", "TSYGANKOV", "PORTU", "ABEL RUIZ", "STUANI",
-    "VLACHODIMOS", "NYLAND", "KIKE SALAS", "MARCAO", "NIANZOU", "AZPILICUETA", "OSO", "JUANLU SANCHEZ", "CARMONA", "AGOUME", "GUDELJ", "SOW", "JOAN JORDAN", "EJUKE", "JANUZAJ", "ALEXIS SANCHEZ", "ISAAC ROMERO", "MAUPAY",  
-    "DMITROVIC", "CABRERA", "CARLOS ROMERO", "EL HILALI", "POL LOZANO", "EDU EXPOSITO", "TERRATS", "JAVI PUADO", "PERE MILLA", "KIKE GARCIA",
-    "BATALLA", "DANI CARDENAS", "MUMIN", "LUIZ FELIPE", "LEJEUNE", "PEP CHAVARRIA", "ANDREI RATIU", "BALLIU", "GUMBAU", "PEDRO DIAZ", "UNAI LOPEZ", "OSCAR VALENTIN", "PATHE CISS", "NTEKA", "OSCAR TREJO", "ALVARO GARCIA", "ILIAS AKHOMACH", "JORGE DE FRUTOS", "ISI PALAZON", "CAMELLO",
-    "SERGIO HERRERA", "AITOR FERNANDEZ", "BOYOMO", "JORGE HERRANDO", "CATENA","JAVI GALAN", "JUAN CRUZ", "ROSIER", "LUCAS TORRO", "MONCAYOLA", "AIMAR OROZ", "MOI GOMEZ", "VICTOR MUÑOZ", "RAUL MORO", "RUBEN GARCIA", "KIKE BARJA", "RAUL GARCIA", "BUDIMIR",
-    "LEO ROMAN", "MARTIN VALJENT", "RAILLO", "MOJICA", "TONI LATO", "PABLO MAFFEO", "SAMU COSTA", "MASCARELL", "SERGI DARDER", "MANU MORLANES", "PABLO TORRE", "JAN VIRGILI", "ASANO", "VEDAT MURIQI", "JOSEPH", "ABDON PRATS",
-    "RYAN", "MANU SANCHEZ", "OLASAGASTI", "UNAI VENCEDOR", "CARLOS ALVAREZ", "ETTA EYONG", "IVAN ROMERO", "CARLOS ESPI", "MORALES",
-    "IÑAKI PEÑA", "AFFENGRUBER", "VICTOR CHUST","HECTOR FORT", "SANGARE","ALEIX FEBAS", "ALVARO RODRIGUEZ", "RAFA MIR", "ANDRE SILVA",
-    "DAVID SORIA", "ABDEL ABQAR", "DJENE", "DOMINGOS DUARTE", "DIEGO RICO", "JUAN IGLESIAS", "KIKO FEMENIA","ALLAN NYOM", "MARIO MARTIN", "ARAMBARRI", "LUIS MILLA", "BORJA MAYORAL", "SATRIANO", 
-    "SIVERA", "NAHUEL TENAGLIA", "JONNY OTTO", "ANTONIO BLANCO", "CARLES ALEÑA", "ANDER GUEVARA", "JON GURIDI", "CALEBE", "DENIS SUAREZ", "LUCAS BOYE", "MARIANO DIAZ",
-    "ESCANDELL", "ERIC BAILLY", "SANTI CAZORLA", "DENDONCKER"
-];
+const dbEquipos = {
+    "REAL MADRID": [
+        { name: "COURTOIS", rating: 90, positions: ["POR"], tier: "platino" },
+        { name: "LUNIN", rating: 80, positions: ["POR"], tier: "diamante" },
+        { name: "FRAN GONZALEZ", rating: 65, positions: ["POR"], tier: "platino" },
+        { name: "MILTAO", rating: 84, positions: ["DFC"], tier: "platino" },
+        { name: "RUDIGER", rating: 84, positions: ["DFC"], tier: "diamante" },
+        { name: "FRAN GARCIA", rating: 77, positions: ["LI"], tier: "platino" },
+        { name: "MENDY", rating: 81, positions: ["LI"], tier: "diamante" },
+        { name: "ALEXANDER-ARNOLD", rating: 85, positions: ["LD"], tier: "platino" },
+        { name: "HUIJSEN", rating: 81, positions: ["DFC"], tier: "platino" },
+        { name: "ASENCIO", rating: 78, positions: ["DFC", "LD"], tier: "platino" },
+        { name: "CARRERAS", rating: 81, positions: ["LI"], tier: "diamante" },
+        { name: "BELLINGHAM", rating: 89, positions: ["MCO", "MC"], tier: "platino" },
+        { name: "CAMAVINGA", rating: 81, positions: ["MCD", "MC", "LI"], tier: "diamante" },
+        { name: "VALVERDE", rating: 89, positions: ["MC", "LD", "ED", "MCD"], tier: "platino" },
+        { name: "TCHOUAMENI", rating: 84, positions: ["MCD", "MC", "DFC"], tier: "oro" },
+        { name: "ARDA GULER", rating: 83, positions: ["MC", "MCO", "ED"], tier: "platino" },
+        { name: "MASTANTUONO", rating: 77, positions: ["ED"], tier: "diamante" },
+        { name: "VINICIUS", rating: 89, positions: ["EI", "DC"], tier: "platino" },
+        { name: "MBAPPE", rating: 91, positions: ["DC", "EI"], tier: "platino" },
+        { name: "RODRYGO", rating: 84, positions: ["EI", "DC", "ED"], tier: "diamante" },
+        { name: "BRAHIM DIAZ", rating: 81, positions: ["ED"], tier: "platino" },
+        { name: "GONZALO GARCIA", rating: 81, positions: ["DC"], tier: "diamante" },
+        { name: "THIAGO PITARCH", rating: 68, positions: ["MC", "MCD", "MCO"], tier: "platino" },
+
+    ],
+    "BARCELONA": [
+        { name: "TER STEGEN", rating: 89, positions: ["POR"], tier: "platino" },
+        { name: "ARAUJO", rating: 85, positions: ["DFC", "LD"], tier: "diamante" },
+        { name: "CUBARSI", rating: 81, positions: ["DFC"], tier: "oro" },
+        { name: "KOUNDE", rating: 85, positions: ["LD", "DFC"], tier: "diamante" },
+        { name: "BALDE", rating: 82, positions: ["LI", "CAI"], tier: "oro" },
+        { name: "DE JONG", rating: 87, positions: ["MC", "MCD"], tier: "platino" },
+        { name: "PEDRI", rating: 86, positions: ["MC", "MCO"], tier: "diamante" },
+        { name: "GAVI", rating: 83, positions: ["MC", "EI"], tier: "oro" },
+        { name: "LAMINE YAMAL", rating: 86, positions: ["ED"], tier: "diamante" },
+        { name: "RAPHINHA", rating: 85, positions: ["EI", "ED", "MCO"], tier: "diamante" },
+        { name: "LEWANDOWSKI", rating: 88, positions: ["DC"], tier: "platino" },
+        { name: "DANI OLMO", rating: 84, positions: ["MCO", "EI", "MC"], tier: "diamante" },
+        { name: "SZCZESNY", rating: 82, positions: ["POR"], tier: "oro" }
+    ]
+    // AÑADE AQUÍ EL RESTO DE EQUIPOS (ATLÉTICO, ETC.) SIGUIENDO ESTE FORMATO
+};
+
+// Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
+const players = [];
+const playerStats = {};
+const tierLists = { bronce: [], plata: [], oro: [], diamante: [], platino: [] };
+
+Object.keys(dbEquipos).forEach(club => {
+    dbEquipos[club].forEach(p => {
+        players.push(p.name);
+        playerStats[p.name] = { rating: p.rating, positions: p.positions, tier: p.tier, club: club };
+        tierLists[p.tier].push(p.name);
+    });
+});
+
+function getPlayerTier(playerName) { return playerStats[playerName] ? playerStats[playerName].tier : 'bronce'; }
+function getPlayerRating(playerName) { return playerStats[playerName] ? playerStats[playerName].rating : 75; }
+function getPlayerPositions(playerName) { return playerStats[playerName] ? playerStats[playerName].positions : ["Desconocida"]; }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 const roscoQuestions = [
