@@ -48,7 +48,7 @@ const dbEquipos = {
         { name: "CASADO", rating: 78, positions: ["MCD", "MC"], tier: "diamante" },
         { name: "PEDRI", rating: 90, positions: ["MC", "MCD", "MCO"], tier: "platino" },
         { name: "DE JONG", rating: 87, positions: ["MC", "MCD", "MCO"], tier: "diamante" },
-        { name: "GAVI", rating: 83, positions: ["MC", "MCD", "MCO""], tier: "oro" },
+        { name: "GAVI", rating: 83, positions: ["MC", "MCD", "MCO"], tier: "oro" },
         { name: "FERMIN LOPEZ", rating: 83, positions: ["MC", "MCO"], tier: "platino" },
         { name: "DANI OLMO", rating: 84, positions: ["MCO", "MC"], tier: "diamante" },
         { name: "RAPHINHA", rating: 89, positions: ["EI", "MCO"], tier: "oro" },
