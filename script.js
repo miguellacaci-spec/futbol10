@@ -2434,32 +2434,6 @@ function closeLineupSelector() {
     document.getElementById('lineup-selector-modal').classList.add('hidden');
 }
 
-function playMatchVsCPU() {
-    const lineup = getLineup();
-    if (lineup.filter(p => p !== null).length < 11) {
-        mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores alineados antes de jugar.");
-        return;
-    }
-
-    let myStrength = 0;
-    const tierPoints = { bronce: 1, plata: 2, oro: 3, diamante: 4, platino: 5 };
-    lineup.forEach(p => myStrength += tierPoints[getPlayerTier(p)] || 1);
-
-    matchState = { 
-        turn: 0, 
-        myGoals: 0, 
-        cpuGoals: 0, 
-        myStrength: myStrength, 
-        cpuStrength: Math.max(11, myStrength + (Math.floor(Math.random() * 15) - 7)), 
-        minutes: [15, 35, 60, 75, 89] 
-    };
-
-    document.getElementById('match-score-my').innerText = '0';
-    document.getElementById('match-score-cpu').innerText = '0';
-    document.getElementById('match-close-btn').classList.add('hidden');
-    document.getElementById('match-simulation-modal').classList.remove('hidden');
-    playMatchTurn();
-}
 
 // ==========================================
 // 11. PARTIDO TÁCTICO VS CPU (ACTUALIZADO)
