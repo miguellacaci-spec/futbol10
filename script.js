@@ -81,8 +81,29 @@ const dbEquipos = {
         { name: "JULIAN ALVAREZ", rating: 86, positions: ["DC"], tier: "oro" },
         { name: "SORLOTH", rating: 83, positions: ["DC"], tier: "platino" }
         
-        
     ],
+    
+    "VILLARREAL": [
+        { name: "DIEGO CONDE", rating: 79, positions: ["POR"], tier: "platino" },
+        { name: "ARNAU TENAS", rating: 75, positions: ["POR"], tier: "platino" },
+        { name: "LUIZ JUNIOR", rating: 78, positions: ["POR"], tier: "diamante" },
+        { name: "RENATO VEIGA", rating: 78, positions: ["DFC"], tier: "platino" },
+        { name: "KAMBWALA", rating: 72, positions: ["DFC"], tier: "diamante" },
+        { name: "FOYTH", rating: 79, positions: ["DFC"], tier: "diamante" },
+        { name: "PAU NAVARRO", rating: 74, positions: ["DFC", "LD"], tier: "diamante" },
+        { name: "SERGI CARDONA", rating: 79, positions: ["LI"], tier: "oro" },
+        { name: "MOURIÑO", rating: 78, positions: ["LD"], tier: "platino" },
+        { name: "FREEMAN", rating: 73, positions: ["LD"], tier: "oro" },
+        { name: "SANTI COMESAÑA", rating: 79, positions: ["MC", "MCD"], tier: "oro" },
+        { name: "PAPE GUEYE", rating: 80, positions: ["MC", "MCD"], tier: "platino" },
+        { name: "BUCHANAN", rating: 76, positions: ["ED"], tier: "diamante" },
+        { name: "MOLEIRO", rating: 82, positions: ["MCO", "EI"], tier: "oro" },
+        { name: "GERARD MORENO", rating: 81, positions: ["DC"], tier: "oro" },
+        { name: "AYOZE PEREZ", rating: 80, positions: ["DC", "MCO"], tier: "diamante" },
+        { name: "NICOLAS PEPE", rating: 81, positions: ["ED", "DC"], tier: "diamante" },
+        { name: "MIKAUTADZE", rating: 79, positions: ["DC", "MCO"], tier: "diamante" },
+        { name: "OLUWASEYI", rating: 71, positions: ["DC"], tier: "platino" },
+        { name: "LOGAN COSTA", rating: 77, positions: ["DFC"], tier: "diamante" }
 
 };
 
