@@ -1,6 +1,3 @@
-// ==========================================
-// 0. FUNCIONES GLOBALES DE AYUDA
-// ==========================================
 const removeAccents = (str) => {
     return str.replace(/[ÁÀÄÂ]/gi, 'A')
               .replace(/[ÉÈËÊ]/gi, 'E')
@@ -8,10 +5,6 @@ const removeAccents = (str) => {
               .replace(/[ÓÒÖÔ]/gi, 'O')
               .replace(/[ÚÙÜÛ]/gi, 'U');
 };
-// ==========================================
-// 1. SÚPER BASE DE DATOS (CLUBES, MEDIAS Y POSICIONES)
-// ==========================================
-const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 
 const dbEquipos = {
     "REAL MADRID": [
@@ -37,7 +30,7 @@ const dbEquipos = {
         { name: "RODRYGO", rating: 84, positions: ["EI", "DC", "ED"], tier: "diamante" },
         { name: "BRAHIM DIAZ", rating: 81, positions: ["ED"], tier: "platino" },
         { name: "GONZALO GARCIA", rating: 81, positions: ["DC"], tier: "diamante" },
-        { name: "THIAGO PITARCH", rating: 68, positions: ["MC", "MCD", "MCO"], tier: "platino" },
+        { name: "THIAGO PITARCH", rating: 68, positions: ["MC", "MCD", "MCO"], tier: "platino" }
 
     ],
     "BARCELONA": [
@@ -61,35 +54,27 @@ const dbEquipos = {
         { name: "RAPHINHA", rating: 89, positions: ["EI", "MCO"], tier: "oro" },
         { name: "LAMINE YAMAL", rating: 89, positions: ["ED"], tier: "platino" },
         { name: "BARDGHJI", rating: 74, positions: ["ED"], tier: "diamante" },
-        { name: "FERRAN TORRES", rating: 84, positions: ["EI", "DC"], tier: "oro" },
+        { name: "FERRAN TORRES", rating: 84, positions: ["EI", "DC"], tier: "oro" }
         
     ],
     "ATLETICO DE MADRID": [
-        { name: "JOAN GARCIA", rating: 86, positions: ["POR"], tier: "platino" },
-        { name: "SZCZESNY", rating: 83, positions: ["POR"], tier: "platino" },
-        { name: "CUBARSI", rating: 83, positions: ["DFC"], tier: "platino" },
-        { name: "ERIC GARCIA", rating: 83, positions: ["DFC", "LD"], tier: "diamante" },
-        { name: "ARAUJO", rating: 81, positions: ["DFC"], tier: "oro" },
-        { name: "CHRISTENSEN", rating: 80, positions: ["MCD", "DFC"], tier: "diamante" },
-        { name: "BALDE", rating: 83, positions: ["LI"], tier: "oro" },
-        { name: "GERARD MARTIN", rating: 78, positions: ["DFC", "LI"], tier: "platino" },
-        { name: "KOUNDE", rating: 86, positions: ["LD"], tier: "diamante" },
-        { name: "JOAO CANCELO", rating: 84, positions: ["LD", "LI"], tier: "oro" },
-        { name: "MARC BERNAL", rating: 75, positions: ["MCD", "MC"], tier: "diamante" },
-        { name: "CASADO", rating: 78, positions: ["MCD", "MC"], tier: "diamante" },
-        { name: "PEDRI", rating: 90, positions: ["MC", "MCD", "MCO"], tier: "platino" },
-        { name: "DE JONG", rating: 87, positions: ["MC", "MCD", "MCO"], tier: "diamante" },
-        { name: "GAVI", rating: 83, positions: ["MC", "MCD", "MCO""], tier: "oro" },
-        { name: "FERMIN LOPEZ", rating: 83, positions: ["MC", "MCO"], tier: "platino" },
-        { name: "DANI OLMO", rating: 84, positions: ["MCO", "MC"], tier: "diamante" },
-        { name: "RAPHINHA", rating: 89, positions: ["EI", "MCO"], tier: "oro" },
-        { name: "LAMINE YAMAL", rating: 89, positions: ["ED"], tier: "platino" },
-        { name: "BARDGHJI", rating: 74, positions: ["ED"], tier: "diamante" },
-        { name: "FERRAN TORRES", rating: 84, positions: ["EI", "DC"], tier: "oro" },
-    // AÑADE AQUÍ EL RESTO DE EQUIPOS (ATLÉTICO, ETC.) SIGUIENDO ESTE FORMATO
+        { name: "OBLAK", rating: 88, positions: ["POR"], tier: "platino" },
+        { name: "MUSSO", rating: 80, positions: ["POR"], tier: "platino" },
+        { name: "HANCKO", rating: 83, positions: ["LI", "DFC"], tier: "platino" },
+        { name: "PUBILL", rating: 80, positions: ["DFC", "LD"], tier: "diamante" },
+        { name: "LE NORMAND", rating: 81, positions: ["DFC"], tier: "oro" },
+        { name: "GIMENEZ", rating: 83, positions: ["DFC"], tier: "diamante" },
+        { name: "LENGLET", rating: 77, positions: ["DFC"], tier: "oro" },
+        { name: "RUGGERI", rating: 78, positions: ["LI"], tier: "platino" },
+        { name: "MARCOS LLORENTE", rating: 85, positions: ["LD", "MC"], tier: "diamante" },
+        { name: "NAHUEL MOLINA", rating: 77, positions: ["LD"], tier: "oro" }
+        
+    ],
+
 };
 
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
+const QWERTY_LAYOUT = ["QWERTYUIOP", "ASDFGHJKLÑ", "ZXCVBNM"];
 const players = [];
 const playerStats = {};
 const tierLists = { bronce: [], plata: [], oro: [], diamante: [], platino: [] };
@@ -105,19 +90,6 @@ Object.keys(dbEquipos).forEach(club => {
 function getPlayerTier(playerName) { return playerStats[playerName] ? playerStats[playerName].tier : 'bronce'; }
 function getPlayerRating(playerName) { return playerStats[playerName] ? playerStats[playerName].rating : 75; }
 function getPlayerPositions(playerName) { return playerStats[playerName] ? playerStats[playerName].positions : ["Desconocida"]; }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 const roscoQuestions = [
@@ -2370,60 +2342,80 @@ function sellAllDuplicates() {
 // ==========================================
 // 11. ALINEACIÓN (11 IDEAL) Y PARTIDO TÁCTICO
 // ==========================================
+// Alineación 4-3-3: 0:POR, 1:LD, 2:DFC, 3:DFC, 4:LI, 5:MC, 6:MC, 7:MC, 8:ED, 9:DC, 10:EI
+const formationPositions = ["POR", "LD", "DFC", "DFC", "LI", "MC", "MC", "MC", "ED", "DC", "EI"];
+
 function renderLineupPitch() {
     const pitch = document.getElementById('lineup-pitch');
     let lineup = getLineup();
     while (lineup.length < 11) lineup.push(null);
     
     pitch.innerHTML = "";
-    const rows = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]];
-    const fallbackImg = "https://placehold.co/140x190/111/ffd700?text=FOTO";
+    const rows = [[10, 9, 8], [7, 6, 5], [4, 3, 2, 1], [0]]; // Delanteros, Medios, Defensas, Portero
 
     rows.forEach(rowIndices => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'pitch-row';
         rowIndices.forEach(idx => {
             const pName = lineup[idx];
+            const reqPos = formationPositions[idx]; // Posición que exige esta casilla
             const slot = document.createElement('div');
             slot.className = 'player-slot clickable';
+            
             if (pName) {
                 const tier = getPlayerTier(pName);
                 slot.innerHTML = `
+                    <div style="color: #ffd700; font-size: 0.6rem; font-weight: bold; margin-bottom: 2px;">${reqPos}</div>
                     <div class="f10-card tier-${tier}" style="width: clamp(35px, 12vw, 60px); aspect-ratio: 2.5/3.5; margin-bottom: 3px;">
-                        <img src="players/${pName}.jpg" style="height: 100%; border-bottom: 1px solid rgba(255,255,255,0.5);" onerror="this.src='${fallbackImg}'">
+                        <img src="players/${pName}.jpg" style="height: 100%; border-bottom: 1px solid rgba(255,255,255,0.5);">
                     </div>
                     <div class="name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem); background: rgba(0,0,0,0.8);">${pName}</div>
+                    <div style="background: var(--primary); color: black; font-size: 0.6rem; font-weight: bold; border-radius: 3px; padding: 1px 4px; margin-top: 2px;">${getPlayerRating(pName)}</div>
                 `;
             } else {
-                slot.innerHTML = `<div class="shirt empty">➕</div><div class="name hidden-name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem);">FICHAR</div>`;
+                slot.innerHTML = `
+                    <div style="color: #ffd700; font-size: 0.6rem; font-weight: bold; margin-bottom: 2px;">${reqPos}</div>
+                    <div class="shirt empty">➕</div>
+                    <div class="name hidden-name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem);">FICHAR</div>
+                `;
             }
-            slot.onclick = () => openLineupSelector(idx);
+            // Pasamos la posición requerida al abrir el selector
+            slot.onclick = () => openLineupSelector(idx, reqPos);
             rowDiv.appendChild(slot);
         });
         pitch.appendChild(rowDiv);
     });
 }
 
-function openLineupSelector(slotIdx) {
+function openLineupSelector(slotIdx, reqPos) {
     currentLineupSlot = slotIdx;
     const data = getAlbumData();
     const currentLineup = getLineup();
     const grid = document.getElementById('lineup-selector-grid');
     grid.innerHTML = "";
 
-    [...data.unlocked].sort().forEach(p => {
+    // FILTRAMOS: Solo jugadores del álbum, que tengan la posición reqPos y que no estén ya en el 11
+    const validPlayers = data.unlocked.filter(p => {
+        return playerStats[p] && playerStats[p].positions.includes(reqPos);
+    }).sort((a, b) => getPlayerRating(b) - getPlayerRating(a)); // Ordenados por media
+
+    validPlayers.forEach(p => {
         const isSelected = currentLineup.includes(p);
         const tier = getPlayerTier(p);
         const card = document.createElement('div');
         card.className = `f10-card tier-${tier} ${isSelected ? 'selected-in-lineup' : 'clickable'}`;
         card.style.width = "100px"; 
-        card.innerHTML = `<img src="players/${p}.jpg"><div class="card-name" style="font-size: 0.6rem;">${p}</div>`;
+        card.innerHTML = `
+            <div style="position: absolute; top: 2px; right: 2px; background: black; color: #00ff87; font-weight: bold; padding: 2px 4px; border-radius: 5px; font-size: 0.7rem;">${getPlayerRating(p)}</div>
+            <img src="players/${p}.jpg">
+            <div class="card-name" style="font-size: 0.6rem;">${p}</div>
+        `;
         if (!isSelected) card.onclick = () => selectPlayerForLineup(p);
         grid.appendChild(card);
     });
 
-    if(data.unlocked.length === 0) {
-        grid.innerHTML = `<p style="color:var(--text-dim); font-family:'Orbitron', sans-serif;">Aún no tienes jugadores en tu álbum.</p>`;
+    if(validPlayers.length === 0) {
+        grid.innerHTML = `<p style="color:var(--error); font-family:'Orbitron';">No tienes cartas desbloqueadas con la posición ${reqPos}. ¡Abre más sobres!</p>`;
     }
 
     document.getElementById('lineup-selector-modal').classList.remove('hidden');
