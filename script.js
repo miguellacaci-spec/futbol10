@@ -130,6 +130,13 @@ const dbEquipos = {
         { name: "AITOR RUIBAL", rating: 80, positions: ["ED", "LD"], tier: "diamante" },
     ],  
     
+    "CELTA DE VIGO": [
+        { name: "RADU", rating: 78, positions: ["POR"], tier: "platino" },
+        { name: "STARFELT", rating: 78, positions: ["DFC"], tier: "platino" },
+        { name: "MINGUEZA", rating: 80, positions: ["LD"], tier: "diamante" },
+        { name: "AIDOO", rating: 73, positions: ["DFC"], tier: "platino" },
+        { name: "ALVARO NUÑEZ", rating: 76, positions: ["LD", "DFC"], tier: "diamante" },
+    ],  
 
 
     
