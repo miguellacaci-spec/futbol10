@@ -106,6 +106,33 @@ const dbEquipos = {
         { name: "OLUWASEYI", rating: 71, positions: ["DC"], tier: "platino" },
         { name: "LOGAN COSTA", rating: 77, positions: ["DFC"], tier: "diamante" }
     ],
+
+    "REAL BETIS": [
+        { name: "ALVARO VALLES", rating: 77, positions: ["POR"], tier: "platino" },
+        { name: "PAU LOPEZ", rating: 77, positions: ["POR"], tier: "platino" },
+        { name: "BELLERIN", rating: 76, positions: ["LD"], tier: "diamante" },
+        { name: "LLORENTE", rating: 80, positions: ["DFC"], tier: "platino" },
+        { name: "NATAN", rating: 78, positions: ["DFC"], tier: "diamante" },
+        { name: "BARTRA", rating: 79, positions: ["DFC"], tier: "diamante" },
+        { name: "JUNIOR FIRPO", rating: 74, positions: ["LI"], tier: "diamante" },
+        { name: "MARC ROCA", rating: 78, positions: ["MCD", "MC"], tier: "oro" },
+        { name: "ALTIMIRA", rating: 77, positions: ["MCD", "MC"], tier: "oro" },
+        { name: "RIQUELME", rating: 76, positions: ["MCD", "MC"], tier: "oro" },
+        { name: "FORNALS", rating: 81, positions: ["MC", "MCO"], tier: "platino" },
+        { name: "ISCO", rating: 84, positions: ["MC", "MCO"], tier: "platino" },
+        { name: "DEOSSA", rating: 75, positions: ["MC", "MCO", "MCD"], tier: "platino" },
+        { name: "FIDALGO", rating: 77, positions: ["MC", "MCO", "MCD"], tier: "platino" },
+        { name: "LO CELSO", rating: 81, positions: ["MC", "MCO"], tier: "oro" },
+        { name: "ANTONY", rating: 81, positions: ["ED"], tier: "oro" },
+        { name: "CHIMY AVILA", rating: 73, positions: ["DC", "ED"], tier: "platino" },
+        { name: "ABDE", rating: 80, positions: ["EI"], tier: "diamante" },
+        { name: "CUCHO HERNANDEZ", rating: 79, positions: ["DC"], tier: "oro" },
+        { name: "AITOR RUIBAL", rating: 80, positions: ["ED", "LD"], tier: "diamante" },
+    ],  
+    
+
+
+    
 };
 
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
