@@ -163,18 +163,30 @@ const players = [];
 const playerStats = {};
 const tierLists = { bronce: [], plata: [], oro: [], diamante: [], platino: [] };
 
+// NUEVA FUNCIÓN: Asigna el Tier en base a la media automáticamente
+function calculateTier(rating) {
+    if (rating >= 84) return 'platino';
+    if (rating >= 80) return 'diamante';
+    if (rating >= 77) return 'oro';
+    if (rating >= 72) return 'plata';
+    return 'bronce';
+}
+
 Object.keys(dbEquipos).forEach(club => {
     dbEquipos[club].forEach(p => {
         players.push(p.name);
-        playerStats[p.name] = { rating: p.rating, positions: p.positions, tier: p.tier, club: club };
-        tierLists[p.tier].push(p.name);
+        
+        // Calculamos el tier real ignorando el texto de la base de datos
+        let autoTier = calculateTier(p.rating);
+        
+        playerStats[p.name] = { rating: p.rating, positions: p.positions, tier: autoTier, club: club };
+        tierLists[autoTier].push(p.name);
     });
 });
 
 function getPlayerTier(playerName) { return playerStats[playerName] ? playerStats[playerName].tier : 'bronce'; }
 function getPlayerRating(playerName) { return playerStats[playerName] ? playerStats[playerName].rating : 75; }
 function getPlayerPositions(playerName) { return playerStats[playerName] ? playerStats[playerName].positions : ["Desconocida"]; }
-
 const roscoAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 const roscoQuestions = [
     { letra: "A", preguntas: [
