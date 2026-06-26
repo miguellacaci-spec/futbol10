@@ -2586,7 +2586,7 @@ function playMatchVsCPU() {
     }
 
     addCoins(-75);
-    //localStorage.setItem('f10_tourneys_count', tourneysCount + 1); <--------- 4 TORNEOS POR DIA
+    localStorage.setItem('f10_tourneys_count', tourneysCount + 1);
     
     tournamentState.active = true;
     tournamentState.roundIndex = 0;
