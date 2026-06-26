@@ -732,7 +732,28 @@ let matchState = {
     cpuStrength: 0,
     minutes: [15, 35, 60, 75, 89]
 };
+// Añadimos el estado del torneo y ampliamos el estado del partido
+let tournamentState = {
+    active: false,
+    roundIndex: 0,
+    rounds: ['CUARTOS DE FINAL', 'SEMIFINALES', 'GRAN FINAL']
+};
 
+// Reemplaza tu actual matchState por este:
+let matchState = {
+    minute: 0,
+    addedTime: 0,
+    myGoals: 0,
+    cpuGoals: 0,
+    myRating: 0,
+    cpuRating: 0,
+    cpuClub: "",
+    cpuPlayers: [],
+    isFinished: false,
+    phase: 'regular', // 'regular', 'extra', 'penalties'
+    myPenalties: 0,
+    cpuPenalties: 0
+};
 // ==========================================
 // 2.5 SISTEMA DE MONEDAS, RÉCORDS Y PERFIL
 // ==========================================
@@ -756,14 +777,28 @@ function updateRecord(gameId, score) {
 
 function showProfile() {
     document.getElementById('profile-coins').innerText = getCoins();
-    const statsHTML = `
+    
+    // Tus estadísticas actuales
+    let statsHTML = `
         <div class="profile-stat-item"><span>Ahorcado</span> <span class="stat-value">🏆 ${getRecord('hangman')}</span></div>
         <div class="profile-stat-item"><span>Blur Guess</span> <span class="stat-value">🏆 ${getRecord('blur')}</span></div>
-        <div class="profile-stat-item"><span>Máquina del Tiempo</span> <span class="stat-value">🏆 ${getRecord('tm')}</span></div>
+        <div class="profile-stat-item"><span>Máquina Tiempo</span> <span class="stat-value">🏆 ${getRecord('tm')}</span></div>
         <div class="profile-stat-item"><span>Higher/Lower</span> <span class="stat-value">🏆 ${getRecord('hl')}</span></div>
         <div class="profile-stat-item"><span>Guerra Aforos</span> <span class="stat-value">🏆 ${getRecord('aforos')}</span></div>
         <div class="profile-stat-item"><span>Zoom Escudos</span> <span class="stat-value">🏆 ${getRecord('zoom')}</span></div>
     `;
+    
+    // Añadimos el Top Goleadores del Club
+    let scorers = JSON.parse(localStorage.getItem('f10_top_scorers')) || {};
+    let sortedScorers = Object.entries(scorers).sort((a, b) => b[1] - a[1]).slice(0, 5); // Coge el Top 5
+
+    if(sortedScorers.length > 0) {
+        statsHTML += `<h4 style="color:var(--primary); font-family:'Orbitron'; margin-top:20px; text-align:center;">⚽ MÁXIMOS GOLEADORES</h4>`;
+        sortedScorers.forEach((s, i) => {
+            statsHTML += `<div class="profile-stat-item" style="border-color:rgba(0,255,135,0.3);"><span>${i+1}. ${s[0]}</span> <span class="stat-value">${s[1]} Goles</span></div>`;
+        });
+    }
+
     document.getElementById('profile-stats').innerHTML = statsHTML;
     document.getElementById('profile-modal').classList.remove('hidden');
 }
@@ -2499,40 +2534,72 @@ function closeLineupSelector() {
 let matchInterval;
 
 function playMatchVsCPU() {
+    if (tournamentState.active) {
+        // Si ya está activo, pasa a la siguiente ronda directamente
+        startMatchSimulation();
+        return;
+    }
+
     const lineup = getLineup();
     if (lineup.filter(p => p !== null).length < 11) {
         mostrarMensajePro("⚠️ PLANTILLA INCOMPLETA", "Necesitas tener a los 11 jugadores en sus posiciones correctas.");
         return;
     }
 
-    // 1. CALCULAR MEDIA DE MI EQUIPO
+    // Control de Límite Diario (4 Torneos/Día)
+    let today = getSpanishDateString();
+    let tourneysDate = localStorage.getItem('f10_tourneys_date');
+    let tourneysCount = parseInt(localStorage.getItem('f10_tourneys_count') || '0');
+
+    if (tourneysDate !== today) {
+        tourneysCount = 0;
+        localStorage.setItem('f10_tourneys_date', today);
+    }
+
+    if (tourneysCount >= 4) {
+        mostrarMensajePro("⏳ LÍMITE ALCANZADO", "Ya has jugado tus 4 torneos diarios. Vuelve mañana a partir de las 00:00 (Hora Española).");
+        return;
+    }
+
+    // Cobro de Inscripción
+    if (getCoins() < 25) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 25 FutCoins para pagar la inscripción al torneo.");
+        return;
+    }
+
+    addCoins(-25);
+    localStorage.setItem('f10_tourneys_count', tourneysCount + 1);
+    
+    // Iniciar Torneo
+    tournamentState.active = true;
+    tournamentState.roundIndex = 0;
+    
+    startMatchSimulation();
+}
+
+function startMatchSimulation() {
+    const lineup = getLineup();
     let myTotalRating = 0;
-    lineup.forEach(p => myTotalRating += getPlayerRating(p));
+    lineup.forEach(p => { if(p) myTotalRating += getPlayerRating(p); });
     let myRating = Math.floor(myTotalRating / 11);
 
-    // 2. BUSCAR RIVAL ALEATORIO
     const clubes = Object.keys(dbEquipos);
     const rivalClub = clubes[Math.floor(Math.random() * clubes.length)];
     let cpuTotalRating = 0;
-    // Simplificamos calculando la media de los 11 mejores de ese club
     const cpuRoster = [...dbEquipos[rivalClub]].sort((a,b) => b.rating - a.rating).slice(0, 11);
     cpuRoster.forEach(p => cpuTotalRating += p.rating);
     let cpuRating = Math.floor(cpuTotalRating / 11);
 
-    // 3. INICIALIZAR ESTADO DEL PARTIDO
     matchState = { 
-        minute: 0,
-        addedTime: Math.floor(Math.random() * 4) + 2, // Añade entre 2 y 5 minutos
-        myGoals: 0, 
-        cpuGoals: 0, 
-        myRating: myRating,
-        cpuRating: cpuRating,
-        cpuClub: rivalClub,
-        cpuPlayers: cpuRoster,
-        isFinished: false
+        minute: 0, 
+        addedTime: Math.floor(Math.random() * 4) + 2, 
+        myGoals: 0, cpuGoals: 0, myPenalties: 0, cpuPenalties: 0,
+        myRating: myRating, cpuRating: cpuRating, 
+        cpuClub: rivalClub, cpuPlayers: cpuRoster, 
+        isFinished: false, phase: 'regular' 
     };
 
-    // 4. PREPARAR UI
+    document.getElementById('match-competition').innerText = `COPA F10 - ${tournamentState.rounds[tournamentState.roundIndex]}`;
     document.getElementById('my-team-rating').innerText = `Media: ${myRating}`;
     document.getElementById('cpu-team-name').innerText = rivalClub;
     document.getElementById('cpu-team-rating').innerText = `Media: ${cpuRating}`;
@@ -2540,14 +2607,17 @@ function playMatchVsCPU() {
     document.getElementById('match-score-cpu').innerText = '0';
     document.getElementById('match-clock').innerText = "00";
     document.getElementById('match-minute-progress').style.width = "0%";
-    document.getElementById('match-close-btn').classList.add('hidden');
+    
+    const btn = document.getElementById('match-close-btn');
+    btn.classList.add('hidden');
+    btn.innerText = "CONTINUAR";
     
     const logDiv = document.getElementById('match-live-log');
     logDiv.innerHTML = `<div style="color: #00ff87; font-weight: bold; text-align: center;">🟢 ¡COMIENZA EL PARTIDO!</div>`;
 
     document.getElementById('match-simulation-modal').classList.remove('hidden');
 
-    // 5. INICIAR CRONÓMETRO CONTINUO (100ms = 1 minuto del juego)
+    if(matchInterval) clearInterval(matchInterval);
     matchInterval = setInterval(simulateMinute, 100);
 }
 
@@ -2555,86 +2625,155 @@ function simulateMinute() {
     if (matchState.isFinished) return;
 
     matchState.minute++;
-    let totalMinutes = 90 + matchState.addedTime;
+    let totalMinutes = matchState.phase === 'extra' ? 120 + matchState.addedTime : 90 + matchState.addedTime;
     
     document.getElementById('match-clock').innerText = matchState.minute;
     document.getElementById('match-minute-progress').style.width = `${(matchState.minute / totalMinutes) * 100}%`;
 
-    // Descanso
-    if (matchState.minute === 45) {
-        logEvent("⏱️ Descanso. Los jugadores van al túnel de vestuarios.", "#ffd700");
+    // Final del tiempo reglamentario / Prórroga
+    if (matchState.minute >= totalMinutes) {
+        if (matchState.myGoals === matchState.cpuGoals) {
+            if (matchState.phase === 'regular') {
+                matchState.phase = 'extra';
+                matchState.minute = 90;
+                matchState.addedTime = 1;
+                logEvent("⏱️ ¡FINAL! Nos vamos a la PRÓRROGA.", "#ffd700");
+                return;
+            } else if (matchState.phase === 'extra') {
+                matchState.phase = 'penalties';
+                clearInterval(matchInterval);
+                logEvent("⏱️ ¡FINAL DE LA PRÓRROGA! Nos vamos a los PENALTIS.", "#ffd700");
+                setTimeout(startPenalties, 2000);
+                return;
+            }
+        } else {
+            matchState.isFinished = true;
+            clearInterval(matchInterval);
+            endSimulatedMatch();
+            return;
+        }
     }
 
-    // Cálculo de Gol (Cada minuto se tira un dado)
-    // Probabilidad base de gol en un minuto: ~1.5%. Se ajusta por diferencia de media.
+    // Lógica de goles (Mantenemos tu base)
     let randomRoll = Math.random();
-    
-    // Calcula la diferencia de media (Ej: Si tengo 85 y rival 80, dif = 5)
     let diff = matchState.myRating - matchState.cpuRating;
-
-    // Chance local (Yo) y Visitante (CPU)
     let myChance = 0.012 + (diff * 0.001); 
     let cpuChance = 0.012 - (diff * 0.001);
 
-    // Evitar chances negativas
     if(myChance < 0.002) myChance = 0.002;
     if(cpuChance < 0.002) cpuChance = 0.002;
 
-    if (randomRoll < myChance) {
-        scoreGoal('me');
-    } else if (randomRoll > 1 - cpuChance) {
-        scoreGoal('cpu');
-    }
+    if (randomRoll < myChance) scoreGoal('me');
+    else if (randomRoll > 1 - cpuChance) scoreGoal('cpu');
+}
 
-    // Final del partido
-    if (matchState.minute >= totalMinutes) {
-        matchState.isFinished = true;
-        clearInterval(matchInterval);
-        endSimulatedMatch();
+function startPenalties() {
+    let myShots = 0, cpuShots = 0;
+    let diff = matchState.myRating - matchState.cpuRating;
+    let myHitChance = Math.max(0.4, Math.min(0.9, 0.75 + (diff * 0.01)));
+    let cpuHitChance = Math.max(0.4, Math.min(0.9, 0.75 - (diff * 0.01)));
+
+    logEvent("🎯 <strong>COMIENZA LA TANDA DE PENALTIS</strong>", "#00d2ff");
+
+    function shoot() {
+        // Comprobar eliminación matemática
+        let myRemaining = 5 - myShots;
+        let cpuRemaining = 5 - cpuShots;
+
+        if (myShots === cpuShots) { // Tanda igualada (ej. ambos tiraron 3)
+            if (myShots < 5) {
+                if (matchState.myPenalties + myRemaining < matchState.cpuPenalties) return finishPenalties();
+                if (matchState.cpuPenalties + cpuRemaining < matchState.myPenalties) return finishPenalties();
+            } else {
+                if (matchState.myPenalties !== matchState.cpuPenalties) return finishPenalties(); // Muerte súbita resuelta
+            }
+        }
+
+        // Tiramos el penalti (alternando)
+        if (myShots === cpuShots) {
+            myShots++;
+            let goal = Math.random() < myHitChance;
+            if (goal) matchState.myPenalties++;
+            logEvent(`🟢 Tanda ${myShots} (Tú): ${goal ? '⚽ MARCAS' : '❌ FALLAS'} [${matchState.myPenalties} - ${matchState.cpuPenalties}]`, goal ? "#00ff87" : "#ff4d4d");
+            setTimeout(shoot, 1000);
+        } else {
+            cpuShots++;
+            let goal = Math.random() < cpuHitChance;
+            if (goal) matchState.cpuPenalties++;
+            logEvent(`🔴 Tanda ${cpuShots} (CPU): ${goal ? '⚽ MARCA' : '❌ FALLA'} [${matchState.myPenalties} - ${matchState.cpuPenalties}]`, goal ? "#ff4d4d" : "#ff4d4d");
+            setTimeout(shoot, 1000);
+        }
     }
+    shoot();
+}
+
+function finishPenalties() {
+    logEvent(`🏁 <strong>FIN PENALTIS: ${matchState.myPenalties} - ${matchState.cpuPenalties}</strong>`, "#ffd700");
+    if (matchState.myPenalties > matchState.cpuPenalties) {
+        matchState.myGoals++; // Sumamos 1 gol al marcador general para desempatar visualmente
+    } else {
+        matchState.cpuGoals++;
+    }
+    document.getElementById('match-score-my').innerText = matchState.myGoals;
+    document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
+    
+    matchState.isFinished = true;
+    setTimeout(endSimulatedMatch, 1000);
 }
 
 function scoreGoal(team) {
     const lineup = getLineup();
     let scorer = "Jugador";
-    let assister = null;
     let color = "";
     
     if (team === 'me') {
         matchState.myGoals++;
-        color = "#00ff87"; // Verde
+        color = "#00ff87";
         document.getElementById('match-score-my').innerText = matchState.myGoals;
         
-        // Quien marca (Prioridad a Delanteros 8,9,10, Medios 5,6,7)
-        const atacantes = [lineup[8], lineup[9], lineup[10], lineup[5], lineup[6], lineup[7]].filter(Boolean);
-        scorer = atacantes[Math.floor(Math.random() * atacantes.length)] || lineup[Math.floor(Math.random() * lineup.length)];
+        // Ponderación de Goleadores
+        let weights = [];
+        lineup.forEach((p, idx) => {
+            if(!p) return;
+            let pos = formationPositions[idx];
+            let w = 1; // Base (Portero)
+            if (["DC", "EI", "ED"].includes(pos)) w = 60; // Delanteros 60%
+            else if (["MC", "MCO", "MCD"].includes(pos)) w = 25; // Medios 25%
+            else if (["DFC", "LI", "LD"].includes(pos)) w = 10; // Defensas 10%
+            weights.push({player: p, weight: w});
+        });
+
+        let totalWeight = weights.reduce((acc, curr) => acc + curr.weight, 0);
+        let rand = Math.random() * totalWeight;
+        let sum = 0;
         
-        // 50% de probabilidad de que haya asistencia
-        if (Math.random() > 0.5) {
-            let possibleAssisters = lineup.filter(p => p && p !== scorer);
-            if(possibleAssisters.length > 0) assister = possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
+        for (let item of weights) {
+            sum += item.weight;
+            if (rand <= sum) {
+                scorer = item.player;
+                break;
+            }
         }
         
+        registerGoalStats(scorer); // Guardamos el gol en la base de datos local
     } else {
         matchState.cpuGoals++;
-        color = "#ff4d4d"; // Rojo
+        color = "#ff4d4d";
         document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-        
-        const cpuP = matchState.cpuPlayers;
-        scorer = cpuP[Math.floor(Math.random() * cpuP.length)].name;
-        if (Math.random() > 0.5) assister = cpuP[Math.floor(Math.random() * cpuP.length)].name;
+        scorer = matchState.cpuPlayers[Math.floor(Math.random() * matchState.cpuPlayers.length)].name;
     }
 
-    // Temblores
     const modalBox = document.getElementById('match-modal-box');
     modalBox.classList.add('anim-goal-shake');
     setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 400);
 
-    // Imprimir en el Log
-    let text = `⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`;
-    if (assister && assister !== scorer) text += ` Asistencia de ${assister}.`;
-    
-    logEvent(text, color);
+    logEvent(`⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`, color);
+}
+
+function registerGoalStats(playerName) {
+    let stats = JSON.parse(localStorage.getItem('f10_top_scorers')) || {};
+    stats[playerName] = (stats[playerName] || 0) + 1;
+    localStorage.setItem('f10_top_scorers', JSON.stringify(stats));
 }
 
 function logEvent(text, color) {
@@ -2652,25 +2791,45 @@ function logEvent(text, color) {
 
 function endSimulatedMatch() {
     logEvent("🏁 <strong>¡FINAL DEL PARTIDO!</strong>", "#ffd700");
-
-    let resultMsg = "";
-    let coinsWon = 0;
+    const btn = document.getElementById('match-close-btn');
     
     if (matchState.myGoals > matchState.cpuGoals) {
-        resultMsg = "¡VICTORIA!";
-        coinsWon = 50;
-    } else if (matchState.myGoals === matchState.cpuGoals) {
-        resultMsg = "¡EMPATE!";
-        coinsWon = 15;
-    } else {
-        resultMsg = "DERROTA...";
-        coinsWon = 5;
+        if (tournamentState.roundIndex === 2) { // Ganó la final
+            logEvent("🏆 ¡CAMPEÓN DEL TORNEO! Has ganado +150 FutCoins 🪙", "#00ff87");
+            addCoins(150);
+            tournamentState.active = false;
+            btn.innerText = "RECLAMAR Y SALIR";
+        } else {
+            logEvent(`✅ ¡VICTORIA! Avanzas a ${tournamentState.rounds[tournamentState.roundIndex + 1]}`, "#00ff87");
+            btn.innerText = "JUGAR SIGUIENTE RONDA";
+        }
+    } else { // Derrota
+        if (tournamentState.roundIndex === 0) {
+            logEvent("❌ Eliminado en Cuartos. Pierdes tu inscripción.", "#ff4d4d");
+        } else if (tournamentState.roundIndex === 1) {
+            logEvent("🥉 Eliminado en Semifinales. Ganas +75 FutCoins 🪙", "#ff4d4d");
+            addCoins(75);
+        } else if (tournamentState.roundIndex === 2) {
+            logEvent("🥈 Subcampeón del torneo. Ganas +100 FutCoins 🪙", "#c0c0c0");
+            addCoins(100);
+        }
+        tournamentState.active = false;
+        btn.innerText = "FINALIZAR TORNEO";
     }
 
-    logEvent(`🎟️ Resultado: ${resultMsg}. Ganaste +${coinsWon} FutCoins 🪙.`, "white");
-    addCoins(coinsWon);
-    
-    document.getElementById('match-close-btn').classList.remove('hidden');
+    btn.classList.remove('hidden');
+}
+
+function closeMatchModal() {
+    // Si ganamos y sigue activo el torneo, jugamos la siguiente ronda.
+    if (tournamentState.active) {
+        tournamentState.roundIndex++;
+        startMatchSimulation();
+    } else {
+        // Si perdimos o ganamos la final, cerramos y vamos al menú del álbum
+        document.getElementById('match-simulation-modal').classList.add('hidden');
+        document.getElementById('album-coins').innerText = getCoins();
+    }
 }
 // ==========================================
 // TARJETAS PRE-JUEGO (INFO Y MODO)
