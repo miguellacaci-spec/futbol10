@@ -2555,6 +2555,7 @@ function closeLineupSelector() {
 let matchInterval;
 function playMatchVsCPU() {
     if (tournamentState.active) {
+        // Si ya está activo, pasa a la siguiente ronda directamente
         startMatchSimulation();
         return;
     }
@@ -2565,28 +2566,14 @@ function playMatchVsCPU() {
         return;
     }
 
-    let today = getSpanishDateString();
-    let tourneysDate = localStorage.getItem('f10_tourneys_date');
-    let tourneysCount = parseInt(localStorage.getItem('f10_tourneys_count') || '0');
-
-    if (tourneysDate !== today) {
-        tourneysCount = 0;
-        localStorage.setItem('f10_tourneys_date', today);
-    }
-
-    if (tourneysCount >= 4) {
-        mostrarMensajePro("⏳ LÍMITE ALCANZADO", "Ya has jugado tus 4 torneos diarios. Vuelve mañana a partir de las 00:00 (Hora Española).");
-        return;
-    }
-
     // Cobro de 75 monedas de Inscripción
     if (getCoins() < 75) {
         mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 75 FutCoins para pagar la inscripción al torneo.");
         return;
     }
 
-    addCoins(-75);
-    localStorage.setItem('f10_tourneys_count', tourneysCount + 1);
+    addCoins(-75); // Resta las monedas en la base de datos
+    document.getElementById('album-coins').innerText = getCoins(); // Actualiza el número visualmente al instante
     
     tournamentState.active = true;
     tournamentState.roundIndex = 0;
