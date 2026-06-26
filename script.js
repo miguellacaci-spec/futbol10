@@ -724,14 +724,6 @@ let roscoState = {
 };
 
 let currentLineupSlot = -1;
-let matchState = {
-    turn: 0, 
-    myGoals: 0,
-    cpuGoals: 0,
-    myStrength: 0,
-    cpuStrength: 0,
-    minutes: [15, 35, 60, 75, 89]
-};
 // Añadimos el estado del torneo y ampliamos el estado del partido
 let tournamentState = {
     active: false,
