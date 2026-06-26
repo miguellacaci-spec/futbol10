@@ -132,10 +132,25 @@ const dbEquipos = {
     
     "CELTA DE VIGO": [
         { name: "RADU", rating: 78, positions: ["POR"], tier: "platino" },
+        { name: "IVAN VILLAR", rating: 72, positions: ["POR"], tier: "platino" },
         { name: "STARFELT", rating: 78, positions: ["DFC"], tier: "platino" },
         { name: "MINGUEZA", rating: 80, positions: ["LD"], tier: "diamante" },
+        { name: "CARREIRA", rating: 80, positions: ["LD"], tier: "diamante" },
         { name: "AIDOO", rating: 73, positions: ["DFC"], tier: "platino" },
         { name: "ALVARO NUÑEZ", rating: 76, positions: ["LD", "DFC"], tier: "diamante" },
+        { name: "JAVI RODRIGUEZ", rating: 76, positions: ["LD", "DFC"], tier: "diamante" },
+        { name: "MARCOS ALONSO", rating: 79, positions: ["DFC", "LI"], tier: "diamante" },
+        { name: "MORIBA", rating: 78, positions: ["MC", "MCD"], tier: "diamante" },
+        { name: "VECINO", rating: 76, positions: ["MC", "MCD"], tier: "diamante" },
+        { name: "MIGUEL ROMAN", rating: 74, positions: ["MC", "MCD"], tier: "diamante" },
+        { name: "HUGO SOTELO", rating: 74, positions: ["MC", "MCD"], tier: "diamante" },
+        { name: "WILLIOT SWEDBERG", rating: 75, positions: ["EI", "MCO"], tier: "oro" },
+        { name: "HUGO ALVAREZ", rating: 75, positions: ["EI"], tier: "oro" },
+        { name: "FER LOPEZ", rating: 73, positions: ["ED", "MCO"], tier: "oro" },
+        { name: "BORJA IGLESIAS", rating: 80, positions: ["DC"], tier: "oro" },
+        { name: "JUTGLA", rating: 75, positions: ["ED", "DC"], tier: "oro" },
+        { name: "IAGO ASPAS", rating: 81, positions: ["DC"], tier: "platino" },
+        { name: "PABLO DURAN", rating: 74, positions: ["DC"], tier: "platino" },
     ],  
 
 
