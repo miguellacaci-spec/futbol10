@@ -2594,8 +2594,83 @@ function playMatchVsCPU() {
     
     startMatchSimulation();
 }
+// NUEVA FUNCIÓN AUXILIAR PARA CALCULAR LA MEDIA DE UN RIVAL
+function getTeamRating(clubName) {
+    let total = 0;
+    const roster = [...dbEquipos[clubName]].sort((a, b) => b.rating - a.rating).slice(0, 11);
+    roster.forEach(p => total += p.rating);
+    return Math.floor(total / 11);
+}
 
-startMatchSimulation
+// SIMULADOR CON DIFICULTAD PROGRESIVA
+function startMatchSimulation() {
+    const lineup = getLineup();
+    let myTotalRating = 0;
+    lineup.forEach(p => { if(p) myTotalRating += getPlayerRating(p); });
+    let myRating = Math.floor(myTotalRating / 11);
+
+    // 1. Calculamos la media de todos los equipos y los ordenamos de PEOR a MEJOR
+    let allTeams = Object.keys(dbEquipos).map(club => {
+        return { name: club, rating: getTeamRating(club) };
+    }).sort((a, b) => a.rating - b.rating);
+
+    // 2. Filtramos los que ya hemos eliminado en rondas anteriores
+    let availableTeams = allTeams.filter(t => !tournamentState.facedTeams.includes(t.name));
+
+    let rivalClubObj;
+    
+    // 3. Lógica de Dificultad Progresiva
+    if (tournamentState.roundIndex === 0) {
+        // CUARTOS: Selecciona uno de los 2 peores equipos disponibles
+        let easyTier = availableTeams.slice(0, 2);
+        rivalClubObj = easyTier[Math.floor(Math.random() * easyTier.length)];
+    } else if (tournamentState.roundIndex === 1) {
+        // SEMIFINALES: Selecciona un equipo de media tabla superior
+        let midIndex = Math.floor(availableTeams.length / 2);
+        rivalClubObj = availableTeams[midIndex];
+    } else {
+        // FINAL: Selecciona a la fuerza al MEJOR equipo restante
+        rivalClubObj = availableTeams[availableTeams.length - 1];
+    }
+
+    const rivalClub = rivalClubObj.name;
+    const cpuRating = rivalClubObj.rating;
+    
+    // Guardamos el rival en el historial para no repetirlo
+    tournamentState.facedTeams.push(rivalClub);
+
+    const cpuRoster = [...dbEquipos[rivalClub]].sort((a,b) => b.rating - a.rating).slice(0, 11);
+
+    matchState = { 
+        minute: 0, 
+        addedTime: Math.floor(Math.random() * 4) + 2, 
+        myGoals: 0, cpuGoals: 0, myPenalties: 0, cpuPenalties: 0,
+        myRating: myRating, cpuRating: cpuRating, 
+        cpuClub: rivalClub, cpuPlayers: cpuRoster, 
+        isFinished: false, phase: 'regular' 
+    };
+
+    document.getElementById('match-competition').innerText = `COPA F10 - ${tournamentState.rounds[tournamentState.roundIndex]}`;
+    document.getElementById('my-team-rating').innerText = `Media: ${myRating}`;
+    document.getElementById('cpu-team-name').innerText = rivalClub;
+    document.getElementById('cpu-team-rating').innerText = `Media: ${cpuRating}`;
+    document.getElementById('match-score-my').innerText = '0';
+    document.getElementById('match-score-cpu').innerText = '0';
+    document.getElementById('match-clock').innerText = "00";
+    document.getElementById('match-minute-progress').style.width = "0%";
+    
+    const btn = document.getElementById('match-close-btn');
+    btn.classList.add('hidden');
+    btn.innerText = "CONTINUAR";
+    
+    const logDiv = document.getElementById('match-live-log');
+    logDiv.innerHTML = `<div style="color: #00ff87; font-weight: bold; text-align: center;">🟢 ¡COMIENZA EL PARTIDO!</div>`;
+
+    document.getElementById('match-simulation-modal').classList.remove('hidden');
+
+    if(matchInterval) clearInterval(matchInterval);
+    matchInterval = setInterval(simulateMinute, 100);
+}
 function simulateMinute() {
     if (matchState.isFinished) return;
 
