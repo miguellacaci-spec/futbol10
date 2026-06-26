@@ -728,7 +728,8 @@ let currentLineupSlot = -1;
 let tournamentState = {
     active: false,
     roundIndex: 0,
-    rounds: ['CUARTOS DE FINAL', 'SEMIFINALES', 'GRAN FINAL']
+    rounds: ['CUARTOS DE FINAL', 'SEMIFINALES', 'GRAN FINAL'],
+    facedTeams: [] // Array para guardar a quién hemos eliminado
 };
 
 // Reemplaza tu actual matchState por este:
@@ -770,7 +771,7 @@ function updateRecord(gameId, score) {
 function showProfile() {
     document.getElementById('profile-coins').innerText = getCoins();
     
-    // Tus estadísticas actuales
+    // Tus estadísticas actuales (sin la tabla de goleadores)
     let statsHTML = `
         <div class="profile-stat-item"><span>Ahorcado</span> <span class="stat-value">🏆 ${getRecord('hangman')}</span></div>
         <div class="profile-stat-item"><span>Blur Guess</span> <span class="stat-value">🏆 ${getRecord('blur')}</span></div>
@@ -780,21 +781,9 @@ function showProfile() {
         <div class="profile-stat-item"><span>Zoom Escudos</span> <span class="stat-value">🏆 ${getRecord('zoom')}</span></div>
     `;
     
-    // Añadimos el Top Goleadores del Club
-    let scorers = JSON.parse(localStorage.getItem('f10_top_scorers')) || {};
-    let sortedScorers = Object.entries(scorers).sort((a, b) => b[1] - a[1]).slice(0, 5); // Coge el Top 5
-
-    if(sortedScorers.length > 0) {
-        statsHTML += `<h4 style="color:var(--primary); font-family:'Orbitron'; margin-top:20px; text-align:center;">⚽ MÁXIMOS GOLEADORES</h4>`;
-        sortedScorers.forEach((s, i) => {
-            statsHTML += `<div class="profile-stat-item" style="border-color:rgba(0,255,135,0.3);"><span>${i+1}. ${s[0]}</span> <span class="stat-value">${s[1]} Goles</span></div>`;
-        });
-    }
-
     document.getElementById('profile-stats').innerHTML = statsHTML;
     document.getElementById('profile-modal').classList.remove('hidden');
 }
-
 function closeProfile() {
     document.getElementById('profile-modal').classList.add('hidden');
 }
@@ -2159,10 +2148,50 @@ function switchAlbumTab(tabId) {
     document.getElementById(`tab-${tabId}`).classList.remove('hidden');
     document.getElementById(`tab-btn-${tabId}`).classList.add('active');
 
-    if (tabId === 'pack') updatePacksProgress(); // <--- LÍNEA NUEVA
+    if (tabId === 'pack') updatePacksProgress(); 
     if (tabId === 'collection') renderAlbum();
     if (tabId === 'market') renderMarket();
-    if (tabId === 'play') renderLineupPitch();
+    if (tabId === 'play') {
+        renderLineupPitch();
+        renderTopScorers(); // <--- LLAMADA NUEVA AQUÍ
+    }
+}
+
+// NUEVA FUNCIÓN PARA LA TABLA TOP 10 EN EL CAMPO
+function renderTopScorers() {
+    let container = document.getElementById('top-scorers-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'top-scorers-container';
+        container.style.width = '100%';
+        container.style.maxWidth = '400px';
+        container.style.margin = '30px auto 0 auto'; // Centrado debajo del botón de jugar
+        document.getElementById('tab-play').appendChild(container);
+    }
+    
+    let scorers = JSON.parse(localStorage.getItem('f10_top_scorers')) || {};
+    // Ahora coge el Top 10 en lugar del Top 5
+    let sortedScorers = Object.entries(scorers).sort((a, b) => b[1] - a[1]).slice(0, 10); 
+
+    let html = `<h4 style="color:var(--primary); font-family:'Orbitron'; text-align:center; margin-bottom: 15px; text-shadow: 0 0 10px rgba(0,255,135,0.3);">⚽ TOP 10 GOLEADORES HISTÓRICOS</h4>`;
+    
+    if(sortedScorers.length > 0) {
+        html += `<div style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 10px; border: 1px solid rgba(0,255,135,0.2);">`;
+        sortedScorers.forEach((s, i) => {
+            // Colores especiales para Oro, Plata y Bronce en el Top 3
+            let color = i === 0 ? '#ffd700' : (i === 1 ? '#c0c0c0' : (i === 2 ? '#cd7f32' : 'white'));
+            html += `
+            <div style="display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Orbitron'; font-size: 0.9rem;">
+                <span style="color: ${color}; font-weight: bold;">#${i+1} ${s[0]}</span>
+                <span style="color: var(--primary);">${s[1]} Goles</span>
+            </div>`;
+        });
+        html += `</div>`;
+    } else {
+        html += `<p style="text-align: center; color: #777; font-family: 'Orbitron';">Aún no has marcado goles con tu equipo.</p>`;
+    }
+    
+    container.innerHTML = html;
 }
 
 function getSpanishDateString() {
@@ -2524,10 +2553,8 @@ function closeLineupSelector() {
 // 11. PARTIDO TÁCTICO VS CPU (ACTUALIZADO)
 // ==========================================
 let matchInterval;
-
 function playMatchVsCPU() {
     if (tournamentState.active) {
-        // Si ya está activo, pasa a la siguiente ronda directamente
         startMatchSimulation();
         return;
     }
@@ -2538,7 +2565,6 @@ function playMatchVsCPU() {
         return;
     }
 
-    // Control de Límite Diario (4 Torneos/Día)
     let today = getSpanishDateString();
     let tourneysDate = localStorage.getItem('f10_tourneys_date');
     let tourneysCount = parseInt(localStorage.getItem('f10_tourneys_count') || '0');
@@ -2553,66 +2579,23 @@ function playMatchVsCPU() {
         return;
     }
 
-    // Cobro de Inscripción
-    if (getCoins() < 25) {
-        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 25 FutCoins para pagar la inscripción al torneo.");
+    // Cobro de 75 monedas de Inscripción
+    if (getCoins() < 75) {
+        mostrarMensajePro("⚠️ SIN FONDOS", "Necesitas 75 FutCoins para pagar la inscripción al torneo.");
         return;
     }
 
-    addCoins(-25);
+    addCoins(-75);
     localStorage.setItem('f10_tourneys_count', tourneysCount + 1);
     
-    // Iniciar Torneo
     tournamentState.active = true;
     tournamentState.roundIndex = 0;
+    tournamentState.facedTeams = []; // Reseteamos los rivales al empezar
     
     startMatchSimulation();
 }
 
-function startMatchSimulation() {
-    const lineup = getLineup();
-    let myTotalRating = 0;
-    lineup.forEach(p => { if(p) myTotalRating += getPlayerRating(p); });
-    let myRating = Math.floor(myTotalRating / 11);
-
-    const clubes = Object.keys(dbEquipos);
-    const rivalClub = clubes[Math.floor(Math.random() * clubes.length)];
-    let cpuTotalRating = 0;
-    const cpuRoster = [...dbEquipos[rivalClub]].sort((a,b) => b.rating - a.rating).slice(0, 11);
-    cpuRoster.forEach(p => cpuTotalRating += p.rating);
-    let cpuRating = Math.floor(cpuTotalRating / 11);
-
-    matchState = { 
-        minute: 0, 
-        addedTime: Math.floor(Math.random() * 4) + 2, 
-        myGoals: 0, cpuGoals: 0, myPenalties: 0, cpuPenalties: 0,
-        myRating: myRating, cpuRating: cpuRating, 
-        cpuClub: rivalClub, cpuPlayers: cpuRoster, 
-        isFinished: false, phase: 'regular' 
-    };
-
-    document.getElementById('match-competition').innerText = `COPA F10 - ${tournamentState.rounds[tournamentState.roundIndex]}`;
-    document.getElementById('my-team-rating').innerText = `Media: ${myRating}`;
-    document.getElementById('cpu-team-name').innerText = rivalClub;
-    document.getElementById('cpu-team-rating').innerText = `Media: ${cpuRating}`;
-    document.getElementById('match-score-my').innerText = '0';
-    document.getElementById('match-score-cpu').innerText = '0';
-    document.getElementById('match-clock').innerText = "00";
-    document.getElementById('match-minute-progress').style.width = "0%";
-    
-    const btn = document.getElementById('match-close-btn');
-    btn.classList.add('hidden');
-    btn.innerText = "CONTINUAR";
-    
-    const logDiv = document.getElementById('match-live-log');
-    logDiv.innerHTML = `<div style="color: #00ff87; font-weight: bold; text-align: center;">🟢 ¡COMIENZA EL PARTIDO!</div>`;
-
-    document.getElementById('match-simulation-modal').classList.remove('hidden');
-
-    if(matchInterval) clearInterval(matchInterval);
-    matchInterval = setInterval(simulateMinute, 100);
-}
-
+startMatchSimulation
 function simulateMinute() {
     if (matchState.isFinished) return;
 
@@ -2716,50 +2699,71 @@ function finishPenalties() {
 function scoreGoal(team) {
     const lineup = getLineup();
     let scorer = "Jugador";
+    let assister = null;
     let color = "";
     
+    // Subfunción para elegir goleador con probabilidades (Excluye porteros)
+    function getRandomScorer(playersArr, isUser) {
+        let weights = [];
+        playersArr.forEach((p, idx) => {
+            if(!p) return;
+            // Identificar la posición (tu equipo por slot, CPU por su DB)
+            let pos = isUser ? formationPositions[idx] : p.positions[0]; 
+            
+            let w = 0; // 0 por defecto (Portero nunca marcará)
+            if (["DC", "EI", "ED"].includes(pos)) w = 60; // 60% Delanteros
+            else if (["MC", "MCO", "MCD"].includes(pos)) w = 25; // 25% Medios
+            else if (["DFC", "LI", "LD"].includes(pos)) w = 10; // 10% Defensas
+            
+            if (w > 0) weights.push({player: isUser ? p : p.name, weight: w});
+        });
+
+        if (weights.length === 0) return isUser ? "Jugador" : "CPU"; // Por si falla
+        let totalWeight = weights.reduce((acc, curr) => acc + curr.weight, 0);
+        let rand = Math.random() * totalWeight;
+        let sum = 0;
+        for (let item of weights) {
+            sum += item.weight;
+            if (rand <= sum) return item.player;
+        }
+        return weights[0].player;
+    }
+
     if (team === 'me') {
         matchState.myGoals++;
         color = "#00ff87";
         document.getElementById('match-score-my').innerText = matchState.myGoals;
         
-        // Ponderación de Goleadores
-        let weights = [];
-        lineup.forEach((p, idx) => {
-            if(!p) return;
-            let pos = formationPositions[idx];
-            let w = 1; // Base (Portero)
-            if (["DC", "EI", "ED"].includes(pos)) w = 60; // Delanteros 60%
-            else if (["MC", "MCO", "MCD"].includes(pos)) w = 25; // Medios 25%
-            else if (["DFC", "LI", "LD"].includes(pos)) w = 10; // Defensas 10%
-            weights.push({player: p, weight: w});
-        });
-
-        let totalWeight = weights.reduce((acc, curr) => acc + curr.weight, 0);
-        let rand = Math.random() * totalWeight;
-        let sum = 0;
+        scorer = getRandomScorer(lineup, true);
         
-        for (let item of weights) {
-            sum += item.weight;
-            if (rand <= sum) {
-                scorer = item.player;
-                break;
-            }
+        // Asistencias (50% probabilidad)
+        if (Math.random() > 0.5) {
+            let possibleAssisters = lineup.filter((p, idx) => p && p !== scorer && formationPositions[idx] !== "POR");
+            if(possibleAssisters.length > 0) assister = possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
         }
-        
-        registerGoalStats(scorer); // Guardamos el gol en la base de datos local
+        registerGoalStats(scorer); // Guardamos el goleador en el Top Histórico
     } else {
         matchState.cpuGoals++;
         color = "#ff4d4d";
         document.getElementById('match-score-cpu').innerText = matchState.cpuGoals;
-        scorer = matchState.cpuPlayers[Math.floor(Math.random() * matchState.cpuPlayers.length)].name;
+        
+        scorer = getRandomScorer(matchState.cpuPlayers, false);
+        
+        // Asistencias CPU
+        if (Math.random() > 0.5) {
+            let possibleAssisters = matchState.cpuPlayers.filter(p => p.name !== scorer && p.positions[0] !== "POR");
+            if(possibleAssisters.length > 0) assister = possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)].name;
+        }
     }
 
     const modalBox = document.getElementById('match-modal-box');
     modalBox.classList.add('anim-goal-shake');
     setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 400);
 
-    logEvent(`⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`, color);
+    let text = `⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`;
+    if (assister) text += ` Asistencia de ${assister}.`;
+    
+    logEvent(text, color);
 }
 
 function registerGoalStats(playerName) {
