@@ -2883,13 +2883,16 @@ function scoreGoal(team) {
     let assister = null;
     let color = "";
     
+    // ¡LA CLAVE ESTÁ AQUÍ! Obtenemos las posiciones dinámicas de tu táctica actual
+    const currentFormation = getCurrentFormation().positions;
+
     // Subfunción para elegir goleador con probabilidades (Excluye porteros)
     function getRandomScorer(playersArr, isUser) {
         let weights = [];
         playersArr.forEach((p, idx) => {
             if(!p) return;
-            // Identificar la posición (tu equipo por slot, CPU por su DB)
-            let pos = isUser ? formationPositions[idx] : p.positions[0]; 
+            // Si eres tú, lee de currentFormation. Si es CPU, lee de la base de datos
+            let pos = isUser ? currentFormation[idx] : p.positions[0]; 
             
             let w = 0; // 0 por defecto (Portero nunca marcará)
             if (["DC", "EI", "ED"].includes(pos)) w = 60; // 60% Delanteros
@@ -2919,10 +2922,19 @@ function scoreGoal(team) {
         
         // Asistencias (50% probabilidad)
         if (Math.random() > 0.5) {
-            let possibleAssisters = lineup.filter((p, idx) => p && p !== scorer && formationPositions[idx] !== "POR");
+            let possibleAssisters = lineup.filter((p, idx) => p && p !== scorer && currentFormation[idx] !== "POR");
             if(possibleAssisters.length > 0) assister = possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
         }
-        registerGoalStats(scorer); // Guardamos el goleador en el Top Histórico
+        
+        // Guardamos las estadísticas del goleador
+        try {
+            if (typeof registerGoalStats === 'function') {
+                registerGoalStats(scorer); 
+            }
+        } catch (error) {
+            console.error("Error guardando stats:", error);
+        }
+        
     } else {
         matchState.cpuGoals++;
         color = "#ff4d4d";
@@ -2938,15 +2950,16 @@ function scoreGoal(team) {
     }
 
     const modalBox = document.getElementById('match-modal-box');
-    modalBox.classList.add('anim-goal-shake');
-    setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 400);
+    if (modalBox) {
+        modalBox.classList.add('anim-goal-shake');
+        setTimeout(() => modalBox.classList.remove('anim-goal-shake'), 400);
+    }
 
     let text = `⚽ <strong>¡GOL!</strong> [${matchState.minute}'] Marca <strong>${scorer}</strong>.`;
     if (assister) text += ` Asistencia de ${assister}.`;
     
     logEvent(text, color);
 }
-
 function registerGoalStats(playerName) {
     let stats = JSON.parse(localStorage.getItem('f10_top_scorers')) || {};
     stats[playerName] = (stats[playerName] || 0) + 1;
