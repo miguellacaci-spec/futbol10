@@ -2529,26 +2529,27 @@ function sellAllDuplicates() {
 // 11. ALINEACIÓN (11 IDEAL) Y PARTIDO TÁCTICO
 // ==========================================
 
-// Diccionario dinámico con las posiciones y distribución visual de cada táctica
 const formationsMap = {
     balanced: {
         // 4-4-2: 2 delanteros, 4 medios, 4 defensas, 1 portero
         positions: ["POR", "LI", "DFC", "DFC", "LD", "MC", "MC", "MC", "MC", "DC", "DC"],
-        rows: [[10, 9], [8, 7, 6, 5], [4, 3, 2, 1], [0]]
+        // Ordenado de izquierda a derecha
+        rows: [[9, 10], [5, 6, 7, 8], [1, 2, 3, 4], [0]]
     },
     offensive: {
         // 4-3-3: 3 delanteros, 3 medios, 4 defensas, 1 portero
         positions: ["POR", "LI", "DFC", "DFC", "LD", "MC", "MC", "MCO", "EI", "DC", "ED"],
-        rows: [[10, 9, 8], [7, 6, 5], [4, 3, 2, 1], [0]]
+        // Nuevos saltos de línea (MCO y extremos separados)
+        rows: [[8, 9, 10], [7], [5, 6], [1, 2, 3, 4], [0]]
     },
     defensive: {
         // 5-4-1: 1 delantero, 4 medios, 5 defensas, 1 portero
         positions: ["POR", "LI", "DFC", "DFC", "DFC", "LD", "MCD", "MCD", "MC", "MC", "DC"],
-        rows: [[10], [9, 8, 7, 6], [5, 4, 3, 2, 1], [0]]
+        // Nuevos saltos de línea (MCD y MC separados)
+        rows: [[10], [8, 9], [6, 7], [1, 2, 3, 4, 5], [0]]
     }
 };
 
-// Función para obtener la formación actual seleccionada en el dropdown
 function getCurrentFormation() {
     const select = document.getElementById('match-tactic');
     return formationsMap[select ? select.value : 'balanced'];
@@ -2559,18 +2560,38 @@ function renderLineupPitch() {
     let lineup = getLineup();
     while (lineup.length < 11) lineup.push(null);
     
-    pitch.innerHTML = "";
-    
     const formation = getCurrentFormation();
     const formationPositions = formation.positions;
     const rows = formation.rows;
+
+    // VALIDACIÓN: Eliminar jugadores que no sean compatibles con la nueva formación
+    let lineupChanged = false;
+    for (let i = 0; i < 11; i++) {
+        const pName = lineup[i];
+        if (pName) {
+            const reqPos = formationPositions[i];
+            const pPositions = getPlayerPositions(pName); 
+            // Si el jugador no tiene la posición requerida para este hueco, lo quitamos
+            if (!pPositions.includes(reqPos)) {
+                lineup[i] = null; 
+                lineupChanged = true;
+            }
+        }
+    }
+    
+    // Si se eliminó algún jugador inválido, guardamos la alineación actualizada
+    if (lineupChanged) {
+        saveLineup(lineup);
+    }
+
+    pitch.innerHTML = "";
 
     rows.forEach(rowIndices => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'pitch-row';
         rowIndices.forEach(idx => {
             const pName = lineup[idx];
-            const reqPos = formationPositions[idx]; // Posición que exige la táctica actual
+            const reqPos = formationPositions[idx]; 
             
             const slot = document.createElement('div');
             slot.className = 'player-slot clickable';
@@ -2592,7 +2613,6 @@ function renderLineupPitch() {
                     <div class="name hidden-name" style="font-size: clamp(0.45rem, 1.5vw, 0.65rem);">FICHAR</div>
                 `;
             }
-            // Pasamos la posición requerida para filtrar correctamente al fichar
             slot.onclick = () => openLineupSelector(idx, reqPos);
             rowDiv.appendChild(slot);
         });
