@@ -198,10 +198,10 @@
                 
                 <div class="tactic-selector" style="margin-bottom: 20px; text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--primary);">
                     <h4 style="color: white; font-family: 'Orbitron'; margin-top: 0;">TÁCTICA DEL EQUIPO</h4>
-                    <select id="match-tactic" style="background: #1c2128; color: #00ff87; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--primary); font-family: 'Orbitron'; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer;">
-                        <option value="balanced">⚖️ EQUILIBRADA (Normal)</option>
-                        <option value="offensive">⚔️ OFENSIVA (Más ataque, menos fuerza)</option>
-                        <option value="defensive">🛡️ DEFENSIVA (Más defensa, bloque bajo)</option>
+                    <select id="match-tactic" onchange="renderLineupPitch()" style="background: #1c2128; color: #00ff87; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--primary); font-family: 'Orbitron'; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer;">
+                        <option value="balanced">EQUILIBRADA (4-4-2)</option>
+                        <option value="offensive">OFENSIVA (4-3-3)</option>
+                        <option value="defensive">DEFENSIVA (5-4-1)</option>
                     </select>
                 </div>
 
