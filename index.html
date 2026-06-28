@@ -171,6 +171,26 @@
 
             <div id="tab-collection" class="album-tab-content hidden">
                 <div class="album-progress">Progreso: <span id="album-progress-text">0/0</span></div>
+                
+                <div class="album-filters" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%;">
+                    <select id="filter-team" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                        <option value="all">🏆 Todos los Equipos</option>
+                    </select>
+                    <select id="filter-tier" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                        <option value="all">⭐ Todos los Niveles</option>
+                        <option value="bronce">Bronce</option>
+                        <option value="plata">Plata</option>
+                        <option value="oro">Oro</option>
+                        <option value="diamante">Diamante</option>
+                        <option value="platino">Platino</option>
+                    </select>
+                    <select id="filter-status" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                        <option value="all">📦 Todas las cartas</option>
+                        <option value="unlocked">🔓 Desbloqueadas</option>
+                        <option value="locked">🔒 Faltantes</option>
+                    </select>
+                </div>
+
                 <div class="album-grid" id="album-grid"></div>
             </div>
 
@@ -190,6 +210,26 @@
                 <button class="secondary-btn hidden" id="btn-sell-all" onclick="sellAllDuplicates()" style="margin-bottom: 15px; background: #ff4d4d; color: white; border: none;">VENDER TODOS</button>
                 <div class="album-grid" id="market-grid"></div>
             </div>
+
+            <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
+                    <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Mejora el rating de un jugador de tu álbum en +1.<br>
+                    🏆 Torneos ganados: <span id="ui-tournaments-won" style="color:white;font-weight:bold;">0</span> | ⚽ Goles de tu equipo: <span id="ui-total-goals" style="color:white;font-weight:bold;">0</span></p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                        <div class="coin-badge" style="border-color:#00ffff; color:#00ffff; font-size: 0.8rem;">💎 SuperCoins: <span id="ui-supercoins">0</span></div>
+                        <div class="coin-badge" style="border-color:#00d2ff; color:#00d2ff; font-size: 0.8rem;">🧬 Evoluciones: <span id="ui-evolutions">0</span></div>
+                    </div>
+
+                    <div class="input-container" style="max-width: 500px; margin: 0 auto;">
+                        <div class="input-group">
+                            <input type="text" id="upgradeInput" placeholder="Jugador a mejorar..." autocomplete="off">
+                            <button class="secondary-btn" style="background:#00ffff;color:black;padding:10px;" title="Cuesta 1 SuperCoin" onclick="applyUpgrade(true)">💎 +1</button>
+                            <button class="secondary-btn" style="background:#00d2ff;color:black;padding:10px;" title="Cuesta 1 Evolución" onclick="applyUpgrade(false)">🧬 +1</button>
+                        </div>
+                        <div id="upgrade-suggestions" class="suggestions-box"></div>
+                    </div>
+                </div>
 
             <div id="tab-play" class="album-tab-content hidden">
                 <div style="width: 100%; text-align: center; margin-bottom: 20px;">
