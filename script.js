@@ -908,30 +908,12 @@ function addSuperCoins(amount) {
     updateUpgradesUI();
 }
 
-function getTotalGoals() { return parseInt(localStorage.getItem('f10_total_goals')) || 0; }
-function addTotalGoal() {
-    let goals = getTotalGoals() + 1;
-    localStorage.setItem('f10_total_goals', goals);
-    if (goals % 200 === 0) {
-        addEvolutions(1); // 1 Evolución cada 200 goles
-        logEvent("🌟 ¡HAS DESBLOQUEADO UNA EVOLUCIÓN! (200 Goles marcados)", "#00d2ff");
-    }
-}
-
-function getEvolutions() { return parseInt(localStorage.getItem('f10_evolutions')) || 0; }
-function addEvolutions(amount) {
-    localStorage.setItem('f10_evolutions', getEvolutions() + amount);
-    updateUpgradesUI();
-}
-
 function getUpgrades() { return JSON.parse(localStorage.getItem('f10_upgrades')) || {}; }
 function saveUpgrades(upgs) { localStorage.setItem('f10_upgrades', JSON.stringify(upgs)); }
 
 function updateUpgradesUI() {
     if(document.getElementById('ui-supercoins')) document.getElementById('ui-supercoins').innerText = getSuperCoins();
-    if(document.getElementById('ui-evolutions')) document.getElementById('ui-evolutions').innerText = getEvolutions();
     if(document.getElementById('ui-tournaments-won')) document.getElementById('ui-tournaments-won').innerText = getTournamentsWon();
-    if(document.getElementById('ui-total-goals')) document.getElementById('ui-total-goals').innerText = getTotalGoals();
 }
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
@@ -3208,7 +3190,8 @@ function startGameFromInfo() {
     // Ejecuta la función de cargar la pantalla del minijuego correspondiente
     if (pendingGameInit) pendingGameInit();
 }
-function applyUpgrade(isSuperCoin) {
+
+function applyUpgrade() {
     const input = document.getElementById('upgradeInput');
     const name = input.value.toUpperCase().trim();
     
@@ -3218,18 +3201,13 @@ function applyUpgrade(isSuperCoin) {
         return;
     }
 
-    if (isSuperCoin && getSuperCoins() <= 0) {
+    if (getSuperCoins() <= 0) {
         mostrarMensajePro("⚠️ SIN SUPERCOINS", "Necesitas 1 SuperCoin. Gana 10 torneos para conseguir una.");
-        return;
-    }
-    if (!isSuperCoin && getEvolutions() <= 0) {
-        mostrarMensajePro("⚠️ SIN EVOLUCIONES", "Necesitas 1 Evolución. Tu equipo debe marcar 200 goles para conseguir una.");
         return;
     }
 
     // Gastar moneda
-    if (isSuperCoin) addSuperCoins(-1);
-    else addEvolutions(-1);
+    addSuperCoins(-1);
 
     // Guardar la mejora permanentemente
     let upgs = getUpgrades();
@@ -3254,6 +3232,7 @@ function applyUpgrade(isSuperCoin) {
     updateUpgradesUI();
     input.value = "";
     
-    // Refrescar el campo si está puesto ahí
+    // Refrescar el campo y mercado
     renderLineupPitch();
+    renderMarket();
 }
