@@ -198,7 +198,30 @@ const dbEquipos = {
         { name: "ROBERT NAVARRO", rating: 76, positions: ["EI", "ED"] },
         { name: "GURUZETA", rating: 78, positions: ["DC"] },
         { name: "IÑAKI WILLIAMS", rating: 81, positions: ["ED", "DC"] },
-        { name: "BERENGUER", rating: 78, positions: ["EI", "ED", "MCO"] },
+        { name: "BERENGUER", rating: 78, positions: ["EI", "ED", "MCO"] }
+    ],
+    
+    "VALENCIA": [
+        { name: "DIMITRIEVSKI", rating: 77, positions: ["POR"] },
+        { name: "DIAKHABY", rating: 76, positions: ["DFC"] },
+        { name: "CESAR TARREGA", rating: 75, positions: ["DFC"] },
+        { name: "COPETE", rating: 74, positions: ["DFC"] },
+        { name: "GAYA", rating: 77, positions: ["LI"] },
+        { name: "JESUS VAZQUEZ", rating: 71, positions: ["LI"] },
+        { name: "FOULQUIER", rating: 72, positions: ["LD"] },
+        { name: "PEPELU", rating: 76, positions: ["MC", "MCD"] },
+        { name: "GUIDO RODRIGUEZ", rating: 76, positions: ["MC", "MCD"] },
+        { name: "SANTAMARIA", rating: 75, positions: ["MC", "MCD"] },
+        { name: "JAVI GUERRA", rating: 76, positions: ["MC", "MCO","MCD"] },
+        { name: "ANDRE ALMEIDA", rating: 74, positions: ["MCO", "MC"] },
+        { name: "UGRINIC", rating: 75, positions: ["MCO", "MC"] },
+        { name: "RAMAZANI", rating: 76, positions: ["EI"] },
+        { name: "DANJUMA", rating: 75, positions: ["EI", "DC"] },
+        { name: "LUIS RIOJA", rating: 77, positions: ["ED"] },
+        { name: "HUGO DURO", rating: 77, positions: ["DC"] },
+        { name: "UMAR SADIQ", rating: 76, positions: ["DC"] },
+        { name: "DANI RABA", rating: 74, positions: ["MCO", "ED", "DC"] },
+        { name: "DIEGO LOPEZ", rating: 77, positions: ["ED", "EI"] }
     ],
         
 };
