@@ -247,6 +247,28 @@ const dbEquipos = {
         { name: "AKOR ADAMS", rating: 75, positions: ["DC"] },
         { name: "RUBEN VARGAS", rating: 78, positions: ["ED", "EI", "MCO"] }
     ],
+
+    "RAYO VALLECANO": [
+        { name: "BATALLA", rating: 79, positions: ["POR"] },
+        { name: "DANI CARDENAS", rating: 72, positions: ["POR"] },
+        { name: "PEP CHAVARRIA", rating: 78, positions: ["LI"] },
+        { name: "NOBEL MENDY", rating: 75, positions: ["LI", "DFC"] },
+        { name: "LEJEUNE", rating: 79, positions: ["DFC"] },
+        { name: "RATIU", rating: 80, positions: ["LD"] },
+        { name: "FRAN PEREZ", rating: 74, positions: ["LD"] },
+        { name: "BALLIU", rating: 75, positions: ["LD", "LI"] },
+        { name: "GUMBAU", rating: 72, positions: ["MCD","MC"] },
+        { name: "UNAI LOPEZ", rating: 76, positions: ["MCD","MC"] },
+        { name: "OSCAR VALENTIN", rating: 77, positions: ["MCD","MC"] },
+        { name: "PEDRO DIAZ", rating: 75, positions: ["MC", "MCO"] },
+        { name: "PATHE CISS", rating: 77, positions: ["MCD", "DFC"] },
+        { name: "NTEKA", rating: 70, positions: ["MCO", "DC"] },
+        { name: "ALVARO GARCIA", rating: 81, positions: ["EI", "DC"] },
+        { name: "ISI PALAZON", rating: 80, positions: ["MCO", "DC"] },
+        { name: "CAMELLO", rating: 73, positions: ["DC"] },
+        { name: "ALEMAO", rating: 74, positions: ["DC"] },
+        { name: "JORGE DE FRUTOS", rating: 81, positions: ["ED","DC"] }
+    ],
         
 };
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
