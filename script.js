@@ -2176,6 +2176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupAutocomplete('zoomInput', 'zoom-suggestions'); 
     setupAutocomplete('top10Input', 'top10-suggestions');
     setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
+    setupAutocomplete('upgradeInput', 'upgrade-suggestions');
 
     const solveBtn = document.getElementById('solveButton');
     if(solveBtn) solveBtn.onclick = solveFullWord;
@@ -3011,7 +3012,7 @@ function scoreGoal(team) {
         matchState.myGoals++;
         color = "#00ff87";
         document.getElementById('match-score-my').innerText = matchState.myGoals;
-        
+        addTotalGoal();
         scorer = getRandomScorer(lineup, true);
         
         // Asistencias (50% probabilidad)
@@ -3081,6 +3082,11 @@ function endSimulatedMatch() {
         if (tournamentState.roundIndex === 2) { // Ganó la final
             logEvent("🏆 ¡CAMPEÓN DEL TORNEO! Has ganado +150 FutCoins 🪙", "#00ff87");
             addCoins(150);
+            // NUEVO: Sumar el torneo y checkear la SuperCoin
+            let won = addTournamentWon();
+            logEvent(`🏆 Torneos en tu palmarés: ${won}`, "#ffd700");
+            if (won % 10 === 0) logEvent("💎 ¡HAS GANADO UNA SUPERCOIN! (x10 Torneos)", "#00ffff");
+            // FIN NUEVO
             tournamentState.active = false;
             btn.innerText = "RECLAMAR Y SALIR";
         } else {
@@ -3201,4 +3207,53 @@ function startGameFromInfo() {
     closeGameInfo();
     // Ejecuta la función de cargar la pantalla del minijuego correspondiente
     if (pendingGameInit) pendingGameInit();
+}
+function applyUpgrade(isSuperCoin) {
+    const input = document.getElementById('upgradeInput');
+    const name = input.value.toUpperCase().trim();
+    
+    const data = getAlbumData();
+    if (!data.unlocked.includes(name)) {
+        mostrarMensajePro("❌ ERROR", "Debes tener al jugador desbloqueado en tu álbum para poder mejorarlo.");
+        return;
+    }
+
+    if (isSuperCoin && getSuperCoins() <= 0) {
+        mostrarMensajePro("⚠️ SIN SUPERCOINS", "Necesitas 1 SuperCoin. Gana 10 torneos para conseguir una.");
+        return;
+    }
+    if (!isSuperCoin && getEvolutions() <= 0) {
+        mostrarMensajePro("⚠️ SIN EVOLUCIONES", "Necesitas 1 Evolución. Tu equipo debe marcar 200 goles para conseguir una.");
+        return;
+    }
+
+    // Gastar moneda
+    if (isSuperCoin) addSuperCoins(-1);
+    else addEvolutions(-1);
+
+    // Guardar la mejora permanentemente
+    let upgs = getUpgrades();
+    upgs[name] = (upgs[name] || 0) + 1;
+    saveUpgrades(upgs);
+
+    // Aplicarla al instante en el juego (Memoria RAM)
+    let oldTier = playerStats[name].tier;
+    playerStats[name].rating += 1;
+    let newTier = calculateTier(playerStats[name].rating);
+    playerStats[name].tier = newTier;
+
+    // Si cambió de nivel, lo movemos de la piscina de sobres de ese nivel
+    if (oldTier !== newTier) {
+        tierLists[oldTier] = tierLists[oldTier].filter(p => p !== name);
+        tierLists[newTier].push(name);
+    }
+
+    // Feedback visual y refresco general
+    mostrarMensajePro("🌟 ¡JUGADOR EVOLUCIONADO!", `${name} ha subido a ${playerStats[name].rating} de media.\n${oldTier !== newTier ? '¡Ha ascendido al nivel ' + newTier.toUpperCase() + '!' : ''}`);
+    
+    updateUpgradesUI();
+    input.value = "";
+    
+    // Refrescar el campo si está puesto ahí
+    renderLineupPitch();
 }
