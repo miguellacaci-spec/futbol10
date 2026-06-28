@@ -194,22 +194,23 @@
                 <div class="album-grid" id="album-grid"></div>
             </div>
 
-            <div id="tab-market" class="album-tab-content hidden">
-                <div class="market-buy-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--primary);">
-                    <h3 style="color: var(--primary); font-family: 'Orbitron'; margin-top: 0;">FICHAR JUGADOR</h3>
-                    <p style="color: var(--text-dim); font-size: 0.85rem;">Búscalo y fíchalo por 750🪙.</p>
+            <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
+                    <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Gana 10 torneos para obtener 1 SuperCoin y mejorar +1 a tu jugador.</p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; font-family: 'Orbitron'; font-size: 0.9rem;">
+                        <span style="color: white;">🏆 Torneos: <b id="ui-tournaments-won">0</b></span>
+                        <span style="color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5);">💎 SuperCoins: <b id="ui-supercoins">0</b></span>
+                    </div>
+
                     <div class="input-container" style="max-width: 400px; margin: 0 auto;">
                         <div class="input-group">
-                            <input type="text" id="marketBuyInput" placeholder="Nombre del jugador..." autocomplete="off">
-                            <button class="secondary-btn" onclick="buySpecificPlayer()">COMPRAR</button>
+                            <input type="text" id="upgradeInput" placeholder="Jugador a mejorar..." autocomplete="off">
+                            <button class="secondary-btn" style="background: #ffd700; color: black;" onclick="applyUpgrade()">EVOLUCIONAR</button>
                         </div>
-                        <div id="market-buy-suggestions" class="suggestions-box"></div>
+                        <div id="upgrade-suggestions" class="suggestions-box"></div>
                     </div>
                 </div>
-                <h3 style="color: white; font-family: 'Orbitron';">TUS REPETIDOS</h3>
-                <button class="secondary-btn hidden" id="btn-sell-all" onclick="sellAllDuplicates()" style="margin-bottom: 15px; background: #ff4d4d; color: white; border: none;">VENDER TODOS</button>
-                <div class="album-grid" id="market-grid"></div>
-            </div>
 
             <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
                     <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
