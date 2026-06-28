@@ -240,14 +240,17 @@ function calculateTier(rating) {
     return 'bronce';
 }
 
+const savedUpgrades = getUpgrades(); // Cargar mejoras guardadas
+
 Object.keys(dbEquipos).forEach(club => {
     dbEquipos[club].forEach(p => {
         players.push(p.name);
         
-        // Calculamos el tier real ignorando el texto de la base de datos
-        let autoTier = calculateTier(p.rating);
+        // Sumamos el rating base + las evoluciones guardadas que tenga el jugador
+        let currentRating = p.rating + (savedUpgrades[p.name] || 0);
+        let autoTier = calculateTier(currentRating); // El tier se actualiza dinámicamente si mejora
         
-        playerStats[p.name] = { rating: p.rating, positions: p.positions, tier: autoTier, club: club };
+        playerStats[p.name] = { rating: currentRating, positions: p.positions, tier: autoTier, club: club };
         tierLists[autoTier].push(p.name);
     });
 });
@@ -890,7 +893,46 @@ function showInfo() {
 function closeInfo() {
     document.getElementById('info-modal').classList.add('hidden');
 }
+// === SISTEMA DE PROGRESIÓN Y EVOLUCIONES ===
+function getTournamentsWon() { return parseInt(localStorage.getItem('f10_tournaments_won')) || 0; }
+function addTournamentWon() {
+    let won = getTournamentsWon() + 1;
+    localStorage.setItem('f10_tournaments_won', won);
+    if (won % 10 === 0) addSuperCoins(1); // 1 SuperCoin cada 10 torneos
+    return won;
+}
 
+function getSuperCoins() { return parseInt(localStorage.getItem('f10_supercoins')) || 0; }
+function addSuperCoins(amount) {
+    localStorage.setItem('f10_supercoins', getSuperCoins() + amount);
+    updateUpgradesUI();
+}
+
+function getTotalGoals() { return parseInt(localStorage.getItem('f10_total_goals')) || 0; }
+function addTotalGoal() {
+    let goals = getTotalGoals() + 1;
+    localStorage.setItem('f10_total_goals', goals);
+    if (goals % 200 === 0) {
+        addEvolutions(1); // 1 Evolución cada 200 goles
+        logEvent("🌟 ¡HAS DESBLOQUEADO UNA EVOLUCIÓN! (200 Goles marcados)", "#00d2ff");
+    }
+}
+
+function getEvolutions() { return parseInt(localStorage.getItem('f10_evolutions')) || 0; }
+function addEvolutions(amount) {
+    localStorage.setItem('f10_evolutions', getEvolutions() + amount);
+    updateUpgradesUI();
+}
+
+function getUpgrades() { return JSON.parse(localStorage.getItem('f10_upgrades')) || {}; }
+function saveUpgrades(upgs) { localStorage.setItem('f10_upgrades', JSON.stringify(upgs)); }
+
+function updateUpgradesUI() {
+    if(document.getElementById('ui-supercoins')) document.getElementById('ui-supercoins').innerText = getSuperCoins();
+    if(document.getElementById('ui-evolutions')) document.getElementById('ui-evolutions').innerText = getEvolutions();
+    if(document.getElementById('ui-tournaments-won')) document.getElementById('ui-tournaments-won').innerText = getTournamentsWon();
+    if(document.getElementById('ui-total-goals')) document.getElementById('ui-total-goals').innerText = getTotalGoals();
+}
 // ==========================================
 // 3. NAVEGACIÓN Y MENÚS
 // ==========================================
@@ -2245,10 +2287,14 @@ function switchAlbumTab(tabId) {
 
     if (tabId === 'pack') updatePacksProgress(); 
     if (tabId === 'collection') renderAlbum();
-    if (tabId === 'market') renderMarket();
+    if (tabId === 'market') {
+        renderMarket();
+        updateUpgradesUI(); // <--- LÍNEA NUEVA
+    }
     if (tabId === 'play') {
         renderLineupPitch();
         renderTopScorers(); // <--- LLAMADA NUEVA AQUÍ
+    
     }
 }
 
@@ -2425,28 +2471,53 @@ function updatePacksProgress() {
     if(progGratis) progGratis.innerText = `${data.unlocked.length}/${players.length}`;
 }
 
+function populateTeamFilter() {
+    const select = document.getElementById('filter-team');
+    if(select.options.length > 1) return; // Si ya se llenó, no repetir
+    Object.keys(dbEquipos).sort().forEach(club => {
+        const opt = document.createElement('option');
+        opt.value = club;
+        opt.innerText = club;
+        select.appendChild(opt);
+    });
+}
+
 function renderAlbum() { 
+    populateTeamFilter(); // Rellena el selector de equipos
+    
     const data = getAlbumData();
     const grid = document.getElementById('album-grid'); 
     grid.innerHTML = ""; 
     
+    // Obtener valores de los filtros
+    const fTeam = document.getElementById('filter-team').value;
+    const fTier = document.getElementById('filter-tier').value;
+    const fStatus = document.getElementById('filter-status').value;
+
     let unlockedCount = 0; 
+    let displayCount = 0;
     
-    // Al no usar .sort(), se respeta el orden original del array 'players' (agrupado por equipos)
     players.forEach(p => { 
         const isUnlocked = data.unlocked.includes(p); 
-        const tier = getPlayerTier(p); 
+        if (isUnlocked) unlockedCount++; 
+        
+        const pData = playerStats[p];
+        
+        // Aplicar filtros
+        if (fTeam !== 'all' && pData.club !== fTeam) return;
+        if (fTier !== 'all' && pData.tier !== fTier) return;
+        if (fStatus === 'unlocked' && !isUnlocked) return;
+        if (fStatus === 'locked' && isUnlocked) return;
+        
+        displayCount++;
         const card = document.createElement('div'); 
         
         if (isUnlocked) { 
-            unlockedCount++; 
-            card.className = `f10-card tier-${tier}`; 
-            
-            // Pon aquí tu código original para las cartas desbloqueadas.
-            // Por ejemplo:
-            card.innerHTML = `<img src="players/${p}.jpg" class="player-img"> <div class="player-name">${p}</div>`; 
+            card.className = `f10-card tier-${pData.tier}`; 
+            card.innerHTML = `<div style="position:absolute;top:2px;right:2px;background:black;color:#00ff87;font-weight:bold;padding:2px 4px;border-radius:5px;font-size:0.7rem;z-index:2;">${pData.rating}</div>
+                              <img src="players/${p}.jpg" class="player-img"> 
+                              <div class="card-name">${p}</div>`; 
         } else { 
-            // Esto se queda igual, que es lo que arreglamos de los candados
             card.className = `f10-card locked`; 
             card.innerHTML = `🔒 ${p}`; 
         }
@@ -2456,7 +2527,7 @@ function renderAlbum() {
 
     const progressText = document.getElementById('album-progress-text'); 
     if(progressText) { 
-        progressText.innerText = `${unlockedCount}/${players.length}`;
+        progressText.innerHTML = `${unlockedCount}/${players.length} <span style="font-size:0.8rem; color:#888;">(Mostrando: ${displayCount})</span>`;
     } 
 }
 
