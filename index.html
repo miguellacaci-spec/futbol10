@@ -1,1300 +1,647 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Futbol10 - Minijuegos</title>
-
     <link rel="stylesheet" href="style.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-
 </head>
-
 <body>
-
     <div id="app">
-
         
-
         <div id="menu-screen" class="screen">
-
             <div class="user-bar" style="max-width: 600px;">
-
                 <button onclick="showInfo()" class="icon-btn" title="Cómo Jugar">ℹ️</button>
-
-                
-
                 <button onclick="showProfile()" class="back-btn">👤 PERFIL</button>
-
                 <div class="coin-badge">🪙 <span id="menu-coins">0</span></div>
-
-                
-
                 <a href="https://instagram.com/lacacipzz" target="_blank" class="icon-btn ig-btn" title="Sígueme en Instagram">
-
                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG" style="width: 20px; filter: drop-shadow(0px 0px 2px rgba(255,255,255,0.8));">
-
                 </a>
-
             </div>
-
-
 
             <div class="logo-f10-container">
-
                 <div class="f10-icon">
-
                     <div class="f-part">F</div>
-
                     <div class="ten-part">10</div>
-
                 </div>
-
                 <h1 class="logo-texto-inferior">FUTBOL<span>10</span></h1>
-
             </div>
-
             <div class="menu-grid">
-
                 <div class="menu-card sobres-card" onclick="showGame('album')">
-
                     <div class="card-bg bg-sobres"></div>
-
                     <div class="card-hub-badge">SISTEMA CENTRAL</div>
-
                     <div class="card-info">
-
                         <h3>Álbum F10</h3>
-
                         <p>Gestión de álbum, sobres y partidos vs CPU</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card rosco-game-card" onclick="showRoscoInfo()">
-
                     <div class="card-bg bg-rosco"></div>
-
                     <div class="card-info">
-
                         <h3>El Rosco</h3>
-
                         <p>Desafío de vocabulario</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card laliga-card" onclick="showCategory('laliga')">
-
                     <div class="card-bg bg-laliga"></div>
-
                     <div class="card-info">
-
                         <h3>LaLiga</h3>
-
                         <p>Minijuegos españoles</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card premier-card" onclick="showCategory('premier')">
-
                     <div class="card-bg bg-premier"></div>
-
                     <div class="card-info">
-
                         <h3>Premier</h3>
-
                         <p>Minijuegos ingleses</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card europeos-card" onclick="showCategory('europeos')">
-
                     <div class="card-bg bg-europeos"></div>
-
                     <div class="card-info">
-
                         <h3>Global</h3>
-
                         <p>Conocimiento global</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card leyendas-card" onclick="showCategory('leyendas')">
-
                     <div class="card-bg bg-leyendas"></div>
-
                     <div class="card-info">
-
                         <h3>Leyendas</h3>
-
                         <p>Minijuegos históricos</p>
-
                     </div>
-
                 </div>
-
-
 
                 <div class="menu-card top10-card" onclick="showGameInfo('top10')">
-
                     <div class="card-bg bg-top10"></div>
-
                     <div class="card-info">
-
                         <h3>Top 10</h3>
-
                         <p>Rankings oficiales</p>
-
                     </div>
-
                 </div>
-
             </div> 
-
         </div> 
 
-
-
         <div id="category-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
-
                 <h2 id="category-title" class="logo" style="font-size: 1.5rem; margin: 0;"></h2>
-
             </nav>
-
             <div class="menu-grid" id="category-games-grid"></div>
-
         </div>
 
-
-
         <div id="album-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
-
                 <div class="score-board">🪙 <span id="album-coins">0</span></div>
-
             </nav>
-
-
 
             <h2 class="logo" style="font-size: 1.8rem; margin-bottom: 2vh;">ÁLBUM <span>F10</span></h2>
 
-
-
             <div class="album-tabs">
-
                 <button class="album-tab active" id="tab-btn-pack" onclick="switchAlbumTab('pack')">SOBRES</button>
-
                 <button class="album-tab" id="tab-btn-collection" onclick="switchAlbumTab('collection')">ÁLBUM</button>
-
                 <button class="album-tab" id="tab-btn-market" onclick="switchAlbumTab('market')">MERCADO</button>
-
                 <button class="album-tab" id="tab-btn-play" onclick="switchAlbumTab('play')" style="color: #00ff87; border-color: rgba(0,255,135,0.3);">PARTIDO</button>
-
             </div>
-
-
 
             <div id="tab-pack" class="album-tab-content">
-
                 <div id="pack-container" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; padding: 10px;">
-
                     <div class="pack-container" id="free-pack-btn" onclick="openFreePack(event)">
-
                         <div class="pack-visual bg-free-pack">
-
                             <div class="pack-logo" style="color: #0b0e14;">F10</div>
-
                             <div class="pack-title" style="background: #0b0e14; color: #a8ff78;">GRATIS</div>
-
                             <div class="pack-price" style="background: #0b0e14; color: #fff;">0 🪙</div>
-
                             <div id="prog-gratis" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">?/?</div>
-
                         </div>
-
                     </div>
-
                     <div class="pack-container" onclick="openPack(event, 'bronce')">
-
                         <div class="pack-visual" style="background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);">
-
                             <div class="pack-logo">F10</div>
-
                             <div class="pack-title">BRONCE</div>
-
                             <div class="pack-price">25 🪙</div>
-
                             <div id="prog-bronce" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
-
                         </div>
-
                     </div>
-
                     <div class="pack-container" onclick="openPack(event, 'plata')">
-
                         <div class="pack-visual" style="background: linear-gradient(135deg, #e6e8fa 0%, #a9a9a9 100%);">
-
                             <div class="pack-logo">F10</div>
-
                             <div class="pack-title">PLATA</div>
-
                             <div class="pack-price">50 🪙</div>
-
                             <div id="prog-plata" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
-
                         </div>
-
                     </div>
-
                     <div class="pack-container" onclick="openPack(event, 'oro')">
-
                         <div class="pack-visual" style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);">
-
                             <div class="pack-logo">F10</div>
-
                             <div class="pack-title">ORO</div>
-
                             <div class="pack-price">100 🪙</div>
-
                             <div id="prog-oro" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
-
                         </div>
-
                     </div>
-
                     <div class="pack-container" onclick="openPack(event, 'diamante')">
-
                         <div class="pack-visual" style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);">
-
                             <div class="pack-logo">F10</div>
-
                             <div class="pack-title" style="color: #fff; background: rgba(0,0,0,0.4);">DIAMANTE</div>
-
                             <div class="pack-price">200 🪙</div>
-
                             <div id="prog-diamante" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
-
                         </div>
-
                     </div>
-
                     <div class="pack-container" onclick="openPack(event, 'platino')">
-
                         <div class="pack-visual" style="background: linear-gradient(135deg, #a200ff 0%, #4b0082 100%);">
-
                             <div class="pack-logo">F10</div>
-
                             <div class="pack-title" style="color: #fff; background: rgba(0,0,0,0.4);">PLATINO</div>
-
                             <div class="pack-price">400 🪙</div>
-
                             <div id="prog-platino" style="margin-top: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white;">0/0</div>
-
                         </div>
-
                     </div>
-
                 </div>
-
                 <div id="pack-reveal" class="pack-reveal-area hidden">
-
                     <div class="reveal-cards" id="reveal-cards-container"></div>
-
                     <button class="secondary-btn" style="margin-top: 30px;" onclick="closePackReveal()">GUARDAR EN EL ÁLBUM</button>
-
                 </div>
-
             </div>
-
-
 
             <div id="tab-collection" class="album-tab-content hidden">
-
                 <div class="album-progress">Progreso: <span id="album-progress-text">0/0</span></div>
-
                 
-
                 <div class="album-filters" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%;">
-
                     <select id="filter-team" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
-
                         <option value="all">🏆 Todos los Equipos</option>
-
                     </select>
-
                     <select id="filter-tier" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
-
                         <option value="all">⭐ Todos los Niveles</option>
-
                         <option value="bronce">Bronce</option>
-
                         <option value="plata">Plata</option>
-
                         <option value="oro">Oro</option>
-
                         <option value="diamante">Diamante</option>
-
                         <option value="platino">Platino</option>
-
                     </select>
-
                     <select id="filter-status" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
-
                         <option value="all">📦 Todas las cartas</option>
-
                         <option value="unlocked">🔓 Desbloqueadas</option>
-
                         <option value="locked">🔒 Faltantes</option>
-
                     </select>
-
                 </div>
-
-
 
                 <div class="album-grid" id="album-grid"></div>
-
             </div>
 
-
-
-            <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
-
-                    <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
-
-                    <p style="color: var(--text-dim); font-size: 0.85rem;">Gana 10 torneos para obtener 1 SuperCoin y mejorar +1 a tu jugador.</p>
-
-                    
-
-                    <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; font-family: 'Orbitron'; font-size: 0.9rem;">
-
-                        <span style="color: white;">🏆 Torneos: <b id="ui-tournaments-won">0</b></span>
-
-                        <span style="color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5);">💎 SuperCoins: <b id="ui-supercoins">0</b></span>
-
+            <div id="tab-market" class="album-tab-content hidden">
+                
+                <div class="market-buy-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--primary);">
+                    <h3 style="color: var(--primary); font-family: 'Orbitron'; margin-top: 0;">FICHAR JUGADOR</h3>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Búscalo y fíchalo por 750🪙.</p>
+                    <div class="input-container" style="max-width: 400px; margin: 0 auto;">
+                        <div class="input-group">
+                            <input type="text" id="marketBuyInput" placeholder="Nombre del jugador..." autocomplete="off">
+                            <button class="secondary-btn" onclick="buySpecificPlayer()">COMPRAR</button>
+                        </div>
+                        <div id="market-buy-suggestions" class="suggestions-box"></div>
                     </div>
+                </div>
 
-
+                <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
+                    <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Gana 10 torneos para obtener 1 SuperCoin y mejorar +1 a tu jugador.</p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; font-family: 'Orbitron'; font-size: 0.9rem;">
+                        <span style="color: white;">🏆 Torneos: <b id="ui-tournaments-won">0</b></span>
+                        <span style="color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5);">💎 SuperCoins: <b id="ui-supercoins">0</b></span>
+                    </div>
 
                     <div class="input-container" style="max-width: 400px; margin: 0 auto;">
-
                         <div class="input-group">
-
                             <input type="text" id="upgradeInput" placeholder="Jugador a mejorar..." autocomplete="off">
-
                             <button class="secondary-btn" style="background: #ffd700; color: black;" onclick="applyUpgrade()">EVOLUCIONAR</button>
-
                         </div>
-
                         <div id="upgrade-suggestions" class="suggestions-box"></div>
-
                     </div>
-
                 </div>
 
-
-
-            <div class="market-upgrade-section" style="width: 100%; text-align: center; margin-bottom: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 15px; border: 1px solid #ffd700;">
-
-                    <h3 style="color: #ffd700; font-family: 'Orbitron'; margin-top: 0;">LABORATORIO DE EVOLUCIÓN</h3>
-
-                    <p style="color: var(--text-dim); font-size: 0.85rem;">Mejora el rating de un jugador de tu álbum en +1.<br>
-
-                    🏆 Torneos ganados: <span id="ui-tournaments-won" style="color:white;font-weight:bold;">0</span> | ⚽ Goles de tu equipo: <span id="ui-total-goals" style="color:white;font-weight:bold;">0</span></p>
-
-                    
-
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;">
-
-                        <div class="coin-badge" style="border-color:#00ffff; color:#00ffff; font-size: 0.8rem;">💎 SuperCoins: <span id="ui-supercoins">0</span></div>
-
-                        <div class="coin-badge" style="border-color:#00d2ff; color:#00d2ff; font-size: 0.8rem;">🧬 Evoluciones: <span id="ui-evolutions">0</span></div>
-
-                    </div>
-
-
-
-                    <div class="input-container" style="max-width: 500px; margin: 0 auto;">
-
-                        <div class="input-group">
-
-                            <input type="text" id="upgradeInput" placeholder="Jugador a mejorar..." autocomplete="off">
-
-                            <button class="secondary-btn" style="background:#00ffff;color:black;padding:10px;" title="Cuesta 1 SuperCoin" onclick="applyUpgrade(true)">💎 +1</button>
-
-                            <button class="secondary-btn" style="background:#00d2ff;color:black;padding:10px;" title="Cuesta 1 Evolución" onclick="applyUpgrade(false)">🧬 +1</button>
-
-                        </div>
-
-                        <div id="upgrade-suggestions" class="suggestions-box"></div>
-
-                    </div>
-
-                </div>
-
-
+                <h3 style="color: white; font-family: 'Orbitron';">TUS REPETIDOS</h3>
+                <button class="secondary-btn hidden" id="btn-sell-all" onclick="sellAllDuplicates()" style="margin-bottom: 15px; background: #ff4d4d; color: white; border: none;">VENDER TODOS</button>
+                <div class="album-grid" id="market-grid"></div>
+            </div>
 
             <div id="tab-play" class="album-tab-content hidden">
-
                 <div style="width: 100%; text-align: center; margin-bottom: 20px;">
-
                     <h3 style="color: #00ff87; font-family: 'Orbitron';">TU 11 FAVORITO</h3>
-
                 </div>
-
                 
-
                 <div class="tactic-selector" style="margin-bottom: 20px; text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--primary);">
-
                     <h4 style="color: white; font-family: 'Orbitron'; margin-top: 0;">TÁCTICA DEL EQUIPO</h4>
-
                     <select id="match-tactic" onchange="renderLineupPitch()" style="background: #1c2128; color: #00ff87; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--primary); font-family: 'Orbitron'; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer;">
-
                         <option value="balanced">EQUILIBRADA (4-4-2)</option>
-
                         <option value="offensive">OFENSIVA (4-3-3)</option>
-
                         <option value="defensive">DEFENSIVA (5-4-1)</option>
-
                     </select>
-
                 </div>
-
-
 
                 <div class="pitch-container" id="lineup-pitch" style="margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,255,135,0.2);"></div>
-
                 <button id="btn-play-match" class="secondary-btn" style="width: 100%; max-width: 300px; background: #00ff87; color: black;" onclick="playMatchVsCPU()">⚽ JUGAR TORNEO (-75🪙)</button>
-
             </div>
-
-        </div> <div id="hangman-screen" class="screen hidden">
-
+        </div> 
+        <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">
-
                     RACHA: <span id="streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="max-streak">0</span>
-
                 </div>
-
             </nav>
-
             <div class="game-layout">
-
                 <div class="canvas-side">
-
                     <canvas id="hangmanCanvas" width="220" height="280"></canvas>
-
                 </div>
-
                 <div class="play-side">
-
                     <div class="word-container" id="wordDisplay"></div>
-
                     <div id="qwerty-keyboard" class="keyboard-container"></div>
-
                     <div class="input-container">
-
                         <div class="input-group">
-
                             <input type="text" id="wordInput" placeholder="Nombre completo..." autocomplete="off">
-
                             <button id="solveButton" class="secondary-btn">ENVIAR</button>
-
                             <button onclick="buyHangmanHint()" class="back-btn" title="Pista por 50 monedas">💡 50🪙</button>
-
                         </div>
-
                         <div id="hangman-suggestions" class="suggestions-box"></div>
-
                     </div>
-
                     <div class="info-footer">VIDAS: <span id="lives">6</span></div>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="blur-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">RACHA: <span id="blur-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="blur-max">0</span></div>
-
             </nav>
-
             <div class="blur-container">
-
                 <div class="image-box"><img id="playerImg" src="" alt="Jugador"></div>
-
                 <div class="input-container" style="max-width: 320px;">
-
                     <div class="input-group">
-
                         <input type="text" id="blurInput" placeholder="¿Quién es?" autocomplete="off">
-
                         <button id="btnBlurCheck" class="secondary-btn">ADIVINAR</button>
-
                     </div>
-
                     <div id="blur-suggestions" class="suggestions-box"></div>
-
                 </div>
-
                 <div class="info-footer">INTENTOS: <span id="blur-lives">5</span></div>
-
             </div>
-
         </div>
-
-
 
         <div id="timemachine-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">RACHA: <span id="tm-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="tm-max">0</span></div>
-
             </nav>
-
             <div class="tm-layout">
-
                 <h2 class="tm-title">¿EN QUÉ AÑO OCURRIÓ?</h2>
-
                 <div class="tm-monitor"><img id="tm-image" src="" alt="Evento Histórico"></div>
-
                 <div id="tm-event-text" class="tm-event-card">Cargando evento...</div>
-
                 <div class="tm-controls">
-
                     <div class="input-group">
-
                         <input type="number" id="tmInput" placeholder="AÑO" autocomplete="off">
-
                         <button id="btnTmCheck" class="secondary-btn">ENVIAR</button>
-
                     </div>
-
                     <div class="tm-status">
-
                         <span id="tm-feedback"></span>
-
                         <span class="tm-lives-badge">INTENTOS: <span id="tm-lives">5</span></span>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="eleven-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">TIEMPO: <span id="eleven-timer">03:00</span></div>
-
             </nav>
-
             <div class="eleven-layout">
-
                 <div class="eleven-header">
-
                     <h2 id="eleven-team" class="logo">Equipo</h2>
-
                     <p id="eleven-desc" style="color: var(--primary);">Descripción</p>
-
                 </div>
-
                 <div class="pitch-container" id="pitch"></div>
-
             </div>
-
         </div>
-
-
 
         <div id="knowball-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">NIVEL: <span id="kb-level">1</span></div>
-
             </nav>
-
             <div class="kb-header">
-
                 <h2 id="kb-title" class="logo">TÍTULO</h2>
-
                 <p id="kb-desc" style="color: var(--primary);">Descripción</p>
-
             </div>
-
             <div class="kb-layout">
-
                 <div class="kb-pyramid">
-
                     <div class="kb-slot-container" style="width: 60%;"><div class="kb-slot-num">1</div><div class="kb-slot kb-dropzone" id="kb-slot-1"></div></div>
-
                     <div class="kb-slot-container" style="width: 70%;"><div class="kb-slot-num">2</div><div class="kb-slot kb-dropzone" id="kb-slot-2"></div></div>
-
                     <div class="kb-slot-container" style="width: 80%;"><div class="kb-slot-num">3</div><div class="kb-slot kb-dropzone" id="kb-slot-3"></div></div>
-
                     <div class="kb-slot-container" style="width: 90%;"><div class="kb-slot-num">4</div><div class="kb-slot kb-dropzone" id="kb-slot-4"></div></div>
-
                     <div class="kb-slot-container" style="width: 100%;"><div class="kb-slot-num">5</div><div class="kb-slot kb-dropzone" id="kb-slot-5"></div></div>
-
                 </div>
-
                 <div class="kb-cards-area">
-
                     <div class="kb-cards kb-dropzone" id="kb-cards-container"></div>
-
                 </div>
-
                 <button class="secondary-btn" style="margin-top: 20px; width: 100%; max-width: 300px;" onclick="checkKnowball()">COMPROBAR</button>
-
             </div>
-
         </div>
-
-
 
         <div id="rosco-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
-
                 <div id="rosco-single-timer" class="score-board">TIEMPO: <span id="rosco-timer-single">300</span></div>
-
                 <div id="rosco-multi-timers" class="score-board hidden">
-
                     <span id="rosco-timer-p1" class="timer-p1">150</span> | <span id="rosco-timer-p2" class="timer-p2">150</span>
-
                 </div>
-
             </nav>
-
             <div class="rosco-wrapper">
-
                 <div id="rosco-circle" class="rosco-circle"></div>
-
                 <div class="rosco-content">
-
                     <h3 id="rosco-player-title">Turno: Jugador 1</h3>
-
                     <h2 id="rosco-letter-hint">A</h2>
-
                     <p id="rosco-definition">Cargando definición...</p>
-
                     <input type="text" id="roscoInput" placeholder="Respuesta..." autocomplete="off">
-
                     <div class="rosco-actions">
-
                         <button id="btnRoscoCheck" class="secondary-btn">ENVIAR</button>
-
                         <button id="btnPasapalabra" class="back-btn">PASAPALABRA</button>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div> 
 
-
-
         <div id="higherlower-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">PUNTOS: <span id="hl-score">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="hl-max">0</span></div>
-
             </nav>
-
             <h2 class="logo">VALOR DE <span>MERCADO</span></h2>
-
             <div class="hl-layout">
-
                 <div class="hl-card">
-
                     <img id="hl-img-1" src="" alt="Jugador 1">
-
                     <div class="hl-info">
-
                         <h3 id="hl-name-1">Jugador 1</h3>
-
                         <div class="hl-value" id="hl-val-1">0 M€</div>
-
                     </div>
-
                 </div>
-
                 <div class="hl-vs">VS</div>
-
                 <div class="hl-card">
-
                     <img id="hl-img-2" src="" alt="Jugador 2">
-
                     <div class="hl-info">
-
                         <h3 id="hl-name-2">Jugador 2</h3>
-
                         <div class="hl-value hidden-val" id="hl-val-2">???</div>
-
                         <div class="hl-buttons" id="hl-controls">
-
                             <button class="hl-btn btn-higher" onclick="checkHigherLower('higher')">▲ MAYOR</button>
-
                             <button class="hl-btn btn-lower" onclick="checkHigherLower('lower')">▼ MENOR</button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="aforos-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">PUNTOS: <span id="aforos-score">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="aforos-max">0</span></div>
-
             </nav>
-
             <h2 class="logo">GUERRA DE <span>AFOROS</span></h2>
-
             <div class="hl-layout">
-
                 <div class="hl-card">
-
                     <img id="aforos-img-1" src="" alt="Estadio 1">
-
                     <div class="hl-info">
-
                         <h3 id="aforos-name-1">Estadio 1</h3>
-
                         <div class="hl-value" id="aforos-val-1">0</div>
-
                     </div>
-
                 </div>
-
                 <div class="hl-vs">VS</div>
-
                 <div class="hl-card">
-
                     <img id="aforos-img-2" src="" alt="Estadio 2">
-
                     <div class="hl-info">
-
                         <h3 id="aforos-name-2">Estadio 2</h3>
-
                         <div class="hl-value hidden-val" id="aforos-val-2">???</div>
-
                         <div class="hl-buttons" id="aforos-controls">
-
                             <button class="hl-btn btn-higher" onclick="checkAforos('higher')">▲ MAYOR</button>
-
                             <button class="hl-btn btn-lower" onclick="checkAforos('lower')">▼ MENOR</button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="top10-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="showMenu()" class="back-btn">← INICIO</button>
-
                 <div class="score-board">ACIERTOS: <span id="top10-score">0</span>/10</div>
-
             </nav>
-
             <div class="top10-layout">
-
                 <div class="top10-header">
-
                     <h2 id="top10-title" class="logo">TÍTULO DEL TOP</h2>
-
                     <p id="top10-desc" style="color: var(--primary);">Descripción detallada</p>
-
                 </div>
-
                 <div class="top10-list" id="top10-list"></div>
-
                 <div class="input-container top10-input-area">
-
                     <div class="input-group">
-
                         <input type="text" id="top10Input" placeholder="Adivina un jugador..." autocomplete="off">
-
                         <button id="btnTop10Check" class="secondary-btn">ENVIAR</button>
-
                         <button id="btnTop10GiveUp" class="back-btn" onclick="giveUpTop10()">RENDIRSE</button>
-
                     </div>
-
                     <div id="top10-suggestions" class="suggestions-box"></div>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <div id="zoom-screen" class="screen hidden">
-
             <nav class="game-nav">
-
                 <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
-
                 <div class="score-board">RACHA: <span id="zoom-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="zoom-max">0</span></div>
-
             </nav>
-
             <div class="zoom-layout">
-
                 <h2 class="logo">RECONOCE EL <span>ESCUDO</span></h2>
-
                 <div class="zoom-box-container">
-
                     <div class="zoom-lens"><img id="zoom-image" src="" alt="Escudo Zoom"></div>
-
                 </div>
-
                 <div class="input-container" style="max-width: 320px;">
-
                     <div class="input-group">
-
                         <input type="text" id="zoomInput" placeholder="Nombre del equipo..." autocomplete="off">
-
                         <button id="btnZoomCheck" class="secondary-btn">ADIVINAR</button>
-
                     </div>
-
                     <div id="zoom-suggestions" class="suggestions-box"></div>
-
                 </div>
-
                 <div class="info-footer" style="margin-top: 15px;">INTENTOS: <span id="zoom-lives">5</span></div>
-
             </div>
-
         </div>
-
     </div> 
-
     
-
     <div id="custom-modal" class="modal-overlay hidden">
-
         <div class="modal-content">
-
             <h2 id="modal-title">TÍTULO</h2>
-
             <p id="modal-message">Mensaje del juego...</p>
-
             <button id="modal-btn" class="secondary-btn">CONTINUAR</button>
-
         </div>
-
     </div>
-
-
 
     <div id="lineup-selector-modal" class="modal-overlay hidden">
-
         <div class="modal-content" style="max-width: 500px;">
-
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-
                 <h2 class="logo" style="margin: 0;">FICHAR <span>JUGADOR</span></h2>
-
                 <button onclick="closeLineupSelector()" class="back-btn">✕</button>
-
             </div>
-
             <div class="album-grid" id="lineup-selector-grid" style="max-height: 50vh; overflow-y: auto;"></div>
-
         </div>
-
     </div>
-
-
 
     <div id="match-simulation-modal" class="modal-overlay hidden">
-
         <div id="match-modal-box" class="modal-content" style="max-width: 600px; text-align: center; background: rgba(11, 14, 20, 0.98); border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(0, 255, 135, 0.3);">
-
-            
-
             <h2 id="match-competition" style="color: white; font-family: 'Orbitron'; font-size: 1rem; margin-top: 0;">COPA F10 - CUARTOS DE FINAL</h2>
-
             
-
             <div class="tv-scoreboard" style="display: flex; justify-content: center; align-items: center; background: linear-gradient(90deg, rgba(0,255,135,0.1) 0%, rgba(255,77,77,0.1) 100%); border-radius: 10px; padding: 15px 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.2);">
-
                 <div style="flex: 1; text-align: right;">
-
                     <div style="font-family: 'Orbitron'; font-size: 1.1rem; color: #00ff87;">TU EQUIPO</div>
-
                     <div id="my-team-rating" style="font-size: 0.8rem; color: #aaa;">Media: 00</div>
-
                 </div>
-
                 <div style="padding: 0 15px; font-size: 2.8rem; font-weight: bold; color: #00ff87; text-shadow: 0 0 15px rgba(0,255,135,0.8);" id="match-score-my">0</div>
-
                 <div style="color: white; font-size: 1.5rem;">-</div>
-
                 <div style="padding: 0 15px; font-size: 2.8rem; font-weight: bold; color: #ff4d4d; text-shadow: 0 0 15px rgba(255,77,77,0.8);" id="match-score-cpu">0</div>
-
                 <div style="flex: 1; text-align: left;">
-
                     <div id="cpu-team-name" style="font-family: 'Orbitron'; font-size: 1.1rem; color: #ff4d4d;">RIVAL</div>
-
                     <div id="cpu-team-rating" style="font-size: 0.8rem; color: #aaa;">Media: 00</div>
-
                 </div>
-
             </div>
-
-
 
             <div style="font-family: 'Orbitron'; font-size: 1.5rem; color: #ffd700; margin-bottom: 5px; font-weight: bold;">
-
                 <span id="match-clock">00:00</span>'
-
             </div>
-
             
-
             <div id="match-minute-bar" style="width: 100%; height: 6px; background: #333; border-radius: 5px; margin-bottom: 15px; overflow: hidden; box-shadow: inset 0 0 5px black;">
-
                 <div id="match-minute-progress" style="width: 0%; height: 100%; background: #ffd700; transition: width 0.1s linear; box-shadow: 0 0 10px #ffd700;"></div>
-
             </div>
-
             
-
             <div id="match-live-log" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; height: 180px; overflow-y: auto; text-align: left; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 8px;">
-
-                </div>
-
-
+            </div>
 
             <button id="match-close-btn" class="secondary-btn hidden" style="width: 100%; margin-top: 20px;" onclick="closeMatchModal()">FINALIZAR PARTIDO</button>
-
         </div>
-
     </div>
-
-
 
     <div id="futdle-modal" class="modal-overlay hidden">
-
         <div class="modal-content" style="max-width: 95vw; width: 600px;">
-
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-
                 <h2 class="logo" style="margin: 0;">FUT<span>DLE</span></h2>
-
                 <button onclick="closeFutdleModal()" class="back-btn">✕</button>
-
             </div>
-
             <p id="futdle-hint" style="color: var(--primary); margin-bottom: 15px; font-family: 'Orbitron';"></p>
-
             <div id="wordle-grid" class="wordle-grid"></div>
-
             <div id="wordle-keyboard" class="keyboard-container" style="margin-top: 20px;"></div>
-
         </div>
-
     </div>
-
-
 
     <div id="profile-modal" class="modal-overlay hidden">
-
         <div class="modal-content" style="max-width: 400px;">
-
             <h2 class="logo" style="margin: 0;">TU <span>PERFIL</span></h2>
-
             <div style="font-size: 1.3rem; color: #ffd700; margin: 15px 0 25px 0; font-family: 'Orbitron'; font-weight: bold;">
-
                 🪙 FutCoins: <span id="profile-coins">0</span>
-
             </div>
-
             <div class="stats-grid" id="profile-stats"></div>
-
             <button class="secondary-btn" style="margin-top: 25px; width: 100%;" onclick="closeProfile()">VOLVER</button>
-
         </div>
-
     </div>
-
-
 
     <div id="rosco-info-modal" class="modal-overlay hidden">
-
         <div class="modal-content" style="max-width: 450px; border-color: #0044cc; box-shadow: 0 0 30px rgba(0,68,204,0.4); text-align: left;">
-
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-
                 <h2 class="logo" style="margin: 0; font-size: 1.8rem; color: #0044cc;">EL <span style="color: white;">ROSCO</span></h2>
-
                 <button onclick="closeRoscoInfo()" class="back-btn" style="border-color: #0044cc; color: #0044cc;">✕</button>
-
             </div>
-
             
-
             <div style="margin-bottom: 25px; color: var(--text-dim); font-size: 0.95rem; line-height: 1.6;">
-
                 <p>Completa la mítica ruleta de la <strong>A a la Z</strong> adivinando todos los conceptos, jugadores y equipos futbolísticos.</p>
-
                 <div style="background: rgba(0, 68, 204, 0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(0,68,204,0.3); margin-top: 15px;">
-
                     <h4 style="color: white; margin: 0 0 10px 0; font-family: 'Orbitron';">👤 INDIVIDUAL</h4>
-
                     <p style="margin: 0 0 15px 0;">Dispones de <strong>300 segundos</strong> para ti solo. ¡Demuestra que eres el GOAT del conocimiento!</p>
-
                     
-
                     <h4 style="color: white; margin: 0 0 10px 0; font-family: 'Orbitron';">👥 MULTIJUGADOR (LOCAL)</h4>
-
                     <p style="margin: 0;"><strong>150 segundos</strong> por jugador. Pásale el dispositivo a tu colega en el cambio de turno.</p>
-
                 </div>
-
             </div>
-
-
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
-
                 <button class="secondary-btn" style="background: #0044cc; color: white;" onclick="startRoscoFromInfo('individual')">JUGAR INDIVIDUAL</button>
-
                 <button class="secondary-btn" style="background: transparent; border: 2px solid #0044cc; color: #0044cc;" onclick="startRoscoFromInfo('multiplayer')">JUGAR MULTIJUGADOR</button>
-
             </div>
-
         </div>
-
     </div>
-
-
 
     <div id="info-modal" class="modal-overlay hidden">
-
         <div class="modal-content" style="max-width: 600px; text-align: left;">
-
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-
                 <h2 class="logo" style="margin: 0; font-size: 1.8rem;">CÓMO <span>JUGAR</span></h2>
-
                 <button onclick="closeInfo()" class="back-btn">✕</button>
-
             </div>
-
             
-
             <div class="info-scroll-area">
-
                 <p>¡Bienvenido a <strong>FUTBOL10</strong>! Gana FutCoins 🪙 jugando minijuegos para abrir sobres y completar tu colección.</p>
-
                 
-
                 <h4>📦 ÁLBUM F10</h4>
-
                 <p>Compra sobres con tus monedas. Colecciona cartas de diferentes Tiers (Bronce, Plata, Oro, Diamante y Platino). ¡Vende tus repetidas en el Mercado o arma tu 11 ideal para jugar partidos tácticos contra la CPU!</p>
 
-
-
                 <h4>🔤 EL ROSCO</h4>
-
                 <p>El clásico juego de la TV adaptado al fútbol. Adivina las palabras de la A a la Z. Modo solitario (300s) o Multijugador local (150s por jugador).</p>
 
-
-
                 <h4>🕵️‍♂️ LALIGA</h4>
-
                 <ul>
-
                     <li><strong>Ahorcado:</strong> Adivina el jugador oculto letra a letra.</li>
-
                     <li><strong>Blur Guess:</strong> Adivina qué jugador se esconde tras la imagen borrosa.</li>
-
                     <li><strong>Guerra de Aforos:</strong> ¿Qué estadio de LaLiga tiene más capacidad?</li>
-
                 </ul>
-
-
 
                 <h4>🌍 JUEGOS EUROPEOS</h4>
-
                 <ul>
-
                     <li><strong>XI Histórico (Futdle):</strong> Adivina la alineación histórica usando la mecánica estilo Wordle.</li>
-
                     <li><strong>Knowball:</strong> Ordena la pirámide de datos (ej. Jugadores con más Balones de Oro) arrastrando las tarjetas.</li>
-
                 </ul>
-
-
 
                 <h4>🦁 PREMIER LEAGUE</h4>
-
                 <ul>
-
                     <li><strong>Higher/Lower:</strong> ¿Qué jugador de la Premier tiene mayor valor de mercado?</li>
-
                     <li><strong>Escudos Zoom:</strong> Reconoce el escudo del equipo inglés a partir de un detalle ampliado.</li>
-
                 </ul>
-
-
 
                 <h4>⏳ LEYENDAS Y TOP 10</h4>
-
                 <ul>
-
                     <li><strong>Máquina del Tiempo:</strong> Escribe en qué año sucedió el evento histórico de la foto.</li>
-
                     <li><strong>El Top 10:</strong> Adivina el ranking oculto completo (ej. Fichajes más caros).</li>
-
                 </ul>
-
             </div>
-
         </div>
-
     </div>
-
-
 
     <div id="game-info-modal" class="modal-overlay hidden" style="z-index: 9999;">
-
         <div id="game-info-card" class="modal-content" style="border: 2px solid #f5cf8e; text-align: center; box-shadow: 0 0 30px rgba(245, 207, 142, 0.3); transition: 0.3s ease; max-width: 420px;">
-
             
-
             <h2 id="game-info-title" class="logo" style="font-size: 2.2rem; margin-bottom: 10px; color: #f5cf8e; transition: 0.3s ease;">EL TOP 10</h2>
-
             <p id="game-info-desc" style="color: var(--text-dim); margin-bottom: 25px; font-size: 0.95rem; padding: 0 10px;">
-
                 Descripción del juego
-
             </p>
-
             
-
             <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; width: 100%;">
-
                 <button class="secondary-btn" id="btn-play-single" onclick="startGameFromInfo()" style="width: 100%; background: #1a1c23; border: 2px solid #f5cf8e; color: #f5cf8e; transition: 0.3s ease;">
-
                     👤 MODO INDIVIDUAL
-
                 </button>
-
                 <button class="secondary-btn" style="width: 100%; background: #0f1218; border: 2px solid #444; color: #666; cursor: not-allowed;" disabled>
-
                     👥 MULTIJUGADOR <span style="font-size: 0.7rem; color: #ff4d4d;">(Próximamente)</span>
-
                 </button>
-
                 <button class="back-btn" onclick="closeGameInfo()" style="width: 100%; margin-top: 5px;">
-
                     ❌ VOLVER AL MENÚ
-
                 </button>
-
             </div>
-
         </div>
-
     </div>
 
-
-
     <script src="script.js"></script>
-
 </body>
-
-</html> 
-
+</html>
