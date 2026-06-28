@@ -223,6 +223,30 @@ const dbEquipos = {
         { name: "DANI RABA", rating: 74, positions: ["MCO", "ED", "DC"] },
         { name: "DIEGO LOPEZ", rating: 77, positions: ["ED", "EI"] }
     ],
+
+    "SEVILLA": [
+        { name: "VLACHODIMOS", rating: 79, positions: ["POR"] },
+        { name: "OSO", rating: 72, positions: ["LI"] },
+        { name: "SUAZO", rating: 74, positions: ["LI"] },
+        { name: "KIKE SALAS", rating: 76, positions: ["DFC", "LI"] },
+        { name: "MARCAO", rating: 74, positions: ["DFC"] },
+        { name: "FABIO CARDOSO", rating: 74, positions: ["DFC"] },
+        { name: "GATTONI", rating: 71, positions: ["DFC"] },
+        { name: "NIANZOU", rating: 71, positions: ["DFC"] },
+        { name: "ANDRES CASTRIN", rating: 72, positions: ["DFC"] },
+        { name: "JUANLU SANCHEZ", rating: 75, positions: ["LD"] },
+        { name: "CARMONA", rating: 77, positions: ["DFC", "LD"] },
+        { name: "AGOUME", rating: 76, positions: ["MC","MCD"] },
+        { name: "SOW", rating: 75, positions: ["MC", "MCD"] },
+        { name: "JOAN JORDAN", rating: 74, positions: ["MC", "MCD"] },
+        { name: "MANU BUENO", rating: 71, positions: ["MC"] },
+        { name: "EJUKE", rating: 76, positions: ["EI"] },
+        { name: "ALEXIS SANCHEZ", rating: 75, positions: ["DC", "MCO"] },
+        { name: "PEQUE", rating: 74, positions: ["DC","MCO"] },
+        { name: "ISAAC ROMERO", rating: 74, positions: ["DC"] },
+        { name: "AKOR ADAMS", rating: 75, positions: ["DC"] },
+        { name: "RUBEN VARGAS", rating: 78, positions: ["ED", "EI", "MCO"] }
+    ],
         
 };
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
