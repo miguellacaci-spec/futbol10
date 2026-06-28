@@ -2994,7 +2994,6 @@ function scoreGoal(team) {
         matchState.myGoals++;
         color = "#00ff87";
         document.getElementById('match-score-my').innerText = matchState.myGoals;
-        addTotalGoal();
         scorer = getRandomScorer(lineup, true);
         
         // Asistencias (50% probabilidad)
