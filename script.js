@@ -269,6 +269,28 @@ const dbEquipos = {
         { name: "ALEMAO", rating: 74, positions: ["DC"] },
         { name: "JORGE DE FRUTOS", rating: 81, positions: ["ED","DC"] }
     ],
+
+    "RACING SANTANDER": [
+        { name: "EZKIETA", rating: 69, positions: ["POR"] },
+        { name: "ERIKSSON", rating: 66, positions: ["POR"] },
+        { name: "JORGE SALINAS", rating: 67, positions: ["LI"] },
+        { name: "MARIO GARCIA", rating: 67, positions: ["LI"] },
+        { name: "FACUNDO GONZALEZ", rating: 68, positions: ["DFC"] },
+        { name: "JAVI CASTRO", rating: 71, positions: ["DFC"] },
+        { name: "MANU HERNANDO", rating: 68, positions: ["DFC"] },
+        { name: "MANTILLA", rating: 68, positions: ["LD"] },
+        { name: "DAMIAN RODRIGUEZ", rating: 72, positions: ["MCD","MC"] },
+        { name: "MAGUETTE GUEYE", rating: 66, positions: ["MCD","MC"] },
+        { name: "IÑIGO SERNA", rating: 67, positions: ["MC", "MCD"] },
+        { name: "GUSTAVO PUERTA", rating: 71, positions: ["MC", "MCD"] },
+        { name: "ALDASORO", rating: 70, positions: ["MC", "MCD"] },
+        { name: "PEIO CANALES", rating: 68, positions: ["MC", "MCO"] },
+        { name: "IÑIGO VICENTE", rating: 77, positions: ["EI", "MCO"] },
+        { name: "SULEIMAN", rating: 68, positions: ["EI"] },
+        { name: "ANDRES MARTIN", rating: 77, positions: ["ED"] },
+        { name: "VILLALIBRE", rating: 74, positions: ["DC"] },
+        { name: "ARANA", rating: 69, positions: ["DC"] },
+    ],
         
 };
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
