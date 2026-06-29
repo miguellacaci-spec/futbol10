@@ -291,6 +291,12 @@ const dbEquipos = {
         { name: "VILLALIBRE", rating: 74, positions: ["DC"] },
         { name: "ARANA", rating: 69, positions: ["DC"] },
     ],
+
+    "GETAFE": [
+        { name: "DAVID SORIA", rating: 80, positions: ["POR"] },
+        { name: "ABDEL ABQAR", rating: 74, positions: ["DFC", "LD"] },
+        
+    ],
         
 };
 // Generamos automáticamente las listas planas para Ahorcado, Blur, Sobres, etc.
