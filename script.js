@@ -767,7 +767,7 @@ const top10DB = [
         desc: 'Máximos goleadores históricos de la Copa del Mundo',
         items: [
             { rank: 1, name: "LIONEL MESSI", flag: "argentina", stat: "19 Goles", revealed: false },
-            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "16 Goles", revealed: false },
+            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "17 Goles", revealed: false },
             { rank: 3, name: "MIROSLAV KLOSE", flag: "alemania", stat: "16 Goles", revealed: false },
             { rank: 4, name: "RONALDO NAZARIO", flag: "brasil", stat: "15 Goles", revealed: false },
             { rank: 5, name: "GERD MULLER", flag: "alemania", stat: "14 Goles", revealed: false },
