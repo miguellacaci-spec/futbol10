@@ -65,7 +65,6 @@ const dbEquipos = {
         { name: "PUBILL", rating: 80, positions: ["DFC", "LD"] },
         { name: "LE NORMAND", rating: 81, positions: ["DFC"] },
         { name: "GIMENEZ", rating: 83, positions: ["DFC"] },
-        { name: "LENGLET", rating: 77, positions: ["DFC"] },
         { name: "RUGGERI", rating: 78, positions: ["LI"] },
         { name: "MARCOS LLORENTE", rating: 85, positions: ["LD", "MC"] },
         { name: "NAHUEL MOLINA", rating: 77, positions: ["LD"] },
