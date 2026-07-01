@@ -655,6 +655,19 @@
             </div>
         </div>
     </div>
+    <div id="missions-modal" class="modal hidden">
+    <div class="modal-content mission-panel">
+        <div class="tabs">
+            <button onclick="showMissionTab('daily')" class="tab-btn active">DAILY</button>
+            <button onclick="showMissionTab('achievements')" class="tab-btn">LOGROS</button>
+        </div>
+
+        <div id="mission-list" class="scroll-area">
+            </div>
+        
+        <button onclick="closeModal('missions-modal')" class="close-btn">CERRAR</button>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
