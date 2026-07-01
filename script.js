@@ -772,10 +772,10 @@ const top10DB = [
             { rank: 4, name: "RONALDO NAZARIO", flag: "brasil", stat: "15 Goles", revealed: false },
             { rank: 5, name: "GERD MULLER", flag: "alemania", stat: "14 Goles", revealed: false },
             { rank: 6, name: "JUST FONTAINE", flag: "francia", stat: "13 Goles", revealed: false },
-            { rank: 7, name: "HARRY KANE", flag: "inglaterra", stat: "13 Goles", revealed: false }
+            { rank: 7, name: "HARRY KANE", flag: "inglaterra", stat: "13 Goles", revealed: false },
             { rank: 8, name: "PELE", flag: "brasil", stat: "12 Goles", revealed: false },
             { rank: 9, name: "SANDOR KOCSIS", flag: "hungria", stat: "11 Goles", revealed: false },
-            { rank: 10, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false },
+            { rank: 10, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false }
         ]
     },
     {
