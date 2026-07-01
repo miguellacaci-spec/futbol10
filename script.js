@@ -767,15 +767,15 @@ const top10DB = [
         desc: 'Máximos goleadores históricos de la Copa del Mundo',
         items: [
             { rank: 1, name: "LIONEL MESSI", flag: "argentina", stat: "19 Goles", revealed: false },
-            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "17 Goles", revealed: false },
+            { rank: 2, name: "KYLIAN MBAPPE", flag: "francia", stat: "18 Goles", revealed: false },
             { rank: 3, name: "MIROSLAV KLOSE", flag: "alemania", stat: "16 Goles", revealed: false },
             { rank: 4, name: "RONALDO NAZARIO", flag: "brasil", stat: "15 Goles", revealed: false },
             { rank: 5, name: "GERD MULLER", flag: "alemania", stat: "14 Goles", revealed: false },
             { rank: 6, name: "JUST FONTAINE", flag: "francia", stat: "13 Goles", revealed: false },
-            { rank: 7, name: "PELE", flag: "brasil", stat: "12 Goles", revealed: false },
-            { rank: 8, name: "SANDOR KOCSIS", flag: "hungria", stat: "11 Goles", revealed: false },
-            { rank: 9, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false },
-            { rank: 10, name: "HELMUT RAHN", flag: "alemania", stat: "10 Goles", revealed: false }
+            { rank: 7, name: "HARRY KANE", flag: "inglaterra", stat: "13 Goles", revealed: false }
+            { rank: 8, name: "PELE", flag: "brasil", stat: "12 Goles", revealed: false },
+            { rank: 9, name: "SANDOR KOCSIS", flag: "hungria", stat: "11 Goles", revealed: false },
+            { rank: 10, name: "JURGEN KLINSMANN", flag: "alemania", stat: "11 Goles", revealed: false },
         ]
     },
     {
