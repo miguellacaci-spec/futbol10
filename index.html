@@ -7,7 +7,7 @@
     
     <meta name="description" content="Colecciona cartas, abre sobres y demuestra tu conocimiento en los mejores minijuegos de fútbol. ¡Conviértete en el GOAT!">
     <meta name="theme-color" content="#0b0e14">
-    <meta name="author" content="Tu Nombre o Marca">
+    <meta name="author" content="FUTBOL10">
 
     <meta property="og:title" content="FUTBOL10 - Minijuegos de Fútbol">
     <meta property="og:description" content="Juega al rosco, adivina el 11 histórico, abre sobres y colecciona a los mejores.">
@@ -25,11 +25,11 @@
         
         <div id="menu-screen" class="screen">
             <div class="user-bar" style="max-width: 600px;">
-                <button onclick="showInfo()" class="icon-btn" title="Cómo Jugar">ℹ️</button>
-                <button onclick="showProfile()" class="back-btn">👤 PERFIL</button>
-                <div class="coin-badge">🪙 <span id="menu-coins">0</span></div>
-                <a href="https://instagram.com/lacacipzz" target="_blank" class="icon-btn ig-btn" title="Sígueme en Instagram">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG" style="width: 20px; filter: drop-shadow(0px 0px 2px rgba(255,255,255,0.8));">
+                <button onclick="showInfo()" class="icon-btn" title="Cómo Jugar" aria-label="Cómo jugar">ℹ️</button>
+                <button onclick="showProfile()" class="back-btn" aria-label="Ver Perfil">👤 PERFIL</button>
+                <div class="coin-badge" aria-label="Tus Monedas">🪙 <span id="menu-coins">0</span></div>
+                <a href="https://instagram.com/lacacipzz" target="_blank" class="icon-btn ig-btn" title="Sígueme en Instagram" aria-label="Instagram">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG" style="width: 20px; filter: drop-shadow(0px 0px 2px rgba(255,255,255,0.8));" loading="lazy">
                 </a>
             </div>
 
@@ -40,6 +40,7 @@
                 </div>
                 <h1 class="logo-texto-inferior">FUTBOL<span>10</span></h1>
             </div>
+            
             <div class="menu-grid">
                 <div class="menu-card sobres-card" onclick="showGame('album')">
                     <div class="card-bg bg-sobres"></div>
@@ -102,7 +103,7 @@
 
         <div id="category-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <button onclick="showMenu()" class="back-btn" aria-label="Volver al inicio">← INICIO</button>
                 <h2 id="category-title" class="logo" style="font-size: 1.5rem; margin: 0;"></h2>
             </nav>
             <div class="menu-grid" id="category-games-grid"></div>
@@ -110,7 +111,7 @@
 
         <div id="album-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <button onclick="showMenu()" class="back-btn" aria-label="Volver al inicio">← INICIO</button>
                 <div class="score-board">🪙 <span id="album-coins">0</span></div>
             </nav>
 
@@ -184,10 +185,10 @@
                 <div class="album-progress">Progreso: <span id="album-progress-text">0/0</span></div>
                 
                 <div class="album-filters" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%;">
-                    <select id="filter-team" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                    <select id="filter-team" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;" aria-label="Filtrar por Equipo">
                         <option value="all">🏆 Todos los Equipos</option>
                     </select>
-                    <select id="filter-tier" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                    <select id="filter-tier" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;" aria-label="Filtrar por Nivel">
                         <option value="all">⭐ Todos los Niveles</option>
                         <option value="bronce">Bronce</option>
                         <option value="plata">Plata</option>
@@ -195,7 +196,7 @@
                         <option value="diamante">Diamante</option>
                         <option value="platino">Platino</option>
                     </select>
-                    <select id="filter-status" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;">
+                    <select id="filter-status" onchange="renderAlbum()" class="back-btn" style="background:#1c2128; color: white;" aria-label="Filtrar por Estado">
                         <option value="all">📦 Todas las cartas</option>
                         <option value="unlocked">🔓 Desbloqueadas</option>
                         <option value="locked">🔒 Faltantes</option>
@@ -249,7 +250,7 @@
                 
                 <div class="tactic-selector" style="margin-bottom: 20px; text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--primary);">
                     <h4 style="color: white; font-family: 'Orbitron'; margin-top: 0;">TÁCTICA DEL EQUIPO</h4>
-                    <select id="match-tactic" onchange="renderLineupPitch()" style="background: #1c2128; color: #00ff87; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--primary); font-family: 'Orbitron'; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer;">
+                    <select id="match-tactic" onchange="renderLineupPitch()" style="background: #1c2128; color: #00ff87; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--primary); font-family: 'Orbitron'; font-weight: bold; width: 100%; max-width: 300px; cursor: pointer;" aria-label="Elegir Táctica">
                         <option value="balanced">EQUILIBRADA (4-4-2)</option>
                         <option value="offensive">OFENSIVA (4-3-3)</option>
                         <option value="defensive">DEFENSIVA (5-4-1)</option>
@@ -260,9 +261,10 @@
                 <button id="btn-play-match" class="secondary-btn" style="width: 100%; max-width: 300px; background: #00ff87; color: black;" onclick="playMatchVsCPU()">⚽ JUGAR TORNEO (-75🪙)</button>
             </div>
         </div> 
+
         <div id="hangman-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">
                     RACHA: <span id="streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="max-streak">0</span>
                 </div>
@@ -278,7 +280,7 @@
                         <div class="input-group">
                             <input type="text" id="wordInput" placeholder="Nombre completo..." autocomplete="off">
                             <button id="solveButton" class="secondary-btn">ENVIAR</button>
-                            <button onclick="buyHangmanHint()" class="back-btn" title="Pista por 50 monedas">💡 50🪙</button>
+                            <button onclick="buyHangmanHint()" class="back-btn" title="Pista por 50 monedas" aria-label="Comprar pista">💡 50🪙</button>
                         </div>
                         <div id="hangman-suggestions" class="suggestions-box"></div>
                     </div>
@@ -289,11 +291,11 @@
 
         <div id="blur-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="blur-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="blur-max">0</span></div>
             </nav>
             <div class="blur-container">
-                <div class="image-box"><img id="playerImg" src="" alt="Jugador"></div>
+                <div class="image-box"><img id="playerImg" src="" alt="Jugador misterioso" loading="lazy"></div>
                 <div class="input-container" style="max-width: 320px;">
                     <div class="input-group">
                         <input type="text" id="blurInput" placeholder="¿Quién es?" autocomplete="off">
@@ -307,12 +309,12 @@
 
         <div id="timemachine-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="tm-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="tm-max">0</span></div>
             </nav>
             <div class="tm-layout">
                 <h2 class="tm-title">¿EN QUÉ AÑO OCURRIÓ?</h2>
-                <div class="tm-monitor"><img id="tm-image" src="" alt="Evento Histórico"></div>
+                <div class="tm-monitor"><img id="tm-image" src="" alt="Evento Histórico" loading="lazy"></div>
                 <div id="tm-event-text" class="tm-event-card">Cargando evento...</div>
                 <div class="tm-controls">
                     <div class="input-group">
@@ -329,7 +331,7 @@
 
         <div id="eleven-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">TIEMPO: <span id="eleven-timer">03:00</span></div>
             </nav>
             <div class="eleven-layout">
@@ -343,7 +345,7 @@
 
         <div id="knowball-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">NIVEL: <span id="kb-level">1</span></div>
             </nav>
             <div class="kb-header">
@@ -367,7 +369,7 @@
 
         <div id="rosco-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="salirDelRosco()" class="back-btn">← SALIR</button>
+                <button onclick="salirDelRosco()" class="back-btn" aria-label="Salir">← SALIR</button>
                 <div id="rosco-single-timer" class="score-board">TIEMPO: <span id="rosco-timer-single">300</span></div>
                 <div id="rosco-multi-timers" class="score-board hidden">
                     <span id="rosco-timer-p1" class="timer-p1">150</span> | <span id="rosco-timer-p2" class="timer-p2">150</span>
@@ -390,13 +392,13 @@
 
         <div id="higherlower-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">PUNTOS: <span id="hl-score">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="hl-max">0</span></div>
             </nav>
             <h2 class="logo">VALOR DE <span>MERCADO</span></h2>
             <div class="hl-layout">
                 <div class="hl-card">
-                    <img id="hl-img-1" src="" alt="Jugador 1">
+                    <img id="hl-img-1" src="" alt="Jugador 1" loading="lazy">
                     <div class="hl-info">
                         <h3 id="hl-name-1">Jugador 1</h3>
                         <div class="hl-value" id="hl-val-1">0 M€</div>
@@ -404,7 +406,7 @@
                 </div>
                 <div class="hl-vs">VS</div>
                 <div class="hl-card">
-                    <img id="hl-img-2" src="" alt="Jugador 2">
+                    <img id="hl-img-2" src="" alt="Jugador 2" loading="lazy">
                     <div class="hl-info">
                         <h3 id="hl-name-2">Jugador 2</h3>
                         <div class="hl-value hidden-val" id="hl-val-2">???</div>
@@ -419,13 +421,13 @@
 
         <div id="aforos-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">PUNTOS: <span id="aforos-score">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="aforos-max">0</span></div>
             </nav>
             <h2 class="logo">GUERRA DE <span>AFOROS</span></h2>
             <div class="hl-layout">
                 <div class="hl-card">
-                    <img id="aforos-img-1" src="" alt="Estadio 1">
+                    <img id="aforos-img-1" src="" alt="Estadio 1" loading="lazy">
                     <div class="hl-info">
                         <h3 id="aforos-name-1">Estadio 1</h3>
                         <div class="hl-value" id="aforos-val-1">0</div>
@@ -433,7 +435,7 @@
                 </div>
                 <div class="hl-vs">VS</div>
                 <div class="hl-card">
-                    <img id="aforos-img-2" src="" alt="Estadio 2">
+                    <img id="aforos-img-2" src="" alt="Estadio 2" loading="lazy">
                     <div class="hl-info">
                         <h3 id="aforos-name-2">Estadio 2</h3>
                         <div class="hl-value hidden-val" id="aforos-val-2">???</div>
@@ -448,7 +450,7 @@
 
         <div id="top10-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="showMenu()" class="back-btn">← INICIO</button>
+                <button onclick="showMenu()" class="back-btn" aria-label="Volver al inicio">← INICIO</button>
                 <div class="score-board">ACIERTOS: <span id="top10-score">0</span>/10</div>
             </nav>
             <div class="top10-layout">
@@ -470,13 +472,13 @@
 
         <div id="zoom-screen" class="screen hidden">
             <nav class="game-nav">
-                <button onclick="backToCategory()" class="back-btn">← ATRÁS</button>
+                <button onclick="backToCategory()" class="back-btn" aria-label="Volver Atrás">← ATRÁS</button>
                 <div class="score-board">RACHA: <span id="zoom-streak">0</span> <span style="opacity: 0.5;">|</span> 🏆: <span id="zoom-max">0</span></div>
             </nav>
             <div class="zoom-layout">
                 <h2 class="logo">RECONOCE EL <span>ESCUDO</span></h2>
                 <div class="zoom-box-container">
-                    <div class="zoom-lens"><img id="zoom-image" src="" alt="Escudo Zoom"></div>
+                    <div class="zoom-lens"><img id="zoom-image" src="" alt="Escudo Zoom" loading="lazy"></div>
                 </div>
                 <div class="input-container" style="max-width: 320px;">
                     <div class="input-group">
@@ -488,9 +490,8 @@
                 <div class="info-footer" style="margin-top: 15px;">INTENTOS: <span id="zoom-lives">5</span></div>
             </div>
         </div>
-    </div> 
-    
-    <div id="custom-modal" class="modal-overlay hidden">
+        
+    </div> <div id="custom-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2 id="modal-title">TÍTULO</h2>
             <p id="modal-message">Mensaje del juego...</p>
@@ -502,7 +503,7 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 class="logo" style="margin: 0;">FICHAR <span>JUGADOR</span></h2>
-                <button onclick="closeLineupSelector()" class="back-btn">✕</button>
+                <button onclick="closeLineupSelector()" class="back-btn" aria-label="Cerrar Selector">✕</button>
             </div>
             <div class="album-grid" id="lineup-selector-grid" style="max-height: 50vh; overflow-y: auto;"></div>
         </div>
@@ -545,7 +546,7 @@
         <div class="modal-content" style="max-width: 95vw; width: 600px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h2 class="logo" style="margin: 0;">FUT<span>DLE</span></h2>
-                <button onclick="closeFutdleModal()" class="back-btn">✕</button>
+                <button onclick="closeFutdleModal()" class="back-btn" aria-label="Cerrar modal">✕</button>
             </div>
             <p id="futdle-hint" style="color: var(--primary); margin-bottom: 15px; font-family: 'Orbitron';"></p>
             <div id="wordle-grid" class="wordle-grid"></div>
@@ -568,7 +569,7 @@
         <div class="modal-content" style="max-width: 450px; border-color: #0044cc; box-shadow: 0 0 30px rgba(0,68,204,0.4); text-align: left;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 class="logo" style="margin: 0; font-size: 1.8rem; color: #0044cc;">EL <span style="color: white;">ROSCO</span></h2>
-                <button onclick="closeRoscoInfo()" class="back-btn" style="border-color: #0044cc; color: #0044cc;">✕</button>
+                <button onclick="closeRoscoInfo()" class="back-btn" style="border-color: #0044cc; color: #0044cc;" aria-label="Cerrar Info">✕</button>
             </div>
             
             <div style="margin-bottom: 25px; color: var(--text-dim); font-size: 0.95rem; line-height: 1.6;">
@@ -593,7 +594,7 @@
         <div class="modal-content" style="max-width: 600px; text-align: left;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 class="logo" style="margin: 0; font-size: 1.8rem;">CÓMO <span>JUGAR</span></h2>
-                <button onclick="closeInfo()" class="back-btn">✕</button>
+                <button onclick="closeInfo()" class="back-btn" aria-label="Cerrar Cómo Jugar">✕</button>
             </div>
             
             <div class="info-scroll-area">
