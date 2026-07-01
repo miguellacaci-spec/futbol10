@@ -405,3 +405,8 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 @keyframes goalShake { 0%, 100% { transform: translate(0, 0) rotate(0deg); box-shadow: 0 0 30px rgba(0, 255, 135, 0.3); } 10% { transform: translate(-2px, -3px) rotate(-1deg); } 20% { transform: translate(-4px, 0px) rotate(1deg); } 30% { transform: translate(4px, 3px) rotate(0deg); } 40% { transform: translate(2px, -2px) rotate(1deg); } 50% { transform: translate(-2px, 3px) rotate(-1deg); box-shadow: 0 0 80px rgba(0, 255, 135, 1); } 60% { transform: translate(-4px, 2px) rotate(0deg); } 70% { transform: translate(4px, 2px) rotate(-1deg); } 80% { transform: translate(-2px, -2px) rotate(1deg); } 90% { transform: translate(2px, 3px) rotate(0deg); } }
 .anim-goal-shake { animation: goalShake 0.6s ease-in-out; }
+
+
+.progress-bg { height: 8px; background: #222; border-radius: 4px; overflow: hidden; margin: 5px 0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #00ff87, #00d4ff); transition: width 0.5s ease; }
+.mission-item { border-left: 3px solid #00ff87; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.05); }
