@@ -3308,3 +3308,35 @@ function applyUpgrade() {
     renderLineupPitch();
     renderMarket();
 }
+
+const missionData = {
+    daily: [
+        { id: 'd1', desc: 'Gana 3 partidas en Higher Lower', progress: 0, target: 3, reward: 50 },
+        // ... otros retos diarios
+    ],
+    achievements: [
+        { id: 'a1', desc: 'Colecciona todos los jugadores de Bronce', progress: 12, target: 50, reward: 500 },
+        // ... logros permanentes
+    ]
+};
+
+function renderMissions(type) {
+    const container = document.getElementById('mission-list');
+    container.innerHTML = ''; // Limpiamos
+
+    missionData[type].forEach(m => {
+        const percentage = (m.progress / m.target) * 100;
+        container.innerHTML += `
+            <div class="mission-item">
+                <div class="info">
+                    <span>${m.desc}</span>
+                    <span>${m.progress}/${m.target}</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="reward">💰 +${m.reward} F10</div>
+            </div>
+        `;
+    });
+}
