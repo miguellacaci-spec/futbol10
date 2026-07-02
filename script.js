@@ -3328,19 +3328,31 @@ function applyUpgrade() {
 
 // 1. Inicializar seguimiento diario
 function initTracking() {
-    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] };
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || {};
+    
+    // Si es otro día o no hay nada, lo reseteamos por completo
     if (daily.date !== getSpanishDateString()) {
-        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] }; // Reset si es otro día
+        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, rosco: 0, claimed: [] }; 
     }
+    
+    // PARCHE DE SEGURIDAD VITAL: Actualiza la memoria si tienes un guardado antiguo
+    if (!daily.claimed) daily.claimed = [];
+    if (daily.rosco === undefined) daily.rosco = 0;
+    
     localStorage.setItem('f10_daily_track', JSON.stringify(daily));
 }
-
 // 2. Función para inyectar progreso al instante
 function trackDaily(action, amount = 1) {
-    let daily = JSON.parse(localStorage.getItem('f10_daily_track'));
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || {};
+    
     if (daily.date !== getSpanishDateString()) {
-        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] };
+        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, rosco: 0, claimed: [] };
     }
+    
+    // Parche de seguridad
+    if (!daily.claimed) daily.claimed = [];
+    if (daily.rosco === undefined) daily.rosco = 0;
+
     if (daily[action] !== undefined) {
         daily[action] += amount;
         localStorage.setItem('f10_daily_track', JSON.stringify(daily));
