@@ -1266,6 +1266,7 @@ function updateDisplay() {
     if (!document.getElementById('wordDisplay').textContent.includes("_")) {
         localStorage.removeItem('f10_hangman_save'); 
         gameState.streak++;
+        trackDaily('minigames', 1);
         let nuevoRecord = updateRecord('hangman', gameState.streak);
         document.getElementById('max-streak').innerText = nuevoRecord;
 
@@ -1371,6 +1372,7 @@ function checkBlurGuess() {
     
     if (nVal === nPlayer && nVal !== "") {
         blurState.streak++;
+        trackDaily('minigames', 1);
         let nuevoRecord = updateRecord('blur', blurState.streak); 
         document.getElementById('blur-max').innerText = nuevoRecord; 
         
@@ -1434,6 +1436,7 @@ function checkTimeMachineGuess() {
 
     if (guess === timeMachineState.year) {
         timeMachineState.streak++;
+        trackDaily('minigames', 1);
         let nuevoRecord = updateRecord('tm', timeMachineState.streak); 
         document.getElementById('tm-max').innerText = nuevoRecord; 
         addCoins(2); 
@@ -1631,6 +1634,7 @@ function advanceRoscoTurn(keepTurn) {
 }
 
 function endRosco(msg) {
+    trackDaily('rosco', 1);
     clearInterval(roscoState.timerInterval);
     if (roscoState.mode === 'individual') {
         let aciertos = Object.values(roscoState.p1.results).filter(r => r === 'correct').length;
@@ -1865,6 +1869,7 @@ function submitWordleGuess() {
     updateWordleKeyboard();
 
     if (isWin) {
+        trackDaily('minigames', 1);
         setTimeout(() => {
             closeFutdleModal();
             elevenState.guessed.push(wordleState.targetPlayer);
@@ -2012,6 +2017,7 @@ function checkHigherLower(guess) {
     setTimeout(() => {
         if (isCorrect) {
             hlState.score++;
+            trackDaily('minigames', 1);
             document.getElementById('hl-score').innerText = hlState.score;
             let nuevoRecord = updateRecord('hl', hlState.score); 
             document.getElementById('hl-max').innerText = nuevoRecord; 
@@ -2078,6 +2084,7 @@ function checkAforos(guess) {
     setTimeout(() => {
         if (isCorrect) {
             aforosState.score++;
+            trackDaily('minigames', 1);
             document.getElementById('aforos-score').innerText = aforosState.score;
             let nuevoRecord = updateRecord('aforos', aforosState.score); 
             document.getElementById('aforos-max').innerText = nuevoRecord; 
@@ -2116,6 +2123,7 @@ function checkZoomGuess() {
     const val = document.getElementById('zoomInput').value.toUpperCase().trim();
     if (val === zoomState.team) {
         zoomState.streak++;
+        trackDaily('minigames', 1);
         let nuevoRecord = updateRecord('zoom', zoomState.streak); 
         document.getElementById('zoom-max').innerText = nuevoRecord; 
         addCoins(2); 
@@ -2206,6 +2214,8 @@ function checkTop10Guess() {
         renderTop10List();
         
         if (top10State.guessedCount === 10) {
+            updateRecord('top10', 1);
+            trackDaily('minigames', 1);
             setTimeout(() => mostrarMensajePro("🏆 ¡TOP 10 COMPLETADO!", "¡Conoces a la élite del fútbol al detalle!", () => initTop10()), 800);
         }
     } else {
@@ -2457,6 +2467,7 @@ function generatePackCards(amount, packType) {
         card.className = `f10-card tier-${tier}`;
         card.innerHTML = `<img src="players/${randomPlayer}.jpg"><div class="card-name">${randomPlayer}</div>`;
         revealContainer.appendChild(card);
+        trackDaily('packs', 1);
     }
     
     saveAlbumData(data);
@@ -2848,6 +2859,7 @@ function playMatchVsCPU() {
     tournamentState.active = true;
     tournamentState.roundIndex = 0;
     tournamentState.facedTeams = []; // Reseteamos los rivales al empezar
+    trackDaily('tournaments', 1);
     
     startMatchSimulation();
 }
@@ -3336,30 +3348,33 @@ function trackDaily(action, amount = 1) {
     }
 }
 
-// 3. Generar los datos dinámicamente leyendo tu progreso real
 function getMissionData() {
     const data = getAlbumData();
     const tourneysWon = getTournamentsWon();
-    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || { packs: 0, tournaments: 0, minigames: 0 };
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || { packs: 0, tournaments: 0, minigames: 0, rosco: 0 };
     
     // Progreso de Colecciones
     let bronceCount = tierLists.bronce.filter(p => data.unlocked.includes(p)).length;
     let plataCount = tierLists.plata.filter(p => data.unlocked.includes(p)).length;
     let oroCount = tierLists.oro.filter(p => data.unlocked.includes(p)).length;
+    let diamanteCount = tierLists.diamante.filter(p => data.unlocked.includes(p)).length;
 
     return {
         daily: [
-            { id: 'd_packs', desc: 'Abre 2 sobres hoy', progress: daily.packs, target: 2, reward: 50 },
-            { id: 'd_tourneys', desc: 'Juega 1 torneo contra la CPU', progress: daily.tournaments, target: 1, reward: 75 },
-            { id: 'd_minigames', desc: 'Acierta 5 veces en cualquier minijuego', progress: daily.minigames, target: 5, reward: 100 }
+            { id: 'd_minigames', desc: 'Acierta 5 veces en cualquier minijuego', progress: daily.minigames, target: 5, reward: 100 },
+            { id: 'd_packs', desc: 'Abre 2 sobres hoy en la tienda', progress: daily.packs, target: 2, reward: 50 },
+            { id: 'd_tourneys', desc: 'Juega 1 torneo de Copa F10', progress: daily.tournaments, target: 1, reward: 75 },
+            { id: 'd_rosco', desc: 'Juega una partida de El Rosco', progress: daily.rosco, target: 1, reward: 120 }
         ],
         achievements: [
             { id: 'a_bronce', desc: 'Coleccionista: Completa el tier BRONCE', progress: bronceCount, target: tierLists.bronce.length, reward: 500 },
             { id: 'a_plata', desc: 'Coleccionista: Completa el tier PLATA', progress: plataCount, target: tierLists.plata.length, reward: 1000 },
             { id: 'a_oro', desc: 'Coleccionista: Completa el tier ORO', progress: oroCount, target: tierLists.oro.length, reward: 2500 },
-            { id: 'a_tourneys', desc: 'Campeón: Gana 5 Torneos', progress: tourneysWon, target: 5, reward: 400 },
+            { id: 'a_diamante', desc: 'Coleccionista: Completa el tier DIAMANTE', progress: diamanteCount, target: tierLists.diamante.length, reward: 5000 },
+            { id: 'a_tourneys', desc: 'Campeón: Gana 10 Torneos', progress: tourneysWon, target: 10, reward: 1000 },
             { id: 'a_hangman', desc: 'Especialista: Racha de 5 en Ahorcado', progress: getRecord('hangman'), target: 5, reward: 300 },
-            { id: 'a_hl', desc: 'Ojeador: Racha de 10 en Higher/Lower', progress: getRecord('hl'), target: 10, reward: 400 }
+            { id: 'a_hl', desc: 'Ojeador: Racha de 10 en Higher/Lower', progress: getRecord('hl'), target: 10, reward: 400 },
+            { id: 'a_top10', desc: 'Analista: Completa un Top 10 perfecto', progress: getRecord('top10'), target: 1, reward: 600 }
         ]
     };
 }
