@@ -661,19 +661,22 @@
             </div>
         </div>
     </div>
-    <div id="missions-modal" class="modal hidden">
-    <div class="modal-content mission-panel">
-        <div class="tabs">
-            <button onclick="showMissionTab('daily')" class="tab-btn active">DAILY</button>
-            <button onclick="showMissionTab('achievements')" class="tab-btn">LOGROS</button>
-        </div>
-
-        <div id="mission-list" class="scroll-area">
+    <div id="missions-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 class="logo" style="margin: 0; font-size: 1.8rem;">MIS<span>IONES</span></h2>
+                <button onclick="closeModal('missions-modal')" class="back-btn" aria-label="Cerrar">✕</button>
             </div>
-        
-        <button onclick="closeModal('missions-modal')" class="close-btn">CERRAR</button>
+
+            <div class="album-tabs" style="margin-bottom: 15px;">
+                <button onclick="showMissionTab('daily')" class="album-tab tab-btn active">DIARIAS</button>
+                <button onclick="showMissionTab('achievements')" class="album-tab tab-btn">LOGROS</button>
+            </div>
+
+            <div id="mission-list" style="max-height: 50vh; overflow-y: auto; text-align: left; padding-right: 5px;">
+            </div>
+        </div>
     </div>
-</div>
 
     <script src="script.js"></script>
 </body>
