@@ -3310,86 +3310,125 @@ function applyUpgrade() {
     renderMarket();
 }
 
-const missionData = {
-    daily: [
-        { id: 'd1', desc: 'Gana 3 partidas en Higher Lower', progress: 0, target: 3, reward: 50 },
-        // ... otros retos diarios
-    ],
-    achievements: [
-        { id: 'a1', desc: 'Colecciona todos los jugadores de Bronce', progress: 12, target: 50, reward: 500 },
-        // ... logros permanentes
-    ]
-};
+// ==========================================
+// SISTEMA REAL DE MISIONES Y LOGROS
+// ==========================================
 
+// 1. Inicializar seguimiento diario
+function initTracking() {
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] };
+    if (daily.date !== getSpanishDateString()) {
+        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] }; // Reset si es otro día
+    }
+    localStorage.setItem('f10_daily_track', JSON.stringify(daily));
+}
+
+// 2. Función para inyectar progreso al instante
+function trackDaily(action, amount = 1) {
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track'));
+    if (daily.date !== getSpanishDateString()) {
+        daily = { date: getSpanishDateString(), packs: 0, tournaments: 0, minigames: 0, claimed: [] };
+    }
+    if (daily[action] !== undefined) {
+        daily[action] += amount;
+        localStorage.setItem('f10_daily_track', JSON.stringify(daily));
+        checkDailyMissions(); // Refresca el puntito rojo
+    }
+}
+
+// 3. Generar los datos dinámicamente leyendo tu progreso real
+function getMissionData() {
+    const data = getAlbumData();
+    const tourneysWon = getTournamentsWon();
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track')) || { packs: 0, tournaments: 0, minigames: 0 };
+    
+    // Progreso de Colecciones
+    let bronceCount = tierLists.bronce.filter(p => data.unlocked.includes(p)).length;
+    let plataCount = tierLists.plata.filter(p => data.unlocked.includes(p)).length;
+    let oroCount = tierLists.oro.filter(p => data.unlocked.includes(p)).length;
+
+    return {
+        daily: [
+            { id: 'd_packs', desc: 'Abre 2 sobres hoy', progress: daily.packs, target: 2, reward: 50 },
+            { id: 'd_tourneys', desc: 'Juega 1 torneo contra la CPU', progress: daily.tournaments, target: 1, reward: 75 },
+            { id: 'd_minigames', desc: 'Acierta 5 veces en cualquier minijuego', progress: daily.minigames, target: 5, reward: 100 }
+        ],
+        achievements: [
+            { id: 'a_bronce', desc: 'Coleccionista: Completa el tier BRONCE', progress: bronceCount, target: tierLists.bronce.length, reward: 500 },
+            { id: 'a_plata', desc: 'Coleccionista: Completa el tier PLATA', progress: plataCount, target: tierLists.plata.length, reward: 1000 },
+            { id: 'a_oro', desc: 'Coleccionista: Completa el tier ORO', progress: oroCount, target: tierLists.oro.length, reward: 2500 },
+            { id: 'a_tourneys', desc: 'Campeón: Gana 5 Torneos', progress: tourneysWon, target: 5, reward: 400 },
+            { id: 'a_hangman', desc: 'Especialista: Racha de 5 en Ahorcado', progress: getRecord('hangman'), target: 5, reward: 300 },
+            { id: 'a_hl', desc: 'Ojeador: Racha de 10 en Higher/Lower', progress: getRecord('hl'), target: 10, reward: 400 }
+        ]
+    };
+}
+
+// 4. Renderizar y manejar recompensas
 function renderMissions(type) {
     const container = document.getElementById('mission-list');
-    container.innerHTML = ''; // Limpiamos
+    container.innerHTML = ''; 
+    
+    const missions = getMissionData()[type];
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track'));
+    let claimedAch = JSON.parse(localStorage.getItem('f10_achievements_claimed')) || [];
 
-    missionData[type].forEach(m => {
-        const percentage = (m.progress / m.target) * 100;
+    missions.forEach(m => {
+        let isClaimed = (type === 'daily' && daily.claimed.includes(m.id)) || (type === 'achievements' && claimedAch.includes(m.id));
+        let isReady = m.progress >= m.target && !isClaimed;
+        const percentage = Math.min((m.progress / m.target) * 100, 100);
+        
+        let btnHTML = `<div class="reward">💰 +${m.reward} F10</div>`;
+        if(isClaimed) {
+            btnHTML = `<button class="mission-btn claimed" disabled>RECLAMADO</button>`;
+        } else if(isReady) {
+            btnHTML = `<button class="mission-btn ready" onclick="claimMission('${type}', '${m.id}', ${m.reward})">RECLAMAR +${m.reward}🪙</button>`;
+        }
+
         container.innerHTML += `
-            <div class="mission-item">
+            <div class="mission-item ${isClaimed ? 'opacity-50' : ''}">
                 <div class="info">
                     <span>${m.desc}</span>
-                    <span>${m.progress}/${m.target}</span>
+                    <span style="color: ${isReady ? 'var(--primary)' : 'white'}">${m.progress}/${m.target}</span>
                 </div>
                 <div class="progress-bg">
-                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                    <div class="progress-fill" style="width: ${percentage}%; ${isReady ? 'box-shadow: 0 0 15px var(--primary);' : ''}"></div>
                 </div>
-                <div class="reward">💰 +${m.reward} F10</div>
+                ${btnHTML}
             </div>
         `;
     });
 }
 
-
-// Abrir el modal
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if(modal) {
-        modal.classList.remove('hidden');
-        
-        if(modalId === 'missions-modal') {
-            showMissionTab('daily'); // Carga los diarios por defecto
-            
-            // Ocultamos la notificación de punto rojo
-            const dot = document.getElementById('mission-notification');
-            if(dot) dot.classList.add('hidden');
-            localStorage.setItem('f10_missions_date', getSpanishDateString());
-        }
+function claimMission(type, id, reward) {
+    addCoins(reward);
+    if(type === 'daily') {
+        let daily = JSON.parse(localStorage.getItem('f10_daily_track'));
+        daily.claimed.push(id);
+        localStorage.setItem('f10_daily_track', JSON.stringify(daily));
+    } else {
+        let claimedAch = JSON.parse(localStorage.getItem('f10_achievements_claimed')) || [];
+        claimedAch.push(id);
+        localStorage.setItem('f10_achievements_claimed', JSON.stringify(claimedAch));
     }
-}
-
-// Cerrar el modal
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if(modal) modal.classList.add('hidden');
-}
-
-// Cambiar entre pestañas
-function showMissionTab(type) {
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('active');
-        // Marcamos la pestaña correcta según el texto
-        if((type === 'daily' && btn.innerText === 'DIARIAS') || 
-           (type === 'achievements' && btn.innerText === 'LOGROS')) {
-            btn.classList.add('active');
-        }
-    });
-    // Pintamos las misiones
+    mostrarMensajePro("🎁 ¡RECOMPENSA OBTENIDA!", `Has reclamado +${reward} FutCoins 🪙.`);
     renderMissions(type);
+    checkDailyMissions();
 }
-// Comprobar si es un nuevo día para mostrar el puntito rojo
+
 function checkDailyMissions() {
-    const today = getSpanishDateString(); 
-    const lastChecked = localStorage.getItem('f10_missions_date');
+    initTracking(); // Aseguramos que existe el tracker
+    const md = getMissionData();
+    let daily = JSON.parse(localStorage.getItem('f10_daily_track'));
+    let claimedAch = JSON.parse(localStorage.getItem('f10_achievements_claimed')) || [];
+    
+    let hasReady = false;
+    md.daily.forEach(m => { if(m.progress >= m.target && !daily.claimed.includes(m.id)) hasReady = true; });
+    md.achievements.forEach(m => { if(m.progress >= m.target && !claimedAch.includes(m.id)) hasReady = true; });
+
     const dot = document.getElementById('mission-notification');
     if(dot) {
-        if(lastChecked !== today) {
-            dot.classList.remove('hidden'); // Hay misiones nuevas
-        } else {
-            dot.classList.add('hidden'); // Ya entró hoy
-        }
+        if(hasReady) dot.classList.remove('hidden'); // Solo brilla si tienes algo que reclamar
+        else dot.classList.add('hidden');
     }
 }
