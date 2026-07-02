@@ -2232,6 +2232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupAutocomplete('top10Input', 'top10-suggestions');
     setupAutocomplete('marketBuyInput', 'market-buy-suggestions');
     setupAutocomplete('upgradeInput', 'upgrade-suggestions');
+    checkDailyMissions();
 
     const solveBtn = document.getElementById('solveButton');
     if(solveBtn) solveBtn.onclick = solveFullWord;
@@ -3339,4 +3340,54 @@ function renderMissions(type) {
             </div>
         `;
     });
+}
+
+
+// Abrir el modal
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) {
+        modal.classList.remove('hidden');
+        
+        if(modalId === 'missions-modal') {
+            showMissionTab('daily'); // Carga los diarios por defecto
+            
+            // Ocultamos la notificación de punto rojo
+            const dot = document.getElementById('mission-notification');
+            if(dot) dot.classList.add('hidden');
+            localStorage.setItem('f10_missions_date', getSpanishDateString());
+        }
+    }
+}
+
+// Cerrar el modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) modal.classList.add('hidden');
+}
+
+// Cambiar entre pestañas
+function showMissionTab(type) {
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.innerText.toLowerCase() === type || (type==='achievements' && btn.innerText==='LOGROS')) {
+            btn.classList.add('active');
+        }
+    });
+    renderMissions(type);
+}
+
+// Comprobar si es un nuevo día para mostrar el puntito rojo
+function checkDailyMissions() {
+    const today = getSpanishDateString(); 
+    const lastChecked = localStorage.getItem('f10_missions_date');
+    const dot = document.getElementById('mission-notification');
+    if(dot) {
+        if(lastChecked !== today) {
+            dot.classList.remove('hidden'); // Hay misiones nuevas
+        } else {
+            dot.classList.add('hidden'); // Ya entró hoy
+        }
+    }
 }
