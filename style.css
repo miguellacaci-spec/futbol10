@@ -407,6 +407,16 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .anim-goal-shake { animation: goalShake 0.6s ease-in-out; }
 
 
-.progress-bg { height: 8px; background: #222; border-radius: 4px; overflow: hidden; margin: 5px 0; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #00ff87, #00d4ff); transition: width 0.5s ease; }
-.mission-item { border-left: 3px solid #00ff87; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.05); }
+/* DISEÑO MISIONES */
+.mission-item { 
+    border-left: 3px solid var(--primary); 
+    padding: 12px; 
+    margin-bottom: 10px; 
+    background: rgba(255,255,255,0.05); 
+    border-radius: 0 8px 8px 0;
+    font-family: 'Orbitron', sans-serif;
+}
+.mission-item .info { display: flex; justify-content: space-between; font-size: 0.85rem; color: white; margin-bottom: 5px; }
+.progress-bg { height: 6px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; margin: 8px 0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #00ff87, #00d4ff); transition: width 0.5s ease; box-shadow: 0 0 10px rgba(0,255,135,0.5); }
+.mission-item .reward { font-size: 0.8rem; color: #ffd700; font-weight: bold; text-align: right; }
