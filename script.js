@@ -3371,13 +3371,15 @@ function showMissionTab(type) {
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach(btn => {
         btn.classList.remove('active');
-        if(btn.innerText.toLowerCase() === type || (type==='achievements' && btn.innerText==='LOGROS')) {
+        // Marcamos la pestaña correcta según el texto
+        if((type === 'daily' && btn.innerText === 'DIARIAS') || 
+           (type === 'achievements' && btn.innerText === 'LOGROS')) {
             btn.classList.add('active');
         }
     });
+    // Pintamos las misiones
     renderMissions(type);
 }
-
 // Comprobar si es un nuevo día para mostrar el puntito rojo
 function checkDailyMissions() {
     const today = getSpanishDateString(); 
